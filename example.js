@@ -1,5 +1,5 @@
-import { parallelMap, map, collect } from 'blue-iterate'
-import got from 'got'
+const { parallelMap, map, collect } = require('blue-iterate')
+const got = require('got')
 
 const pokeGenerator = async function* () {
   let offset = 0
