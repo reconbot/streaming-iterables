@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "outDir": "dist",
+    "allowJs": false,
+    "target": "es2017",
+    "moduleResolution": "node",
+    "module": "commonjs",
+    "declaration": true
+  },
+  "include": [
+    "lib/*.js",
+    "lib/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
+  "lib": [
+    "esnext"
+  ]
+}
