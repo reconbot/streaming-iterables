@@ -26,7 +26,7 @@ export function merge (
     return emptyIterator()
   }
   if (iterables.length === 1) {
-    return fromIterable(iterables[0])
+    return fromIterable(iterables[0] as Iterator<any>)
   }
   return _merge(iterables)
 }

@@ -7,11 +7,11 @@ async function* _map (func, iterable) {
 
 export function map<T, B> (
   func: (data: T) => B|Promise<B>,
-): (iterable: Iterableish<T>) => AsyncIterator<B>
+): (iterable: Iterableish<T>) => AsyncIterableIterator<B>
 export function map<T, B> (
   func: (data: T) => B|Promise<B>,
   iterable: Iterableish<T>,
-): AsyncIterator<B>
+): AsyncIterableIterator<B>
 export function map (func, iterable?) {
   if (iterable === undefined) {
     return curriedIterable => _map(func, curriedIterable)
