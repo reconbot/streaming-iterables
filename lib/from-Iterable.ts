@@ -9,5 +9,13 @@ export function fromIterable (maybeIterable) {
     return maybeIterable[Symbol.asyncIterator]()
   }
 
-  return maybeIterable
+  if (maybeIterable && typeof maybeIterable.next === 'function') {
+    return maybeIterable
+  }
+
+  if (maybeIterable && typeof maybeIterable === 'function') {
+    return maybeIterable()
+  }
+
+  throw new TypeError('"maybeIterable" does not to conform to any of the iterator or iterable protocols')
 }
