@@ -12,7 +12,7 @@ async function* asyncNumbers () {
   yield 3
 }
 
-describe.only('take', () => {
+describe('take', () => {
   it('Returns the first n elements of the given async iterable', async () => {
     const values = []
     for await (const val of take(2, asyncNumbers())) {

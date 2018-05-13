@@ -1,16 +1,17 @@
 import { assert } from 'chai'
-import { collect } from '../lib/collect'
-import { fromIterable } from '../lib/from-iterable'
+import { collect, fromIterable } from './'
 
-function promiseImmediate (data?) {
-  return new Promise(resolve => setImmediate(() => resolve(data)))
+async function* asyncIterable (arr) {
+ for (const val of arr) {
+   yield val
+ }
 }
 
 describe('collect', () => {
-  it('collects async data', async () => {
-    assert.deepEqual(await collect(fromIterable([1, 2, 3, 4])), [1, 2, 3, 4])
+  it('collects async iterator data', async () => {
+    assert.deepEqual(await collect(asyncIterable([1, 2, 3, 4])), [1, 2, 3, 4])
   })
-  it('collects sync data', async () => {
+  it('collects sync iterable data', async () => {
     assert.deepEqual(await collect([1, 2, 3, 4]), [1, 2, 3, 4])
   })
 })
