@@ -1,4 +1,4 @@
-const { parallelMap, map, collect } = require('blue-iterate')
+const { parallelMap, map, collect } = require('iterator-streams')
 const got = require('got')
 
 const pokeGenerator = async function* () {

@@ -1,7 +1,3 @@
-if ((Symbol as any).asyncIterator === undefined) {
-  ((Symbol as any).asyncIterator) = Symbol.for('asyncIterator')
-}
-
 async function* _buffer (size: number, iterable: Iterator<any>) {
   const buff = []
   for (let i = 0; i <= size; i++) {

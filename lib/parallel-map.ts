@@ -1,16 +1,14 @@
-import { fromIterator } from './from-iterator'
-
-if ((Symbol as any).asyncIterator === undefined) {
-  ((Symbol as any).asyncIterator) = Symbol.for('asyncIterator')
-}
+import { fromIterable } from './from-iterable'
 
 async function* _parallelMap (concurrency: number, func, iterable) {
+  const iterator = fromIterable(iterable)
   const concurrentWork = new Set()
   const results = []
   let ended = false
 
   const queueNext = () => {
-    const nextVal = iterable.next().then(async ({ done, value }) => {
+    const nextVal = (async () => {
+      const { done, value } = await iterator.next()
       if (done) {
         ended = true
       } else {
@@ -18,7 +16,7 @@ async function* _parallelMap (concurrency: number, func, iterable) {
         results.push(mappedValue)
       }
       concurrentWork.delete(nextVal)
-    })
+    })()
     concurrentWork.add(nextVal)
   }
 
@@ -41,12 +39,16 @@ async function* _parallelMap (concurrency: number, func, iterable) {
   }
 }
 
-export function parallelMap (concurrency, func?, iterable?) {
+export function parallelMap (
+  concurrency: number,
+  func?: (data: any) => any,
+  iterable?: Iterable<any>|Iterator<any>|AsyncIterable<any>|AsyncIterator<any>,
+) {
   if (func === undefined) {
     return curriedFunc => parallelMap(concurrency, curriedFunc)
   }
   if (iterable === undefined) {
-    return curriedIterable => parallelMap(concurrency, func, curriedIterable)
+    return curriedIterable => _parallelMap(concurrency, func, curriedIterable)
   }
   return _parallelMap(concurrency, func, iterable)
 }

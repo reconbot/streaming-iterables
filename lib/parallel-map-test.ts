@@ -1,5 +1,5 @@
 import { assert } from 'chai'
-import { fromIterator } from '../lib/from-iterator'
+import { fromIterable } from '../lib/from-iterable'
 import { parallelMap } from '../lib/parallel-map'
 
 function promiseImmediate (data?) {
@@ -17,7 +17,7 @@ async function asyncString (str) {
   return String(str)
 }
 
-async function* fromArray (arr) {
+async function* asyncFromArray (arr) {
   for (const value of arr) {
     yield value
   }
@@ -25,7 +25,7 @@ async function* fromArray (arr) {
 
 describe('parallelMap', () => {
   it('runs a concurrent number of functions at a time', async () => {
-    const ids = fromIterator([1, 2, 3, 4])
+    const ids = fromIterable([1, 2, 3, 4])
     let loaded = 0
     const load = id => promiseImmediate({ id }).then(val => {
       loaded++
@@ -44,7 +44,7 @@ describe('parallelMap', () => {
     assert.deepEqual((await loadIterator.next()).done, true)
   })
   it('allows the end to finish temporarily before the middle', async () => {
-    const ids = fromIterator([11, 5, 3, 2])
+    const ids = fromIterable([11, 5, 3, 2])
     let loaded = 0
     const load = id => delayTicks(id, { id }).then(val => {
       loaded++
@@ -63,7 +63,7 @@ describe('parallelMap', () => {
     assert.deepEqual((await loadIterator.next()).done, true)
   })
   it('iterates a sync function over an async value', async () => {
-    const ids = fromIterator([1, 2, 3, 4])
+    const ids = asyncFromArray([1, 2, 3, 4])
     const load = id => ({ id })
     const loadIterator = parallelMap(2, load, ids)
     assert.deepEqual((await loadIterator.next()).value, { id: 1 })
@@ -73,7 +73,7 @@ describe('parallelMap', () => {
     assert.deepEqual((await loadIterator.next()).done, true)
   })
   it('iterates a sync function over a sync value', async () => {
-    const ids = fromArray([1, 2, 3, 4])
+    const ids = fromIterable([1, 2, 3, 4])
     const load = id => ({ id })
     const loadIterator = parallelMap(2, load, ids)
     assert.deepEqual((await loadIterator.next()).value, { id: 1 })
@@ -83,7 +83,7 @@ describe('parallelMap', () => {
     assert.deepEqual((await loadIterator.next()).done, true)
   })
   it('lets you curry the concurrency and function', async () => {
-    const ids = fromArray([1, 2, 3, 4])
+    const ids = asyncFromArray([1, 2, 3, 4])
     const load = id => ({ id })
     const twoAtAtime = parallelMap(2)
     const loadTwoAtATime = twoAtAtime(load)
@@ -95,7 +95,7 @@ describe('parallelMap', () => {
     assert.deepEqual(vals, [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }])
   })
   it('lets you curry the function', async () => {
-    const ids = fromArray([1, 2, 3, 4])
+    const ids = asyncFromArray([1, 2, 3, 4])
     const load = id => ({ id })
     const loadTwoAtATime = parallelMap(2, load)
     const loadIterator = loadTwoAtATime(ids)

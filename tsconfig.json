@@ -5,16 +5,17 @@
     "target": "es2017",
     "moduleResolution": "node",
     "module": "commonjs",
-    "declaration": true
+    "declaration": true,
+    "lib": [
+      "esnext"
+    ]
   },
   "include": [
     "lib/*.js",
     "lib/*.ts"
   ],
   "exclude": [
-    "node_modules"
-  ],
-  "lib": [
-    "esnext"
+    "node_modules",
+    "lib/*-test.ts"
   ]
 }
