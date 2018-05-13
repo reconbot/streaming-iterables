@@ -1,7 +1,11 @@
-async function* _buffer (size: number, iterable: Iterator<any>) {
+import { fromIterable } from './from-iterable'
+import { Iterableish } from './types'
+
+async function* _buffer<T> (size: number, iterable: Iterableish<T>): AsyncIterableIterator<T> {
+  const iterator = fromIterable(iterable as Iterable<T>)
   const buff = []
   for (let i = 0; i <= size; i++) {
-    buff.push(iterable.next())
+    buff.push(iterator.next())
   }
   while (true) {
     const { value, end } = await buff.shift()
@@ -10,11 +14,13 @@ async function* _buffer (size: number, iterable: Iterator<any>) {
     } else {
       return
     }
-    buff.push(iterable.next())
+    buff.push(iterator.next())
   }
 }
 
-export function buffer (size: number, iterable?: Iterator<any>) {
+export function buffer<T> (size: number): (iterable: Iterableish<T>) => AsyncIterableIterator<T>
+export function buffer<T> (size: number, iterable: Iterableish<T>): AsyncIterableIterator<T>
+export function buffer (size, iterable?) {
   if (iterable === undefined) {
     return curriedIterable => _buffer(size, curriedIterable)
   }

@@ -1,11 +1,7 @@
 import { assert } from 'chai'
-import { buffer } from '../lib/buffer'
+import { buffer } from './'
 
-if ((Symbol as any).asyncIterator === undefined) {
-  ((Symbol as any).asyncIterator) = Symbol.for('asyncIterator')
-}
-
-function promiseImmediate (data?) {
+function promiseImmediate<T> (data?: T): Promise<T> {
   return new Promise(resolve => setImmediate(() => resolve(data)))
 }
 
@@ -19,7 +15,6 @@ describe('buffer', () => {
     }
     const itr = buffer(5, numbers())
     await promiseImmediate()
-    await promiseImmediate()
     assert.equal(num, 0)
     const { value } = await itr.next()
     assert.equal(value, 1)
@@ -30,6 +25,7 @@ describe('buffer', () => {
     await promiseImmediate()
     assert.equal(num, 6)
   })
+
   it('buffers sync data', async () => {
     let num = 0
     function* numbers () {
@@ -42,5 +38,14 @@ describe('buffer', () => {
     const { value } = await itr.next()
     assert.equal(value, 1)
     assert.equal(num, 6)
+  })
+  it('buffers sync iterables', async () => {
+    const itr = buffer(2, [1, 2, 3, 4, 5, 6])
+    assert.equal(1, (await itr.next()).value)
+    assert.equal(2, (await itr.next()).value)
+    assert.equal(3, (await itr.next()).value)
+    assert.equal(4, (await itr.next()).value)
+    assert.equal(5, (await itr.next()).value)
+    assert.equal(6, (await itr.next()).value)
   })
 })
