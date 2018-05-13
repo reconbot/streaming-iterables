@@ -7,9 +7,6 @@ async function* _merge (iterables) {
       const nextVal = await iterator.next()
       if (nextVal.done) {
         sources.delete(iterator)
-        if (nextVal.value !== undefined) {
-          yield nextVal.value
-        }
       } else {
         yield nextVal.value
       }
