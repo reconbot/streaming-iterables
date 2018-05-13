@@ -1,12 +1,20 @@
-async function* _map (func, iterable) {
-  for await (const val of iterable) {
-    yield await func(val)
+import { Iterableish } from './types'
+
+async function* _take<T> (count: number, iterable: Iterableish<T>) {
+  let taken = 0
+  for await (const val of iterable as AsyncIterable<T>) {
+    yield await val
+    taken ++
+    if (taken >= count) {
+      return
+    }
   }
 }
-
-export function map (func: (data: any) => any, iterable?: Iterable<any>|Iterator<any>) {
+export function take<T> (count: number): (iterable: Iterableish<T>) => AsyncIterableIterator<T>
+export function take<T> (count: number, iterable: Iterableish<T>): AsyncIterableIterator<T>
+export function take (count, iterable?) {
   if (iterable === undefined) {
-    return curriedIterable => _map(func, curriedIterable)
+    return curriedIterable => _take(count, curriedIterable)
   }
-  return _map(func, iterable)
+  return _take(count, iterable)
 }
