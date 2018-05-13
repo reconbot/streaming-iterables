@@ -1,11 +1,11 @@
 {
-  "name": "iterator-streams",
+  "name": "streaming-iterables",
   "version": "0.0.2",
   "description": "A collection of utilities that work with sync and async iterables and iterators. Designed to replace your streams.",
   "main": "dist",
   "types": "dist/index.d.ts",
-  "repository": "git@github.com:reconbot/iterator-streams.git",
-  "homepage": "https://github.com/reconbot/iterator-streams",
+  "repository": "git@github.com:reconbot/streaming-iterables.git",
+  "homepage": "https://github.com/reconbot/streaming-iterables",
   "runkitExampleFilename": "example.js",
   "scripts": {
     "test": "npm run unit-test && npm run lint",
