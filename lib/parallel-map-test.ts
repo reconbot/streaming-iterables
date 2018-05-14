@@ -1,6 +1,5 @@
 import { assert } from 'chai'
-import { fromIterable } from '../lib/from-iterable'
-import { parallelMap } from '../lib/parallel-map'
+import { fromIterable, parallelMap } from './'
 
 function promiseImmediate (data?) {
   return new Promise(resolve => setImmediate(() => resolve(data)))

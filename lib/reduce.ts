@@ -8,7 +8,7 @@ export async function _reduce<T, B> (func: (B, T) => B, start: B, iterable: Iter
   return value
 }
 
-export function reduce<T, B> (func: (B, T) => B): (start: B) => (iterable: Iterableish<T>) => Promise<B>
+// export function reduce<T, B> (func: (B, T) => B): (start: B) => (iterable: Iterableish<T>) => Promise<B>
 export function reduce<T, B> (func: (B, T) => B, start: B): (iterable: Iterableish<T>) => Promise<B>
 export function reduce<T, B> (func: (B, T) => B, start: B, iterable: Iterableish<T>): Promise<B>
 export function reduce (func, start?, iterable?) {

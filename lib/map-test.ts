@@ -1,10 +1,6 @@
 import { assert } from 'chai'
 import { fromIterable } from '../lib/from-iterable'
-import { map } from '../lib/map'
-
-if ((Symbol as any).asyncIterator === undefined) {
-  ((Symbol as any).asyncIterator) = Symbol.for('asyncIterator')
-}
+import { map } from './'
 
 async function asyncString (str) {
   return String(str)

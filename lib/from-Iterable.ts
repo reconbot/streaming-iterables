@@ -1,5 +1,8 @@
+import { Iterableish } from './types'
+
 export function fromIterable<T> (values: Iterable<T> | Iterator<T>): Iterator<T>
 export function fromIterable<T> (values: AsyncIterable<T>|AsyncIterator<T>): AsyncIterator<T>
+export function fromIterable<T> (values: Iterableish<T>): AsyncIterable<T>
 export function fromIterable (maybeIterable) {
   if (typeof maybeIterable[Symbol.iterator] === 'function') {
     return maybeIterable[Symbol.iterator]()
