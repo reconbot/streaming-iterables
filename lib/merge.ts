@@ -17,7 +17,7 @@ async function* _merge (iterables) {
 function* emptyIterator () { }
 
 export function merge (
-  ...iterables: Array<Iterable<any>|Iterator<any>|AsyncIterable<any>|AsyncIterator<any>>,
+  ...iterables: Array<Iterable<any>|Iterator<any>|AsyncIterable<any>|AsyncIterator<any>>
 ): Iterator<any>|AsyncIterator<any> {
   if (iterables.length === 0) {
     return emptyIterator()

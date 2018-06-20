@@ -11,7 +11,8 @@
         "space-before-function-paren": [true, "always"],
         "no-empty-interface": false,
         "no-empty": false,
-        "adjacent-overload-signatures": false
+        "adjacent-overload-signatures": false,
+        "trailing-comma": [false]
     },
     "rulesDirectory": []
 }
