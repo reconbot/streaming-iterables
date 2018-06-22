@@ -1,40 +1,34 @@
 import { fromIterable } from './from-iterable'
 
 export async function* parallelMerge (...iterables: Array<Iterable<any>>) {
-  // const concurrentWork = new Set()
-  // const results = []
-  // let ended = false
+  const inputs = iterables.map(fromIterable)
+  const concurrentWork = new Set()
+  const values = new Map()
 
-  // const queue = []
+  const queueNext = input => {
+    const nextVal = Promise.resolve(input.next()).then(async ({ done, value }) => {
+      if (!done) {
+        values.set(input, value)
+      }
+      concurrentWork.delete(nextVal)
+    })
+    concurrentWork.add(nextVal)
+  }
 
-  // const queueNext = () => {
-  //   const nextVal = iterable.next().then(async ({ done, value }) => {
-  //     if (done) {
-  //       ended = true
-  //     } else {
-  //       const mappedValue = await func(value)
-  //       results.push(mappedValue)
-  //     }
-  //     concurrentWork.delete(nextVal)
-  //   })
-  //   concurrentWork.add(nextVal)
-  // }
+  for (const input of inputs) {
+    queueNext(input)
+  }
 
-  // for (let i = 0; i < concurrency; i++) {
-  //   queueNext()
-  // }
-
-  // while (true) {
-  //   if (results.length) {
-  //     yield results.shift()
-  //     if (!ended) {
-  //       queueNext()
-  //       continue
-  //     }
-  //   }
-  //   if (concurrentWork.size === 0) {
-  //     return
-  //   }
-  //   await Promise.race(concurrentWork)
-  // }
+  while (true) {
+    if (concurrentWork.size === 0) {
+      return
+    }
+    await Promise.race(concurrentWork)
+    for (const pair of values) {
+      const [input, value] = pair
+      values.delete(input)
+      yield value
+      queueNext(input)
+    }
+  }
 }

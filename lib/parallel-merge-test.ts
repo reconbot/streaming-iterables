@@ -38,7 +38,7 @@ async function* fastStrings () {
   yield 'Benvenuto'
 }
 
-describe('merge', () => {
+describe('parallelMerge', () => {
   it('iterates sync iterators', async () => {
     const values = []
     const merged = parallelMerge(numbers(), strings())
@@ -53,7 +53,7 @@ describe('merge', () => {
     for await (const val of merged) {
       values.push(val)
     }
-    assert.deepEqual(values, [1, 'Borekh-Habo', 2, 'Wilkomme', 3, 'Benvenuto'])
+    assert.deepEqual(values, ['Borekh-Habo', 1, 'Wilkomme', 'Benvenuto', 2, 3])
   })
   it('iterates iterables', async () => {
     const values = []
@@ -69,6 +69,6 @@ describe('merge', () => {
     for await (const val of merged) {
       values.push(val)
     }
-    assert.deepEqual(values, [4, 5, 6, 'Borekh-Habo', 'Wilkomme', 3, 'Benvenuto'])
+    assert.deepEqual(values, [4, 5, 6, 'Borekh-Habo', 1, 'Wilkomme', 'Benvenuto', 2, 3])
   })
 })
