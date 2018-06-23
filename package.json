@@ -1,6 +1,6 @@
 {
   "name": "streaming-iterables",
-  "version": "0.1.0",
+  "version": "0.0.0-development",
   "description": "A collection of utilities that work with sync and async iterables and iterators. Designed to replace your streams.",
   "main": "dist",
   "types": "dist/index.d.ts",
@@ -14,7 +14,8 @@
     "format": "eslint lib test --fix && tslint lib/*.ts --fix",
     "build": "tsc",
     "prepublish": "npm run build",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
+    "travis-deploy-once": "travis-deploy-once",
+    "semantic-release": "semantic-release"
   },
   "keywords": [
     "generators",
@@ -46,11 +47,11 @@
     "eslint-plugin-promise": "^3.8.0",
     "eslint-plugin-standard": "^3.1.0",
     "mocha": "^5.2.0",
-    "semantic-release": "^15.6.0",
-    "split2": "^2.2.0",
     "ts-node": "^5.0.1",
     "tslint": "^5.10.0",
-    "typescript": "^2.9.2"
+    "typescript": "^2.9.2",
+    "travis-deploy-once": "^5.0.0",
+    "semantic-release": "^15.6.0"
   },
   "engines": {
     "node": ">=8"
