@@ -4,7 +4,6 @@ if ((Symbol as any).asyncIterator === undefined) {
 
 export { buffer } from './buffer'
 export { collect } from './collect'
-export { combine } from './combine'
 export { getIterator } from './get-iterator'
 export { concat } from './concat'
 export { consume } from './consume'
