@@ -4,9 +4,9 @@ if ((Symbol as any).asyncIterator === undefined) {
 
 export { buffer } from './buffer'
 export { collect } from './collect'
-export { getIterator } from './get-iterator'
 export { concat } from './concat'
 export { consume } from './consume'
+export { getIterator } from './get-iterator'
 export { Iterableish, AnyIterable } from './types'
 export { map } from './map'
 export { merge } from './merge'

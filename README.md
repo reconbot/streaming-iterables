@@ -24,38 +24,12 @@ for await (const str of stringable([1,2,3])) {
 // "1", "2", "3"
 ```
 
-## Examples
+Since this works with async iterators it polyfills `Symbol.asyncIterator` if it doesn't exist. (Not an issue since node 10.)
 
-```js
-const { parallelMap, map, consume } = require('streaming-iterables')
-const got = require('got')
-
-const pokeGenerator = async function* () {
-  let offset = 0
-  while(true) {
-    const url = `https://pokeapi.co/api/v2/pokemon/?offset=${offset}`
-    const { body: pokemon } = await got(url, { json: true })
-    if (pokemon.results.length === 0) {
-      return
-    }
-    offset += pokemon.results.length
-    for (const monster of pokemon.results) {
-      yield monster
-    }
-  }
+```ts
+if ((Symbol as any).asyncIterator === undefined) {
+  ;(Symbol as any).asyncIterator = Symbol.for('asyncIterator')
 }
-
-const loadUrl = async ({ url }) => {
-  const { body } = await got(url, { json: true })
-  return body
-}
-
-const loadMonsters = parallelMap(2, loadUrl) // two at at time
-const logMonsters = map(pokemon => console.log(pokemon.name, pokemon.sprites.front_default))
-
-await consume(logMonsters(loadMonsters(pokeGenerator())))
-console.log('caught them all 🎉')
-
 ```
 
 ## Types
