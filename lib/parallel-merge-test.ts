@@ -1,17 +1,17 @@
 import { assert } from 'chai'
-import { collect, parallelMerge } from './'
+import { parallelMerge } from './'
 
-function promiseImmediate<T> (data?: T): Promise<T> {
+function promiseImmediate<T>(data?: T): Promise<T> {
   return new Promise(resolve => setImmediate(() => resolve(data)))
 }
 
-function* numbers () {
+function* numbers() {
   yield 4
   yield 5
   yield 6
 }
 
-async function* slowNumbers () {
+async function* slowNumbers() {
   await promiseImmediate()
   await promiseImmediate()
   yield 1
@@ -23,13 +23,13 @@ async function* slowNumbers () {
   yield 3
 }
 
-function* strings () {
+function* strings() {
   yield 'Borekh-Habo'
   yield 'Wilkomme'
   yield 'Benvenuto'
 }
 
-async function* fastStrings () {
+async function* fastStrings() {
   await promiseImmediate()
   yield 'Borekh-Habo'
   await promiseImmediate()
@@ -40,32 +40,32 @@ async function* fastStrings () {
 
 describe('parallelMerge', () => {
   it('iterates sync iterators', async () => {
-    const values = []
-    const merged = parallelMerge(numbers(), strings())
+    const values: any[] = []
+    const merged = parallelMerge<any>(numbers(), strings())
     for await (const val of merged) {
       values.push(val)
     }
     assert.deepEqual(values, [4, 'Borekh-Habo', 5, 'Wilkomme', 6, 'Benvenuto'])
   })
   it('iterates async iterators', async () => {
-    const values = []
-    const merged = parallelMerge(slowNumbers(), fastStrings())
+    const values: any[] = []
+    const merged = parallelMerge<any>(slowNumbers(), fastStrings())
     for await (const val of merged) {
       values.push(val)
     }
     assert.deepEqual(values, ['Borekh-Habo', 1, 'Wilkomme', 'Benvenuto', 2, 3])
   })
   it('iterates iterables', async () => {
-    const values = []
-    const merged = parallelMerge([1, 2, 3], ['Borekh-Habo', 'Wilkomme', 'Benvenuto'])
+    const values: any[] = []
+    const merged = parallelMerge<any>([1, 2, 3], ['Borekh-Habo', 'Wilkomme', 'Benvenuto'])
     for await (const val of merged) {
       values.push(val)
     }
     assert.deepEqual(values, [1, 'Borekh-Habo', 2, 'Wilkomme', 3, 'Benvenuto'])
   })
   it('a mix of sync and async iterators and iterables', async () => {
-    const values = []
-    const merged = parallelMerge(slowNumbers(), numbers(), fastStrings())
+    const values: any[] = []
+    const merged = parallelMerge<any>(slowNumbers(), numbers(), fastStrings())
     for await (const val of merged) {
       values.push(val)
     }

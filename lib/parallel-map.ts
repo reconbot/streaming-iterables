@@ -1,13 +1,19 @@
-import { fromIterable } from './from-iterable'
+import { AnyIterable } from './types'
+import { getIterator } from './get-iterator'
 
-async function* _parallelMap (concurrency: number, func, iterable) {
-  const iterator = fromIterable(iterable)
+async function* _parallelMap<T, R>(
+  concurrency: number,
+  func: (data: T) => R | Promise<R>,
+  itr: AnyIterable<T>
+): AsyncIterableIterator<R> {
+  const iterator = getIterator(itr)
   const concurrentWork = new Set()
-  const results = []
+  const results: any[] = []
   let ended = false
 
   const queueNext = () => {
-    const nextVal = (async () => {
+    let nextVal
+    nextVal = (async () => {
       const { done, value } = await iterator.next()
       if (done) {
         ended = true
@@ -39,16 +45,30 @@ async function* _parallelMap (concurrency: number, func, iterable) {
   }
 }
 
-export function parallelMap (
+export function parallelMap<T, R>(
+  concurrency: number
+): {
+  (func: (data: T) => R | Promise<R>, iterable: AnyIterable<T>): AsyncIterableIterator<R>
+  (func: (data: T) => R | Promise<R>): (iterable: AnyIterable<T>) => AsyncIterableIterator<R>
+}
+export function parallelMap<T, R>(
   concurrency: number,
-  func?: (data: any) => any,
-  iterable?: Iterable<any>|Iterator<any>|AsyncIterable<any>|AsyncIterator<any>,
-) {
+  func: (data: T) => R | Promise<R>
+): (iterable: AnyIterable<T>) => AsyncIterableIterator<R>
+export function parallelMap<T, R>(
+  concurrency: number,
+  func: (data: T) => R | Promise<R>,
+  iterable: AnyIterable<T>
+): AsyncIterableIterator<R>
+export function parallelMap<T, R>(concurrency: number, func?: (data: T) => R | Promise<R>, iterable?: AnyIterable<T>) {
   if (func === undefined) {
-    return curriedFunc => parallelMap(concurrency, curriedFunc)
+    return <A, B>(curriedFunc: (data: A) => B | Promise<B>, curriedIterable?: AnyIterable<A>) =>
+      curriedIterable
+        ? parallelMap<A, B>(concurrency, curriedFunc, curriedIterable)
+        : parallelMap<A, B>(concurrency, curriedFunc)
   }
   if (iterable === undefined) {
-    return curriedIterable => _parallelMap(concurrency, func, curriedIterable)
+    return (curriedIterable: AnyIterable<T>) => parallelMap<T, R>(concurrency, func, curriedIterable)
   }
-  return _parallelMap(concurrency, func, iterable)
+  return _parallelMap<T, R>(concurrency, func, iterable)
 }

@@ -1,3 +1,1 @@
-export function combine () {
-
-}
+export function combine() {}

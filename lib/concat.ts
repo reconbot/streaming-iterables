@@ -1,7 +1,7 @@
-import { Iterableish } from './types'
-export async function* concat (...iterables: Array<Iterableish<any>>) {
+import { AnyIterable } from './types'
+export async function* concat(...iterables: Array<AnyIterable<any>>) {
   for await (const iterable of iterables) {
-    for await (const value of iterable as AsyncIterable<any>) {
+    for await (const value of iterable) {
       yield value
     }
   }

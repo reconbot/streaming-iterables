@@ -1,6 +1,6 @@
-import { Iterableish } from './types'
-export async function consume<T> (iterator: Iterableish<T>) {
-  for await (const val of iterator as AsyncIterable<T>) {
+import { AnyIterable } from './types'
+export async function consume<T>(iterator: AnyIterable<T>) {
+  for await (const val of iterator) {
     // do nothing
   }
 }

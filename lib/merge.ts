@@ -1,7 +1,8 @@
-import { fromIterable } from './from-iterable'
+import { getIterator } from './get-iterator'
+import { AnyIterable } from './types'
 
-async function* _merge (iterables) {
-  const sources = new Set(iterables.map(fromIterable)) as Set<Iterator<any>|AsyncIterator<any>>
+export async function* merge(...iterables: Array<AnyIterable<any>>) {
+  const sources = new Set(iterables.map(getIterator))
   while (sources.size) {
     for (const iterator of sources) {
       const nextVal = await iterator.next()
@@ -12,18 +13,4 @@ async function* _merge (iterables) {
       }
     }
   }
-}
-
-function* emptyIterator () { }
-
-export function merge (
-  ...iterables: Array<Iterable<any>|Iterator<any>|AsyncIterable<any>|AsyncIterator<any>>
-): Iterator<any>|AsyncIterator<any> {
-  if (iterables.length === 0) {
-    return emptyIterator()
-  }
-  if (iterables.length === 1) {
-    return fromIterable(iterables[0] as Iterator<any>)
-  }
-  return _merge(iterables)
 }

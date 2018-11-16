@@ -1,7 +1,8 @@
-import { fromIterable } from './from-iterable'
+import { getIterator } from './get-iterator'
+import { AnyIterable } from './types'
 
-export async function* parallelMerge (...iterables: Array<Iterable<any>>) {
-  const inputs = iterables.map(fromIterable)
+export async function* parallelMerge<T>(...iterables: Array<AnyIterable<T>>): AsyncIterableIterator<T> {
+  const inputs = iterables.map(getIterator)
   const concurrentWork = new Set()
   const values = new Map()
 

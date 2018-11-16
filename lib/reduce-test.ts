@@ -1,23 +1,23 @@
 import { assert } from 'chai'
 import { collect, reduce } from './'
 
-function promiseImmediate<T> (data?: T): Promise<T> {
+function promiseImmediate<T>(data?: T): Promise<T> {
   return new Promise(resolve => setImmediate(() => resolve(data)))
 }
 
-function* numbers () {
+function* numbers() {
   yield 1
   yield 2
   yield 3
 }
 
-async function* asyncNumbers () {
+async function* asyncNumbers() {
   yield 1
   yield await promiseImmediate(2)
   yield 3
 }
 
-const add = (num1, num2) => num1 + num2
+const add = (num1: number, num2: number) => num1 + num2
 
 describe('reduce', () => {
   it('reduces sync functions with sync iterators', async () => {
