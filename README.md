@@ -48,6 +48,23 @@ Literally any `Iterable` (async or regular).
 
 ## API
 
+### batch
+```ts
+function batch<t>(size: number, iterable: AnyIterable<T>): AsyncIterableIterator<T[]>
+```
+
+Batch objects from `iterable` into arrays of `size` length. The final array may be shorter than size if there is not enough items.
+
+```ts
+import { batch } from 'streaming-iterables'
+import { getPokemon, trainMonster } from './util'
+
+// Instantly load 10 monsters while we process them
+for await (const monstes of buffer(10, getPokemon())) {
+  console.log(monsters) // 10 pokemon at a time!
+}
+```
+
 ### buffer
 ```ts
 function buffer<T>(size: number, iterable: AnyIterable<T>): AsyncIterableIterator<T>
@@ -112,6 +129,31 @@ import { getPokemon, trainMonster } from './util'
 
 const train = map(trainMonster)
 await consume(train(getPokemon())) // load all the pokemon and train them!
+```
+
+### flatten
+```ts
+function flatten(iterable: AnyIterable<any>): AsyncIterableIterator<any>
+```
+
+Returns a new iterator by pulling every item out of `iterable` (and all its sub iterables) and yielding them depth-first. Checks for the iterable interfaces and iterates it if it exists.
+
+*note*: Typescript doesn't have recursive types so we use any
+
+```ts
+import { flatten } from 'streaming-iterables'
+
+for await (const item of flatten([1, 2, [3, [4, 5], 6], 7, 8])) {
+  console.log(item)
+}
+// 1
+// 2
+// 3
+// 4
+// 5
+// 6
+// 7
+// 8
 ```
 
 ### getIterator

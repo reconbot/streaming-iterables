@@ -1,5 +1,5 @@
 import { assert } from 'chai'
-import { collect, reduce } from './'
+import { reduce } from './'
 
 function promiseImmediate<T>(data?: T): Promise<T> {
   return new Promise(resolve => setImmediate(() => resolve(data)))
