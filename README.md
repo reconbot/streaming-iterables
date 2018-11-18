@@ -156,6 +156,27 @@ for await (const item of flatten([1, 2, [3, [4, 5], 6], 7, 8])) {
 // 8
 ```
 
+### filter
+```ts
+function filter<T>(filterFunc: (data: T) => boolean | Promise<boolean>, iterable: AnyIterable<T>): AsyncIterableIterator<T>
+```
+
+Takes a `filterFunc` and a `iterable`, and returns a new async iterator of the same type containing the members of the given iterable which cause the `filterFunc` to return true.
+
+```ts
+import { filter } from 'streaming-iterables'
+import { getPokemon } from './util'
+
+const filterWater = filter(pokemon => pokemon.elements.include('water'))
+
+for await (const pokemon of filterWater(getPokemon())) {
+  console.log(pokemon)
+}
+// squirtle
+// vaporeon
+// magikarp
+```
+
 ### getIterator
 ```ts
 function getIterator<T>(values: Iterableish<T>): Iterator<T> | AsyncIterator<T>

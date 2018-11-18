@@ -1,7 +1,8 @@
 import { assert } from 'chai'
 import { flatten } from './'
+import { AnyIterable } from './types'
 
-async function* asyncValues(values) {
+async function* asyncValues<T>(values: AnyIterable<T>) {
   for await (const value of values) {
     yield value
   }
