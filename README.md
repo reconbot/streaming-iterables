@@ -265,4 +265,4 @@ A passthrough iterator that yields the data it consumes passing the data through
 
 ## Contributors needed!
 
-Writing docs and code is a lot of work! Thank you advance for helping out.
+Writing docs and code is a lot of work! Thank you in advance for helping out.
