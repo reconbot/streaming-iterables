@@ -4,6 +4,8 @@
 
 A collection of utilities that work with sync and async iterables and iterators. Designed to replace your streams. Think some sort of combination of [`bluestream`](https://www.npmjs.com/package/bluestream) and [ramda](http://ramdajs.com/) but for a much more simple construct, async iterators. The goal is to make it dead easy to replace your stream based processes with async iterators, which in general should make your code smaller, faster and have less bugs.
 
+JavaScript iterators are lazy loading which allows you to do multiple operations on a collection of data and not pay a tax for looping over the collection multiple times.
+
 Contributors welcome!
 
 ## Overview
@@ -45,6 +47,12 @@ Any iterable or iterator.
 type AnyIterable<T> = Iterable<T> | AsyncIterable<T>
 ```
 Literally any `Iterable` (async or regular).
+
+### FlatMapValue
+```ts
+type FlatMapValue<B> = B | AnyIterable<B> | undefined | null | Promise<B | AnyIterable<B> | undefined | null>
+```
+A value, an array of that value, undefined, null or promises for any of them. Used in the `flatMap` and `flatTransform` functions as possible return values of the mapping function.
 
 ## API
 
@@ -131,19 +139,52 @@ const train = map(trainMonster)
 await consume(train(getPokemon())) // load all the pokemon and train them!
 ```
 
-### flatten
+### flatMap
 ```ts
-function flatten(iterable: AnyIterable<any>): AsyncIterableIterator<any>
+function flatMap<T, B>(func: (data: T) => FlatMapValue<B>, iterable: AnyIterable<T>): AsyncIterableIterator<B>
 ```
 
-Returns a new iterator by pulling every item out of `iterable` (and all its sub iterables) and yielding them depth-first. Checks for the iterable interfaces and iterates it if it exists.
+Map `func` over the `iterable`, flatten the result and then ignore all null or undefined values. It's the transform function we've always needed. It's equivalent to;
+```ts
+(func, iterable) => filter(i => i !== undefined && i !== null, flatten(map(func, iterable)))
+```
 
-*note*: Typescript doesn't have recursive types so we use any
+The return value for `func` is `FlatMapValue<B>`. Typescript doesn't have recursive types but you can nest iterables as deep as you like.
+
+The ordering of the results is guaranteed.
+
+```ts
+import { flatMap } from 'streaming-iterables'
+import { getPokemon, lookupStats } from './util'
+
+async function getDefeatedGyms(pokemon) {
+  if (pokemon.gymBattlesWon > 0) {
+    const stats = await lookupStats(pokemon)
+    return stats.gyms
+  }
+}
+
+for await (const gym of flatMap(getDefeatedGyms, getPokemon())) {
+  console.log(gym.name)
+}
+// "Pewter Gym"
+// "Cerulean Gym"
+// "Vermilion Gym"
+```
+
+### flatten
+```ts
+function flatten<B>(iterable: AnyIterable<B | AnyIterable<B>>): AsyncIterableIterator<B>
+```
+
+Returns a new iterator by pulling every item out of `iterable` (and all its sub iterables) and yielding them depth-first. Checks for the iterable interfaces and iterates it if it exists. If the value is a string it is not iterated as that ends up in an infinite loop.
+
+*note*: Typescript doesn't have recursive types but you can nest iterables as deep as you like.
 
 ```ts
 import { flatten } from 'streaming-iterables'
 
-for await (const item of flatten([1, 2, [3, [4, 5], 6], 7, 8])) {
+for await (const item of flatten([1, 2, [3, [4, 5], 6])) {
   console.log(item)
 }
 // 1
@@ -152,8 +193,40 @@ for await (const item of flatten([1, 2, [3, [4, 5], 6], 7, 8])) {
 // 4
 // 5
 // 6
-// 7
-// 8
+```
+
+### flatTransform
+```ts
+function flatTransform<T, R>(concurrency: number, func: (data: T) => FlatMapValue<R>, iterable: AnyIterable<T>): AsyncIterableIterator<R>
+```
+
+Map `func` over the `iterable`, flatten the result and then ignore all null or undefined values. It's the transform function we've always needed. It's equivalent to;
+```ts
+(concurrency, func, iterable) => filter(i => i !== undefined && i !== null, flatten(transform(concurrency, func, iterable)))
+```
+
+The return value for `func` is `FlatMapValue<B>`. Typescript doesn't have recursive types but you can nest iterables as deep as you like.
+
+Order is determined by when `func` resolves. And it will run up to `concurrency` async `func` operations at once.
+
+```ts
+import { flatTransform } from 'streaming-iterables'
+import { getPokemon, lookupStats } from './util'
+
+async function getDefeatedGyms(pokemon) {
+  if (pokemon.gymBattlesWon > 0) {
+    const stats = await lookupStats(pokemon)
+    return stats.gyms
+  }
+}
+
+// lookup 10 stats at a time
+for await (const gym of flatTransform(10, getDefeatedGyms, getPokemon())) {
+  console.log(gym.name)
+}
+// "Pewter Gym"
+// "Cerulean Gym"
+// "Vermilion Gym"
 ```
 
 ### filter
@@ -197,6 +270,7 @@ import got from 'got'
 const urls = ['https://http.cat/200', 'https://http.cat/201', 'https://http.cat/202']
 const download = map(got)
 
+// download one at a time
 for await (page of download(urls)) {
   console.log(page)
 }
@@ -209,24 +283,18 @@ function merge(...iterables: Array<AnyIterable<any>>): AsyncIterableIterator<any
 
 Combine multiple iterators into a single iterable. Reads one item off each iterable in order repeatedly until they are all exhausted.
 
-
-### parallelMap
-```ts
-function parallelMap<T, R>(concurrency: number, func: (data: T) => R | Promise<R>, iterable: AnyIterable<T>): AsyncIterableIterator<R>
-```
-
 ### parallelMerge
 ```ts
 function parallelMerge<T>(...iterables: Array<AnyIterable<T>>): AsyncIterableIterator<T>
 ```
-Combine multiple iterators into a single iterable. Reads one item off of every iterable and yields them as they resolve. This is useful for pulling items out of an array of iterables as soon as they're available.
+Combine multiple iterators into a single iterable. Reads one item off of every iterable and yields them as they resolve. This is useful for pulling items out of a collection of iterables as soon as they're available.
 
 ```ts
 import { parallelMerge } from 'streaming-iterables'
-import { getPokemon, trainMonster } from './util'
+import { getPokemon, getTransformer } from './util'
 
 // pokemon are much faster to load btw
-const heros = parallelMerge(getPokemon(), trainMonster())
+const heros = parallelMerge(getPokemon(), getTransformer())
 for await (const hero of heros) {
   console.log(hero)
 }
@@ -263,6 +331,25 @@ function tap<T>(func: (data: T) => any, iterable: AnyIterable<T>): AsyncIterable
 
 A passthrough iterator that yields the data it consumes passing the data through to a function. If you provide an async function the iterator will wait for the promise to resolve before yielding the value. This is useful for logging, or processing information and passing it along.
 
+### transform
+```ts
+function transform<T, R>(concurrency: number, func: (data: T) => R | Promise<R>, iterable: AnyIterable<T>): AsyncIterableIterator<R>
+```
+Map a function or async function over all the values of an iterable. Order is determined by when `func` resolves. And it will run up to `concurrency` async `func` operations at once.
+
+
+```ts
+import { consume, transform } from 'streaming-iterables'
+import got from 'got'
+
+const urls = ['https://http.cat/200', 'https://http.cat/201', 'https://http.cat/202']
+const download = transform(1000, got)
+
+// download all of these at the same time
+for await (page of download(urls)) {
+  console.log(page)
+}
+```
 ## Contributors needed!
 
 Writing docs and code is a lot of work! Thank you in advance for helping out.

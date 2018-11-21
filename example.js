@@ -1,4 +1,4 @@
-const { parallelMap, map, consume } = require('streaming-iterables')
+const { transform, map, consume } = require('streaming-iterables')
 const got = require('got')
 
 // A generator to fetch all the pokemon from the pokemon api
@@ -22,8 +22,8 @@ const loadUrl = async ({ url }) => {
   const { body } = await got(url, { json: true })
   return body
 }
-// a parallelMap iterator that will load the monsters two at a time
-const loadMonsters = parallelMap(2, loadUrl)
+// a transform iterator that will load the monsters two at a time and yield them as soon as they're ready
+const loadMonsters = transform(2, loadUrl)
 
 // a map function to log monster data
 const logMonsters = map(pokemon => console.log(`${pokemon.name} ${pokemon.sprites.front_default}`))

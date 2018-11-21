@@ -1,7 +1,7 @@
 import { AnyIterable } from './types'
 import { getIterator } from './get-iterator'
 
-async function* _parallelMap<T, R>(
+async function* _transform<T, R>(
   concurrency: number,
   func: (data: T) => R | Promise<R>,
   itr: AnyIterable<T>
@@ -45,30 +45,30 @@ async function* _parallelMap<T, R>(
   }
 }
 
-export function parallelMap<T, R>(
+export function transform<T, R>(
   concurrency: number
 ): {
   (func: (data: T) => R | Promise<R>, iterable: AnyIterable<T>): AsyncIterableIterator<R>
   (func: (data: T) => R | Promise<R>): (iterable: AnyIterable<T>) => AsyncIterableIterator<R>
 }
-export function parallelMap<T, R>(
+export function transform<T, R>(
   concurrency: number,
   func: (data: T) => R | Promise<R>
 ): (iterable: AnyIterable<T>) => AsyncIterableIterator<R>
-export function parallelMap<T, R>(
+export function transform<T, R>(
   concurrency: number,
   func: (data: T) => R | Promise<R>,
   iterable: AnyIterable<T>
 ): AsyncIterableIterator<R>
-export function parallelMap<T, R>(concurrency: number, func?: (data: T) => R | Promise<R>, iterable?: AnyIterable<T>) {
+export function transform<T, R>(concurrency: number, func?: (data: T) => R | Promise<R>, iterable?: AnyIterable<T>) {
   if (func === undefined) {
     return <A, B>(curriedFunc: (data: A) => B | Promise<B>, curriedIterable?: AnyIterable<A>) =>
       curriedIterable
-        ? parallelMap<A, B>(concurrency, curriedFunc, curriedIterable)
-        : parallelMap<A, B>(concurrency, curriedFunc)
+        ? transform<A, B>(concurrency, curriedFunc, curriedIterable)
+        : transform<A, B>(concurrency, curriedFunc)
   }
   if (iterable === undefined) {
-    return (curriedIterable: AnyIterable<T>) => parallelMap<T, R>(concurrency, func, curriedIterable)
+    return (curriedIterable: AnyIterable<T>) => transform<T, R>(concurrency, func, curriedIterable)
   }
-  return _parallelMap<T, R>(concurrency, func, iterable)
+  return _transform(concurrency, func, iterable)
 }

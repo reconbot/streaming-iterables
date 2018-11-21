@@ -1,13 +1,13 @@
 import { AnyIterable } from './types'
 
-export async function* flatten(iterable: AnyIterable<any>): AsyncIterableIterator<any> {
+export async function* flatten<B>(iterable: AnyIterable<B | AnyIterable<B>>): AsyncIterableIterator<B> {
   for await (const maybeItr of iterable) {
-    if (maybeItr[Symbol.iterator] || maybeItr[Symbol.asyncIterator]) {
-      for await (const item of flatten(maybeItr)) {
+    if (maybeItr && typeof maybeItr !== 'string' && (maybeItr[Symbol.iterator] || maybeItr[Symbol.asyncIterator])) {
+      for await (const item of flatten(maybeItr as AnyIterable<B>)) {
         yield item
       }
     } else {
-      yield maybeItr
+      yield maybeItr as B
     }
   }
 }
