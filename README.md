@@ -307,6 +307,24 @@ for await (const hero of heros) {
 // jazz
 ```
 
+### pipeline
+```ts
+function pipeline(firstFn: Function, ...fns: Function[]): any;
+```
+
+Calls `firstFn` and then every function in `fns` with the result of the previous function.
+
+```ts
+import { pipeline, map, collect } from 'streaming-iterables'
+import { getPokemon } from './util'
+const getName = map(pokemon => pokemon.name)
+
+// equivalent to `await collect(getName(getPokemon()))`
+await pipeline(getPokemon, getName, collect)
+// charmander
+// bulbasaur
+// MissingNo.
+```
 
 ### reduce
 ```ts
@@ -350,6 +368,26 @@ for await (page of download(urls)) {
   console.log(page)
 }
 ```
+### writeToStream
+```ts
+function writeToStream(stream: Writable, iterable: AnyIterable<any>): Promise<void>
+```
+
+Writes the `iterable` to the stream respecting the stream backpressure. Resolves when the iterable is exhausted.
+
+
+```ts
+import { pipeline, map, writeToStream } from 'streaming-iterables'
+import { getPokemon } from './util'
+import { createWriteStream } from 'fs'
+
+const file = createWriteStream('pokemon.ndjson')
+const serialize = map(pokemon => `${JSON.stringify(pokemon)}\n`)
+await pipeline(getPokemon, serialize, writeToStream(file))
+file.end()
+// now all the pokemon are written to the file!
+```
+
 ## Contributors needed!
 
 Writing docs and code is a lot of work! Thank you in advance for helping out.
