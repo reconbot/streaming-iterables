@@ -1,12 +1,56 @@
-# streaming-iterables
+# streaming-iterables 🏄‍♂️
 
 [![Build Status](https://travis-ci.org/reconbot/streaming-iterables.svg?branch=master)](https://travis-ci.org/reconbot/streaming-iterables) [![Try streaming-iterables on RunKit](https://badge.runkitcdn.com/streaming-iterables.svg)](https://npm.runkit.com/streaming-iterables)
 
-A collection of utilities that work with sync and async iterables and iterators. Designed to replace your streams. Think some sort of combination of [`bluestream`](https://www.npmjs.com/package/bluestream) and [ramda](http://ramdajs.com/) but for a much more simple construct, async iterators. The goal is to make it dead easy to replace your stream based processes with async iterators, which in general should make your code smaller, faster and have less bugs.
+A collection of utilities for [async iterables](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of). Designed to help replace your streams.
 
-JavaScript iterators are lazy loading which allows you to do multiple operations on a collection of data and not pay a tax for looping over the collection multiple times.
+Streams were our last best hope for processing unbounded amounts of data. They've been hard to work with. But now with Node 10 they have become something greater, they've become async iterable.  With async iterators you can have less code, do more work, faster.
 
-Contributors welcome!
+If you still need streams with async functions, check out sister project [`bluestream`🏄‍♀️](https://www.npmjs.com/package/bluestream)!
+
+## Example
+
+Download a bunch of pokemon ([try it here!](https://npm.runkit.com/streaming-iterables))
+
+```ts
+const { buffer, flatten, pipeline, transform } = require('streaming-iterables')
+const got = require('got')
+
+// A generator to fetch all the pokemon from the pokemon api
+const pokedex = async function* () {
+  let offset = 0
+  while(true) {
+    const url = `https://pokeapi.co/api/v2/pokemon/?offset=${offset}`
+    const { body: { results: pokemon } } = await got(url, { json: true })
+    if (pokemon.length === 0) {
+      return
+    }
+    offset += pokemon.length
+    yield pokemon
+  }
+}
+
+// lets buffer two pages so they're ready when we want them
+const bufferTwo = buffer(2)
+
+// a transform iterator that will load the monsters two at a time and yield them as soon as they're ready
+const pokeLoader = transform(2, async ({ url }) => {
+  const { body } = await got(url, { json: true })
+  return body
+})
+
+// string together all our functions
+const pokePipe = pipeline(pokedex, bufferTwo, flatten, pokeLoader)
+
+// lets do it team!
+const run = async () => {
+  for await (const pokemon of pokePipe){
+    console.log(`${pokemon.name} ${pokemon.sprites.front_default}`)
+  }
+}
+
+run().then(() => console.log('caught them all!'))
+```
 
 ## Overview
 Every function is curryable, you can call it with any number of arguments. For example:
@@ -26,33 +70,13 @@ for await (const str of stringable([1,2,3])) {
 // "1", "2", "3"
 ```
 
-Since this works with async iterators it polyfills `Symbol.asyncIterator` if it doesn't exist. (Not an issue since node 10.)
+Since this works with async iterators it polyfills the symbol `Symbol.asyncIterator` if it doesn't exist. (Not needed after node 10.)
 
 ```ts
 if ((Symbol as any).asyncIterator === undefined) {
   ;(Symbol as any).asyncIterator = Symbol.for('asyncIterator')
 }
 ```
-
-## Types
-
-### Iterableish
-```ts
-type Iterableish<T> = Iterable<T> | Iterator<T> | AsyncIterable<T> | AsyncIterator<T>
-```
-Any iterable or iterator.
-
-### AnyIterable
-```ts
-type AnyIterable<T> = Iterable<T> | AsyncIterable<T>
-```
-Literally any `Iterable` (async or regular).
-
-### FlatMapValue
-```ts
-type FlatMapValue<B> = B | AnyIterable<B> | undefined | null | Promise<B | AnyIterable<B> | undefined | null>
-```
-A value, an array of that value, undefined, null or promises for any of them. Used in the `flatMap` and `flatTransform` functions as possible return values of the mapping function.
 
 ## API
 
@@ -388,6 +412,26 @@ file.end()
 // now all the pokemon are written to the file!
 ```
 
-## Contributors needed!
+## Types
+
+### Iterableish
+```ts
+type Iterableish<T> = Iterable<T> | Iterator<T> | AsyncIterable<T> | AsyncIterator<T>
+```
+Any iterable or iterator.
+
+### AnyIterable
+```ts
+type AnyIterable<T> = Iterable<T> | AsyncIterable<T>
+```
+Literally any `Iterable` (async or regular).
+
+### FlatMapValue
+```ts
+type FlatMapValue<B> = B | AnyIterable<B> | undefined | null | Promise<B | AnyIterable<B> | undefined | null>
+```
+A value, an array of that value, undefined, null or promises for any of them. Used in the `flatMap` and `flatTransform` functions as possible return values of the mapping function.
+
+## Contributors wanted!
 
 Writing docs and code is a lot of work! Thank you in advance for helping out.

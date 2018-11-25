@@ -1,7 +1,7 @@
 {
   "name": "streaming-iterables",
   "version": "3.0.0",
-  "description": "A collection of utilities that work with sync and async iterables and iterators. Designed to replace your streams.",
+  "description": "A collection of utilities for async iterables. Designed to replace your streams.",
   "main": "dist",
   "types": "dist/index.d.ts",
   "repository": "git@github.com:reconbot/streaming-iterables.git",
@@ -16,8 +16,10 @@
     "prepare": "npm run build"
   },
   "keywords": [
+    "async",
     "generators",
     "async generators",
+    "async iterables",
     "iterators",
     "async iterators",
     "promise",

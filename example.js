@@ -1,33 +1,37 @@
-const { transform, map, consume } = require('streaming-iterables')
+const { buffer, flatten, pipeline, transform } = require('streaming-iterables')
 const got = require('got')
 
 // A generator to fetch all the pokemon from the pokemon api
-const pokeGenerator = async function* () {
+const pokedex = async function* () {
   let offset = 0
   while(true) {
     const url = `https://pokeapi.co/api/v2/pokemon/?offset=${offset}`
-    const { body: pokemon } = await got(url, { json: true })
-    if (pokemon.results.length === 0) {
+    const { body: { results: pokemon } } = await got(url, { json: true })
+    if (pokemon.length === 0) {
       return
     }
-    offset += pokemon.results.length
-    for (const monster of pokemon.results) {
-      yield monster
-    }
+    offset += pokemon.length
+    yield pokemon
   }
 }
 
-// an async download function to download the data
-const loadUrl = async ({ url }) => {
+// lets buffer two pages so they're ready when we want them
+const bufferTwo = buffer(2)
+
+// a transform iterator that will load the monsters two at a time and yield them as soon as they're ready
+const pokeLoader = transform(2, async ({ url }) => {
   const { body } = await got(url, { json: true })
   return body
-}
-// a transform iterator that will load the monsters two at a time and yield them as soon as they're ready
-const loadMonsters = transform(2, loadUrl)
+})
 
-// a map function to log monster data
-const logMonsters = map(pokemon => console.log(`${pokemon.name} ${pokemon.sprites.front_default}`))
+// string together all our functions
+const pokePipe = pipeline(pokedex, bufferTwo, flatten, pokeLoader)
 
 // lets do it team!
-await consume(logMonsters(loadMonsters(pokeGenerator())))
-console.log('caught them all')
+const run = async () => {
+  for await (const pokemon of pokePipe){
+    console.log(`${pokemon.name} ${pokemon.sprites.front_default}`)
+  }
+}
+
+run().then(() => console.log('caught them all!'))
