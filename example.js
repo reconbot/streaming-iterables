@@ -30,7 +30,8 @@ const pokePipe = pipeline(pokedex, bufferTwo, flatten, pokeLoader)
 // lets do it team!
 const run = async () => {
   for await (const pokemon of pokePipe){
-    console.log(`${pokemon.name} ${pokemon.sprites.front_default}`)
+    console.log(pokemon.name)
+    console.log(pokemon.sprites.front_default)
   }
 }
 
