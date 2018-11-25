@@ -91,9 +91,9 @@ Batch objects from `iterable` into arrays of `size` length. The final array may 
 import { batch } from 'streaming-iterables'
 import { getPokemon, trainMonster } from './util'
 
-// Instantly load 10 monsters while we process them
-for await (const monstes of buffer(10, getPokemon())) {
-  console.log(monsters) // 10 pokemon at a time!
+// batch 10 pokemon while we process them
+for await (const pokemons of batch(10, getPokemon())) {
+  console.log(pokemons) // 10 pokemon at a time!
 }
 ```
 
@@ -107,7 +107,7 @@ Buffer keeps a number of objects in reserve available for immediate reading. Thi
 import { buffer } from 'streaming-iterables'
 import { getPokemon, trainMonster } from './util'
 
-// Instantly load 10 monsters while we process them
+// load 10 monsters in the background while we process them one by one
 for await (const monster of buffer(10, getPokemon())) {
   await trainMonster(monster) // got to do some pokéwork
 }
