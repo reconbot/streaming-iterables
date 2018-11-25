@@ -59,4 +59,10 @@ describe('writeToStream', () => {
     assert.isTrue(stream.readable)
     assert.isTrue(stream.writable)
   })
+  it('deals with an empty write', async () => {
+    const values = []
+    const stream = new PassThrough({ highWaterMark: 4, objectMode: true })
+    stream.resume()
+    await writeToStream(stream, values)
+  })
 })

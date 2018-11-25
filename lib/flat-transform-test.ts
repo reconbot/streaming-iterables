@@ -112,4 +112,9 @@ describe('flatTransform', () => {
     }
     assert.deepEqual(vals, [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }])
   })
+  it('allows empty iterables', async () => {
+    for await (const val of flatTransform(500, () => {}, [])) {
+      throw new Error('No data')
+    }
+  })
 })
