@@ -1,5 +1,6 @@
 import { assert } from 'chai'
-import { parallelMerge } from './'
+import { parallelMerge, fromStream } from './'
+import { PassThrough } from 'stream'
 
 function promiseImmediate<T>(data?: T): Promise<T> {
   return new Promise(resolve => setImmediate(() => resolve(data)))
@@ -70,5 +71,15 @@ describe('parallelMerge', () => {
       values.push(val)
     }
     assert.deepEqual(values, [4, 5, 6, 'Borekh-Habo', 1, 'Wilkomme', 'Benvenuto', 2, 3])
+  })
+  it('works with node streams', async () => {
+    const stream = new PassThrough()
+    const stream2 = new PassThrough()
+    const itr = parallelMerge(fromStream(stream), fromStream(stream2))
+    stream.end()
+    stream2.end()
+    for await (const val of itr) {
+      throw new Error(`there should be no value here ${val}`)
+    }
   })
 })

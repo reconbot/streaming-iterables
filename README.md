@@ -253,6 +253,24 @@ for await (const gym of flatTransform(10, getDefeatedGyms, getPokemon())) {
 // "Vermilion Gym"
 ```
 
+### fromStream
+```ts
+function fromStream<T>(stream: Readable): AsyncIterable<T>
+```
+
+If you are on a node before node 10, you will have to use `fromStream` to turn the stream into an async iterator. If this function is used and the stream already has one, the one already present on the stream is used. This recommended for backwards compatibility.
+
+```ts
+import { fromStream } from 'streaming-iterables'
+import { createReadStream } from 'fs'
+
+const pokeLog = fromStream(createReadStream('./pokedex-operating-system.log'))
+
+for await (const pokeData of pokeLog) {
+  console.log(pokeData) // Buffer(...)
+}
+```
+
 ### filter
 ```ts
 function filter<T>(filterFunc: (data: T) => boolean | Promise<boolean>, iterable: AnyIterable<T>): AsyncIterableIterator<T>

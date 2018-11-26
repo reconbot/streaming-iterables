@@ -1,5 +1,5 @@
 import { assert } from 'chai'
-import { transform } from '.'
+import { transform, fromStream } from '.'
 import { PassThrough } from 'stream'
 
 function promiseImmediate<T>(data?: T) {
@@ -110,19 +110,13 @@ describe('transform', () => {
       throw new Error(`there should be no value here ${val}`)
     }
   })
-  // stream iteration only works in node 10+
-  if (Number(process.versions.node.split('.')[0]) >= 10) {
-    // need to work around https://github.com/nodejs/readable-stream/issues/387
-    it('works with node streams', async () => {
-      const stream = new PassThrough()
-      const pass = i => i
-      const itr = transform(2, pass, stream)
-      stream.end()
-      for await (const val of itr) {
-        throw new Error(`there should be no value here ${val}`)
-      }
-    })
-  } else {
-    it("this version of node doesn't have async iterable streams")
-  }
+  it('works with node streams', async () => {
+    const stream = new PassThrough()
+    const pass = i => i
+    const itr = transform(2, pass, fromStream(stream))
+    stream.end()
+    for await (const val of itr) {
+      throw new Error(`there should be no value here ${val}`)
+    }
+  })
 })
