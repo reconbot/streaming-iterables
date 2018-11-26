@@ -10,10 +10,17 @@ async function* _transform<T, R>(
   const concurrentWork = new Set()
   const results: any[] = []
   let ended = false
-
+  const lastRead = Promise.resolve()
   const queueNext = () => {
     let nextVal
     nextVal = (async () => {
+      // need to work around https://github.com/nodejs/readable-stream/issues/387
+      await lastRead
+      if (ended) {
+        concurrentWork.delete(nextVal)
+        return
+      }
+
       const { done, value } = await iterator.next()
       if (done) {
         ended = true
