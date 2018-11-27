@@ -8,6 +8,13 @@ Streams were our last best hope for processing unbounded amounts of data. They'v
 
 If you still need streams with async functions, check out sister project [`bluestream`🏄‍♀️](https://www.npmjs.com/package/bluestream)!
 
+## Install
+There are no dependencies
+
+```bash
+npm install streaming-iterables
+```
+
 ## Example
 
 Download a bunch of pokemon ([try it here!](https://npm.runkit.com/streaming-iterables))
