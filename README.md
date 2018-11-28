@@ -330,7 +330,27 @@ for await (page of download(urls)) {
 function merge(...iterables: Array<AnyIterable<any>>): AsyncIterableIterator<any>
 ```
 
-Combine multiple iterators into a single iterable. Reads one item off each iterable in order repeatedly until they are all exhausted.
+Combine multiple iterators into a single iterable. Reads one item off each iterable in order repeatedly until they are all exhausted. If you care less about order and want them faster see [`parallelMerge()`](#parallelmerge).
+
+### parallelMap
+```ts
+function parallelMap<T, R>(concurrency: number, func: (data: T) => R | Promise<R>, iterable: AnyIterable<T>): AsyncIterableIterator<R>
+```
+
+Map a function or async function over all the values of an iterable and do them concurrently. Just like [`map()`](#map). If you don't care about order, see the faster [`transform()`](#transform) function.
+
+```ts
+import { consume, map } from 'streaming-iterables'
+import got from 'got'
+
+const urls = ['https://http.cat/200', 'https://http.cat/201', 'https://http.cat/202']
+const download = map(2, got)
+
+// download two at a time
+for await (page of download(urls)) {
+  console.log(page)
+}
+```
 
 ### parallelMerge
 ```ts
@@ -402,8 +422,7 @@ A passthrough iterator that yields the data it consumes passing the data through
 ```ts
 function transform<T, R>(concurrency: number, func: (data: T) => R | Promise<R>, iterable: AnyIterable<T>): AsyncIterableIterator<R>
 ```
-Map a function or async function over all the values of an iterable. Order is determined by when `func` resolves. And it will run up to `concurrency` async `func` operations at once.
-
+Map a function or async function over all the values of an iterable. Order is determined by when `func` resolves. And it will run up to `concurrency` async `func` operations at once. If you care about order see [`parallelMap()`](#parallelmap).
 
 ```ts
 import { consume, transform } from 'streaming-iterables'
@@ -417,6 +436,7 @@ for await (page of download(urls)) {
   console.log(page)
 }
 ```
+
 ### writeToStream
 ```ts
 function writeToStream(stream: Writable, iterable: AnyIterable<any>): Promise<void>
