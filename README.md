@@ -89,10 +89,11 @@ if ((Symbol as any).asyncIterator === undefined) {
 
 ### batch
 ```ts
-function batch<t>(size: number, iterable: AnyIterable<T>): AsyncIterableIterator<T[]>
+function batch<T>(size: number, iterable: AsyncIterable<T>): AsyncIterableIterator<T[]>
+function batch<T>(size: number, iterable: Iterable<T>): IterableIterator<T[]>
 ```
 
-Batch objects from `iterable` into arrays of `size` length. The final array may be shorter than size if there is not enough items.
+Batch objects from `iterable` into arrays of `size` length. The final array may be shorter than size if there is not enough items. Returns a sync iterator if the `iterable` is sync, otherwise an async iterator.
 
 ```ts
 import { batch } from 'streaming-iterables'
@@ -122,10 +123,11 @@ for await (const monster of buffer(10, getPokemon())) {
 
 ### collect
 ```ts
-function collect<T>(iterable: AnyIterable<T>): Promise<T[]>
+function collect<T>(iterable: Iterable<T>): T[]
+function collect<T>(iterable: AsyncIterable<T>): Promise<T[]>
 ```
 
-Collect all the values from an iterable into an array.
+Collect all the values from an iterable into an array. Returns an array if you pass it an iterable and a promise for an array if you pass it an async iterable.
 
 ```ts
 import { collect } from 'streaming-iterables'
@@ -137,10 +139,11 @@ console.log(await collect(getPokemon()))
 
 ### concat
 ```ts
+function concat(...iterables: Array<Iterable<any>>): IterableIterator<any>
 function concat(...iterables: Array<AnyIterable<any>>): AsyncIterableIterator<any>
 ```
 
-Combine multiple iterators into a single iterable. Reads each iterable one at a time.
+Combine multiple iterators into a single iterable. Reads each iterable completely one at a time. Returns a sync iterator if all `iterables` are sync, otherwise it returns an async iterable.
 
 ```ts
 import { concat } from 'streaming-iterables'
@@ -157,7 +160,8 @@ for await (const hero of concat(getPokemon(2), getTransformers(2))) {
 
 ### consume
 ```ts
-function consume<T>(iterator: AnyIterable<T>): Promise<void>
+export function consume<T>(iterator: Iterable<T>): void
+export function consume<T>(iterator: AsyncIterable<T>): Promise<void>
 ```
 
 A promise that resolves after the function drains the iterable of all data. Useful for processing a pipeline of data.
@@ -409,14 +413,14 @@ Reduces an iterable to a value which is the accumulated result of running each v
 function take<T>(count: number, iterable: AnyIterable<T>): AsyncIterableIterator<T>
 ```
 
-A passthrough iterator that reads a specific number of items from an iterator.
+Returns a new iterator that reads a specific number of items from `iterable`.
 
 ### tap
 ```ts
 function tap<T>(func: (data: T) => any, iterable: AnyIterable<T>): AsyncIterableIterator<T>
 ```
 
-A passthrough iterator that yields the data it consumes passing the data through to a function. If you provide an async function the iterator will wait for the promise to resolve before yielding the value. This is useful for logging, or processing information and passing it along.
+Returns a new iterator that yields the data it consumes passing the data through to a function. If you provide an async function the iterator will wait for the promise to resolve before yielding the value. This is useful for logging, or processing information and passing it along.
 
 ### transform
 ```ts

@@ -26,7 +26,7 @@ describe('consume', () => {
       }
     }
     assert.equal(num, 0)
-    await consume(numbers())
+    consume(numbers())
     assert.equal(num, 10)
   })
 })

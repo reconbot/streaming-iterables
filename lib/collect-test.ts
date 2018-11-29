@@ -12,6 +12,6 @@ describe('collect', () => {
     assert.deepEqual(await collect(asyncIterable([1, 2, 3, 4])), [1, 2, 3, 4])
   })
   it('collects sync iterable data', async () => {
-    assert.deepEqual(await collect([1, 2, 3, 4]), [1, 2, 3, 4])
+    assert.deepEqual(collect([1, 2, 3, 4]), [1, 2, 3, 4])
   })
 })
