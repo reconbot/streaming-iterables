@@ -87,6 +87,28 @@ if ((Symbol as any).asyncIterator === undefined) {
 
 ## API
 
+- [`batch()`](#batch)
+- [`buffer()`](#buffer)
+- [`collect()`](#collect)
+- [`concat()`](#concat)
+- [`consume()`](#consume)
+- [`flatMap()`](#flatmap)
+- [`flatten()`](#flatten)
+- [`flatTransform()`](#flattransform)
+- [`fromStream()`](#fromstream)
+- [`filter()`](#filter)
+- [`getIterator()`](#getiterator)
+- [`map()`](#map)
+- [`merge()`](#merge)
+- [`parallelMap()`](#parallelmap)
+- [`parallelMerge()`](#parallelmerge)
+- [`pipeline()`](#pipeline)
+- [`reduce()`](#reduce)
+- [`take()`](#take)
+- [`tap()`](#tap)
+- [`transform()`](#transform)
+- [`writeToStream()`](#writetostream)
+
 ### batch
 ```ts
 function batch<T>(size: number, iterable: AsyncIterable<T>): AsyncIterableIterator<T[]>
