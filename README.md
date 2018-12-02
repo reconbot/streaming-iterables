@@ -1,6 +1,6 @@
 # streaming-iterables 🏄‍♂️
 
-[![Build Status](https://travis-ci.org/reconbot/streaming-iterables.svg?branch=master)](https://travis-ci.org/reconbot/streaming-iterables) [![Try streaming-iterables on RunKit](https://badge.runkitcdn.com/streaming-iterables.svg)](https://npm.runkit.com/streaming-iterables)
+[![Build Status](https://travis-ci.org/reconbot/streaming-iterables.svg?branch=master)](https://travis-ci.org/reconbot/streaming-iterables) [![Try streaming-iterables on RunKit](https://badge.runkitcdn.com/streaming-iterables.svg)](https://npm.runkit.com/streaming-iterables) [![install size](https://packagephobia.now.sh/badge?p=streaming-iterables)](https://packagephobia.now.sh/result?p=streaming-iterables)
 
 A collection of utilities for [async iterables](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of). Designed to help replace your streams.
 
@@ -9,7 +9,7 @@ Streams were our last best hope for processing unbounded amounts of data. They'v
 If you still need streams with async functions, check out sister project [`bluestream`🏄‍♀️](https://www.npmjs.com/package/bluestream)!
 
 ## Install
-There are no dependencies
+There are no dependencies.
 
 ```bash
 npm install streaming-iterables
@@ -119,7 +119,7 @@ Batch objects from `iterable` into arrays of `size` length. The final array may 
 
 ```ts
 import { batch } from 'streaming-iterables'
-import { getPokemon, trainMonster } from './util'
+import { getPokemon } from 'iterable-pokedex'
 
 // batch 10 pokemon while we process them
 for await (const pokemons of batch(10, getPokemon())) {
@@ -135,7 +135,7 @@ Buffer keeps a number of objects in reserve available for immediate reading. Thi
 
 ```ts
 import { buffer } from 'streaming-iterables'
-import { getPokemon, trainMonster } from './util'
+import { getPokemon, trainMonster } from 'iterable-pokedex'
 
 // load 10 monsters in the background while we process them one by one
 for await (const monster of buffer(10, getPokemon())) {
@@ -153,7 +153,7 @@ Collect all the values from an iterable into an array. Returns an array if you p
 
 ```ts
 import { collect } from 'streaming-iterables'
-import { getPokemon } from './util'
+import { getPokemon } from 'iterable-pokedex'
 
 console.log(await collect(getPokemon()))
 // [bulbasaur, ivysaur, venusaur, charmander, ...]
@@ -169,7 +169,8 @@ Combine multiple iterators into a single iterable. Reads each iterable completel
 
 ```ts
 import { concat } from 'streaming-iterables'
-import { getPokemon, getTransformers } from './util'
+import { getPokemon } from 'iterable-pokedex'
+import { getTransformers } from './util'
 
 for await (const hero of concat(getPokemon(2), getTransformers(2))) {
   console.log(hero)
@@ -190,7 +191,7 @@ A promise that resolves after the function drains the iterable of all data. Usef
 
 ```ts
 import { consume, map } from 'streaming-iterables'
-import { getPokemon, trainMonster } from './util'
+import { getPokemon, trainMonster } from 'iterable-pokedex'
 
 const train = map(trainMonster)
 await consume(train(getPokemon())) // load all the pokemon and train them!
@@ -212,7 +213,7 @@ The ordering of the results is guaranteed.
 
 ```ts
 import { flatMap } from 'streaming-iterables'
-import { getPokemon, lookupStats } from './util'
+import { getPokemon, lookupStats } from 'iterable-pokedex'
 
 async function getDefeatedGyms(pokemon) {
   if (pokemon.gymBattlesWon > 0) {
@@ -268,7 +269,7 @@ Order is determined by when `func` resolves. And it will run up to `concurrency`
 
 ```ts
 import { flatTransform } from 'streaming-iterables'
-import { getPokemon, lookupStats } from './util'
+import { getPokemon, lookupStats } from 'iterable-pokedex'
 
 async function getDefeatedGyms(pokemon) {
   if (pokemon.gymBattlesWon > 0) {
@@ -313,9 +314,9 @@ Takes a `filterFunc` and a `iterable`, and returns a new async iterator of the s
 
 ```ts
 import { filter } from 'streaming-iterables'
-import { getPokemon } from './util'
+import { getPokemon } from 'iterable-pokedex'
 
-const filterWater = filter(pokemon => pokemon.elements.include('water'))
+const filterWater = filter(pokemon => pokemon.types.include('Water'))
 
 for await (const pokemon of filterWater(getPokemon())) {
   console.log(pokemon)
@@ -386,7 +387,7 @@ Combine multiple iterators into a single iterable. Reads one item off of every i
 
 ```ts
 import { parallelMerge } from 'streaming-iterables'
-import { getPokemon, getTransformer } from './util'
+import { getPokemon, getTransformer } from 'iterable-pokedex'
 
 // pokemon are much faster to load btw
 const heros = parallelMerge(getPokemon(), getTransformer())
@@ -411,7 +412,7 @@ Calls `firstFn` and then every function in `fns` with the result of the previous
 
 ```ts
 import { pipeline, map, collect } from 'streaming-iterables'
-import { getPokemon } from './util'
+import { getPokemon } from 'iterable-pokedex'
 const getName = map(pokemon => pokemon.name)
 
 // equivalent to `await collect(getName(getPokemon()))`
@@ -473,7 +474,7 @@ Writes the `iterable` to the stream respecting the stream backpressure. Resolves
 
 ```ts
 import { pipeline, map, writeToStream } from 'streaming-iterables'
-import { getPokemon } from './util'
+import { getPokemon } from 'iterable-pokedex'
 import { createWriteStream } from 'fs'
 
 const file = createWriteStream('pokemon.ndjson')
