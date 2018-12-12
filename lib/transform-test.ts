@@ -119,4 +119,20 @@ describe('transform', () => {
       throw new Error(`there should be no value here ${val}`)
     }
   })
+  it('allows infinite parallelism', async () => {
+    const values: any[] = []
+    for await (const val of transform(Infinity, promiseImmediate, asyncFromArray([1, 2, 3]))) {
+      values.push(val)
+    }
+    assert.deepEqual(values, [1, 2, 3])
+  })
+  it('tolerates resolving out of order', async () => {
+    const values: any[] = []
+    const source = asyncFromArray([3, 2, 1])
+    const waitTicks = i => delayTicks(i, i)
+    for await (const val of transform(Infinity, waitTicks, source)) {
+      values.push(val)
+    }
+    assert.deepEqual(values, [1, 2, 3])
+  })
 })

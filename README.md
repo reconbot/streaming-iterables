@@ -258,15 +258,21 @@ for await (const item of flatten([1, 2, [3, [4, 5], 6])) {
 function flatTransform<T, R>(concurrency: number, func: (data: T) => FlatMapValue<R>, iterable: AnyIterable<T>): AsyncIterableIterator<R>
 ```
 
-Map `func` over the `iterable`, flatten the result and then ignore all null or undefined values. It's the transform function we've always needed. It's equivalent to;
+Map `func` over the `iterable`, flatten the result and then ignore all null or undefined values. Returned async iterables are flattened concurrently too. It's the transform function we've always wanted.
+
+It's similar to;
 ```ts
-(concurrency, func, iterable) => filter(i => i !== undefined && i !== null, flatten(transform(concurrency, func, iterable)))
+const filterEmpty = filter(i => i !== undefined && i !== null)
+(concurrency, func, iterable) => filterEmpty(flatten(transform(concurrency, func, iterable)))
 ```
 
-The return value for `func` is `FlatMapValue<B>`. Typescript doesn't have recursive types but you can nest iterables as deep as you like.
 
-Order is determined by when `func` resolves. And it will run up to `concurrency` async `func` operations at once.
+The return value for `func` is `FlatMapValue<B>`. Typescript doesn't have recursive types but you can nest iterables as deep as you like. Only directly returned async iterables are processed concurrently. (Eg, an async generator function's output will be processed concurrently, however returning an async generator's output in an array will not be processed concurrently.)
 
+Order is determined by when async operations resolve. And it will run up to `concurrency` async operations at once. This includes promises and async iterables returned from `func`.
+
+
+Promise Example;
 ```ts
 import { flatTransform } from 'streaming-iterables'
 import { getPokemon, lookupStats } from 'iterable-pokedex'
@@ -285,6 +291,29 @@ for await (const gym of flatTransform(10, getDefeatedGyms, getPokemon())) {
 // "Pewter Gym"
 // "Cerulean Gym"
 // "Vermilion Gym"
+```
+
+Async Generator Example
+```ts
+import { flatTransform } from 'streaming-iterables'
+import { getPokemon } from 'iterable-pokedex'
+import { findFriendsFB, findFriendsMySpace } from './util'
+
+
+async function* findFriends (pokemeon) {
+  yield await findFriendsFB(pokemon.name)
+  yield await findFriendsMySpace(pokemon.name)
+}
+
+for await (const pokemon of flatTransform(10, findFriends, getPokemon())) {
+  console.log(pokemon.name)
+}
+// Pikachu
+// Meowth
+// Ash - FB
+// Jessie - FB
+// Misty - MySpace
+// James - MySpace
 ```
 
 ### fromStream

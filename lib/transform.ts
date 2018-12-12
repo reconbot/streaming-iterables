@@ -8,47 +8,56 @@ async function* _transform<T, R>(
 ): AsyncIterableIterator<R> {
   const iterator = getIterator(itr)
   const concurrentWork = new Set()
+  const nextValue: T[] = []
+  let readingNextValue = false
   const results: any[] = []
   let ended = false
-  const lastRead = Promise.resolve()
-  const queueNext = () => {
-    let nextVal
-    nextVal = (async () => {
-      // need to work around https://github.com/nodejs/readable-stream/issues/387
-      await lastRead
-      if (ended) {
-        concurrentWork.delete(nextVal)
-        return
-      }
 
+  const queueNextRead = () => {
+    if (ended || readingNextValue) {
+      return
+    }
+    readingNextValue = true
+    let nextValWork
+    nextValWork = (async () => {
       const { done, value } = await iterator.next()
       if (done) {
         ended = true
       } else {
-        const mappedValue = await func(value)
-        results.push(mappedValue)
+        nextValue.push(value)
       }
-      concurrentWork.delete(nextVal)
+      concurrentWork.delete(nextValWork)
+      readingNextValue = false
     })()
-    concurrentWork.add(nextVal)
+    concurrentWork.add(nextValWork)
   }
 
-  for (let i = 0; i < concurrency; i++) {
-    queueNext()
+  const queueNextTransform = value => {
+    let transformWork
+    transformWork = (async () => {
+      const mappedValue = await func(value)
+      results.push(mappedValue)
+      concurrentWork.delete(transformWork)
+    })()
+    concurrentWork.add(transformWork)
   }
 
   while (true) {
-    if (results.length) {
-      yield results.shift()
-      if (!ended) {
-        queueNext()
-        continue
-      }
+    if (nextValue.length > 0 && concurrentWork.size < concurrency) {
+      queueNextTransform(nextValue.shift())
     }
-    if (concurrentWork.size === 0) {
+    while (results.length > 0) {
+      yield results.shift()
+    }
+    if (nextValue.length === 0) {
+      queueNextRead()
+    }
+    if (concurrentWork.size > 0) {
+      await Promise.race(concurrentWork)
+    }
+    if (ended && nextValue.length === 0 && results.length === 0 && concurrentWork.size === 0) {
       return
     }
-    await Promise.race(concurrentWork)
   }
 }
 
