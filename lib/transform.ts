@@ -1,64 +1,103 @@
 import { AnyIterable } from './types'
 import { getIterator } from './get-iterator'
+import { pipeline } from './pipeline'
+import { buffer } from './buffer'
+import { map } from './map'
 
-async function* _transform<T, R>(
+interface IDeferred {
+  promise: Promise<any>
+  resolve: (value?: any) => void
+  reject: (error?: Error) => void
+}
+
+function defer<T>() {
+  let reject
+  let resolve
+  const promise = new Promise<T>((resolveFunc, rejectFunc) => {
+    resolve = resolveFunc
+    reject = rejectFunc
+  })
+  return {
+    promise,
+    reject,
+    resolve,
+  }
+}
+
+function endReadQueue(readQueue, endValue) {
+  while (readQueue.length > 0) {
+    const { resolve } = readQueue.shift() as IDeferred
+    resolve(endValue)
+  }
+}
+
+function _transform<T, R>(
   concurrency: number,
   func: (data: T) => R | Promise<R>,
-  itr: AnyIterable<T>
+  iterable: AnyIterable<T>
 ): AsyncIterableIterator<R> {
-  const iterator = getIterator(itr)
-  const concurrentWork = new Set()
-  const nextValue: T[] = []
-  let readingNextValue = false
-  const results: any[] = []
-  let ended = false
+  const iterator = getIterator(iterable)
 
-  const queueNextRead = () => {
-    if (ended || readingNextValue) {
+  const valueQueue: Array<IteratorResult<R>> = []
+  const readQueue: IDeferred[] = []
+
+  let endValue: null | IteratorResult<T> = null
+  let reading = false
+  let inflightCount = 0
+
+  function fillQueue() {
+    if (inflightCount + valueQueue.length >= concurrency) {
       return
     }
-    readingNextValue = true
-    let nextValWork
-    nextValWork = (async () => {
-      const { done, value } = await iterator.next()
+    if (endValue && inflightCount === 0 && valueQueue.length === 0) {
+      endReadQueue(readQueue, endValue)
+      return
+    }
+    if (reading === true) {
+      return
+    }
+    reading = true
+    inflightCount++
+    Promise.resolve(iterator.next()).then(async ({ done, value }) => {
       if (done) {
-        ended = true
-      } else {
-        nextValue.push(value)
+        endValue = { done, value }
+        inflightCount--
+        fillQueue()
+        return
       }
-      concurrentWork.delete(nextValWork)
-      readingNextValue = false
-    })()
-    concurrentWork.add(nextValWork)
+      reading = false
+      fillQueue()
+      const transformedValue = await func(value)
+      inflightCount--
+      const result = { value: transformedValue, done: false }
+      if (readQueue.length > 0) {
+        const readDeferred = readQueue.shift() as IDeferred
+        readDeferred.resolve(result)
+      } else {
+        valueQueue.push(result)
+      }
+      fillQueue()
+    })
   }
 
-  const queueNextTransform = value => {
-    let transformWork
-    transformWork = (async () => {
-      const mappedValue = await func(value)
-      results.push(mappedValue)
-      concurrentWork.delete(transformWork)
-    })()
-    concurrentWork.add(transformWork)
+  async function next() {
+    if (valueQueue.length === 0) {
+      const deferred = defer<IteratorResult<R>>()
+      readQueue.push(deferred)
+      fillQueue()
+      return deferred.promise
+    }
+    const value = valueQueue.shift() as IteratorResult<R>
+    fillQueue()
+    return value
   }
 
-  while (true) {
-    if (nextValue.length > 0 && concurrentWork.size < concurrency) {
-      queueNextTransform(nextValue.shift())
-    }
-    while (results.length > 0) {
-      yield results.shift()
-    }
-    if (nextValue.length === 0) {
-      queueNextRead()
-    }
-    if (concurrentWork.size > 0) {
-      await Promise.race(concurrentWork)
-    }
-    if (ended && nextValue.length === 0 && results.length === 0 && concurrentWork.size === 0) {
-      return
-    }
+  const asyncIterableIterator = {
+    next,
+    [Symbol.asyncIterator]: () => asyncIterableIterator,
   }
+
+  return asyncIterableIterator
 }
 
 export function transform<T, R>(

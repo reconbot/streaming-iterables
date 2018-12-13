@@ -129,9 +129,10 @@ for await (const pokemons of batch(10, getPokemon())) {
 
 ### buffer
 ```ts
-function buffer<T>(size: number, iterable: AnyIterable<T>): AsyncIterableIterator<T>
+function buffer<T>(size: number, iterable: AsyncIterable<T>): AsyncIterableIterator<T>
+function buffer<T>(size: number, iterable: Iterable<T>): IterableIterator<T>
 ```
-Buffer keeps a number of objects in reserve available for immediate reading. This is helpful with async iterators as it will prefetch results so you don't have to wait for them to load.
+Buffer keeps a number of objects in reserve available for immediate reading. This is helpful with async iterators as it will prefetch results so you don't have to wait for them to load. For sync iterables it will precompute up to `size` values and keep them in reserve. The internal buffer will start to be filled once `.next()` is called for the first time. This matches generator function behaviors.
 
 ```ts
 import { buffer } from 'streaming-iterables'

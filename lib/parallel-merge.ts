@@ -25,8 +25,7 @@ export async function* parallelMerge<T>(...iterables: Array<AnyIterable<T>>): As
       return
     }
     await Promise.race(concurrentWork)
-    for (const pair of values) {
-      const [input, value] = pair
+    for (const [input, value] of values) {
       values.delete(input)
       yield value
       queueNext(input)

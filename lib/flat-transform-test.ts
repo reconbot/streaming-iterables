@@ -33,7 +33,7 @@ describe('flatTransform', () => {
     assert.deepEqual((await loadIterator.next()).value, '1')
     assert.equal(loaded, 3)
     assert.deepEqual((await loadIterator.next()).value, '2')
-    assert.equal(loaded, 3)
+    assert.equal(loaded, 4)
     assert.deepEqual((await loadIterator.next()).value, '3')
     assert.equal(loaded, 4)
     assert.deepEqual((await loadIterator.next()).value, '4')

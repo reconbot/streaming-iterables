@@ -1,19 +1,17 @@
 import { Writable } from 'stream'
 import { AnyIterable } from './types'
 
-function write(stream, data) {
+function waitForDrain(stream) {
   return new Promise(resolve => {
-    if (!stream.write(data)) {
-      stream.once('drain', resolve)
-    } else {
-      resolve()
-    }
+    stream.once('drain', resolve)
   })
 }
 
 async function _writeToStream(stream: Writable, iterable: AnyIterable<any>) {
   for await (const value of iterable) {
-    await write(stream, value)
+    if (stream.write(value) === false) {
+      await waitForDrain(stream)
+    }
   }
 }
 

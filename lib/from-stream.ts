@@ -15,7 +15,7 @@ async function* _fromStream(stream: Readable) {
       continue
     }
     if ((stream as any)._readableState.ended) {
-      return null
+      return
     }
     await onceReadable(stream)
   }
