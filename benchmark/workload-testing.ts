@@ -3,6 +3,7 @@ import { Suite } from 'benchmark'
 import { Readable, Transform } from 'stream'
 import { obj as through2 } from 'through2-concurrent'
 import { consume, map, pipeline, fromStream, parallelMap, transform, buffer } from '../'
+import { map as bluestreamMap } from 'bluestream'
 
 /*
  Say you have a file of users and you want to write them to your database. The database responds in between 1-5 ms. What's the fastest way to save them?
@@ -88,6 +89,16 @@ suite.add('through2Concurrent(source)', {
     const throughTransform = through2({ maxConcurrency: 10 }, (data, enc, cb) => {
       wait1to5ms().then(() => cb(undefined, data))
     })
+    source().pipe(throughTransform)
+    await pipeline(() => fromStream(throughTransform), consume)
+    deferred.resolve()
+  },
+})
+
+suite.add('bluestreamMap(source)', {
+  defer: true,
+  fn: async deferred => {
+    const throughTransform = bluestreamMap({ concurrent: 10 }, wait1to5ms)
     source().pipe(throughTransform)
     await pipeline(() => fromStream(throughTransform), consume)
     deferred.resolve()
