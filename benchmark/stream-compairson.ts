@@ -1,11 +1,12 @@
+// tslint:disable:no-console
 import { Suite } from 'benchmark'
-import { consume, map, pipeline, tap, fromStream } from '../'
+import { consume, map, pipeline, tap, fromStream } from '../dist'
 import { Readable, PassThrough, Transform } from 'stream'
 const suite = new Suite()
 
-const asyncSetImmediate = () => {
+const asyncSetImmediate = (data?: any) => {
   return new Promise(resolve => {
-    setImmediate(resolve)
+    setImmediate(() => resolve(data))
   })
 }
 
