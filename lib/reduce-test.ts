@@ -1,9 +1,6 @@
 import { assert } from 'chai'
 import { reduce } from './'
-
-function promiseImmediate<T>(data?: T): Promise<T> {
-  return new Promise(resolve => setImmediate(() => resolve(data)))
-}
+import { promiseImmediate } from './util-test'
 
 function* numbers() {
   yield 1

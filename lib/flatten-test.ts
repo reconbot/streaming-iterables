@@ -1,13 +1,7 @@
 import { assert } from 'chai'
 import { flatten } from './'
-import { AnyIterable } from './types'
 import { collect } from './collect'
-
-async function* asyncValues<T>(values: AnyIterable<T>) {
-  for await (const value of values) {
-    yield value
-  }
-}
+import { asyncFromArray } from './util-test'
 
 describe('flatten', () => {
   it('flattens arrays', async () => {
@@ -20,7 +14,7 @@ describe('flatten', () => {
 
   it('flattens async and sync iterables', async () => {
     const numbers: number[] = []
-    const values = asyncValues([1, 2, asyncValues([3, [4], asyncValues([5]), 6]), 7, [8]])
+    const values = asyncFromArray([1, 2, asyncFromArray([3, [4], asyncFromArray([5]), 6]), 7, [8]])
     for await (const num of flatten(values as any)) {
       numbers.push(num as number)
     }

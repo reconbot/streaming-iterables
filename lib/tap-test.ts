@@ -1,16 +1,13 @@
 import { assert } from 'chai'
 import { tap } from './'
 import { map } from './map'
-
-function resolveLater<T>(data?: T) {
-  return new Promise(resolve => setImmediate(() => resolve(data))) as Promise<T>
-}
+import { promiseImmediate } from './util-test'
 
 describe('tap', () => {
   it('iterates a sync function over an async value', async () => {
     const logs: number[] = []
     const log = tap<number>(data => logs.push(data))
-    const asyncNumbers = map<number, number>(num => resolveLater(num), [1, 2, 3])
+    const asyncNumbers = map<number, number>(num => promiseImmediate(num), [1, 2, 3])
     const values: any[] = []
     for await (const val of log(asyncNumbers)) {
       values.push(val)
@@ -32,10 +29,10 @@ describe('tap', () => {
   it('iterates an async function over an async value', async () => {
     const logs: any[] = []
     const log = tap<number>(async data => {
-      await resolveLater()
+      await promiseImmediate()
       logs.push(data)
     })
-    const asyncNumbers = map<number, number>(num => resolveLater(num), [1, 2, 3])
+    const asyncNumbers = map<number, number>(num => promiseImmediate(num), [1, 2, 3])
     const values: any[] = []
     for await (const val of log(asyncNumbers)) {
       values.push(val)
@@ -46,7 +43,7 @@ describe('tap', () => {
   it('iterates an async function over a sync value', async () => {
     const logs: any[] = []
     const log = tap<number>(async data => {
-      await resolveLater()
+      await promiseImmediate()
       logs.push(data)
     })
     const syncNumbers = [1, 2, 3]

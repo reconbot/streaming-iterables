@@ -1,12 +1,7 @@
 import { assert } from 'chai'
 import { writeToStream } from './'
 import { PassThrough, Transform } from 'stream'
-
-function asyncImmediate() {
-  return new Promise(resolve => {
-    setImmediate(() => resolve())
-  })
-}
+import { promiseImmediate } from './util-test'
 
 describe('writeToStream', () => {
   it('writes values to a stream', async () => {
@@ -40,13 +35,13 @@ describe('writeToStream', () => {
         cb(null, value)
       },
     })
-    const writePromise = writeToStream(stream, values())
+    writeToStream(stream, values())
     assert.isNull(stream.read())
-    await asyncImmediate()
+    await promiseImmediate()
     assert.isAtMost(lastYield, 2)
     assert.equal(lastWrite, 1)
     assert.equal(stream.read(), 1)
-    await asyncImmediate()
+    await promiseImmediate()
     assert.equal(stream.read(), 2)
     assert.isAtMost(lastYield, 3)
     assert.equal(lastWrite, 2)

@@ -1,10 +1,7 @@
 import { assert } from 'chai'
 import { parallelFlatMap, fromStream } from './'
 import { PassThrough } from 'stream'
-
-async function asyncStringArr(str) {
-  return [String(str)]
-}
+import { asyncStringArr, delayTicks } from './util-test'
 
 describe('parallelFlatMap', () => {
   it('iterates a sync function over an async value', async () => {
@@ -50,7 +47,8 @@ describe('parallelFlatMap', () => {
     const iterable = parallelFlatMap(3, counter, [1, 2, 3, 4, 5, 6])
     const itr = iterable[Symbol.asyncIterator]()
     await itr.next()
-    assert.equal(mapCount, 3)
+    await delayTicks(5)
+    await assert.equal(mapCount, 4)
   })
   it('can have a concurrency more than the items in a stream', async () => {
     const stream = new PassThrough()

@@ -2,9 +2,9 @@
 
 [![Build Status](https://travis-ci.org/reconbot/streaming-iterables.svg?branch=master)](https://travis-ci.org/reconbot/streaming-iterables) [![Try streaming-iterables on RunKit](https://badge.runkitcdn.com/streaming-iterables.svg)](https://npm.runkit.com/streaming-iterables) [![install size](https://packagephobia.now.sh/badge?p=streaming-iterables)](https://packagephobia.now.sh/result?p=streaming-iterables)
 
-A collection of utilities for [async iterables](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of). Designed to help replace your streams.
+A Swiss army knife for [async iterables](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of). Designed to help replace your streams. These utilities have a comparable speed, friendlier error handling, and are easier to understand than most stream based workloads.
 
-Streams were our last best hope for processing unbounded amounts of data. They've been hard to work with. But now with Node 10 they have become something greater, they've become async iterable.  With async iterators you can have less code, do more work, faster.
+Streams were our last best hope for processing unbounded amounts of data. Now with Node 10 they have become something greater, they've become async iterable. With async iterators you can have less code, do more work, faster.
 
 If you still need streams with async functions, check out sister project [`bluestream`🏄‍♀️](https://www.npmjs.com/package/bluestream)!
 
@@ -115,7 +115,7 @@ function batch<T>(size: number, iterable: AsyncIterable<T>): AsyncIterableIterat
 function batch<T>(size: number, iterable: Iterable<T>): IterableIterator<T[]>
 ```
 
-Batch objects from `iterable` into arrays of `size` length. The final array may be shorter than size if there is not enough items. Returns a sync iterator if the `iterable` is sync, otherwise an async iterator.
+Batch objects from `iterable` into arrays of `size` length. The final array may be shorter than size if there is not enough items. Returns a sync iterator if the `iterable` is sync, otherwise an async iterator. Errors from the source `iterable` are immediately raised.
 
 ```ts
 import { batch } from 'streaming-iterables'
@@ -132,7 +132,7 @@ for await (const pokemons of batch(10, getPokemon())) {
 function buffer<T>(size: number, iterable: AsyncIterable<T>): AsyncIterableIterator<T>
 function buffer<T>(size: number, iterable: Iterable<T>): IterableIterator<T>
 ```
-Buffer keeps a number of objects in reserve available for immediate reading. This is helpful with async iterators as it will prefetch results so you don't have to wait for them to load. For sync iterables it will precompute up to `size` values and keep them in reserve. The internal buffer will start to be filled once `.next()` is called for the first time. This matches generator function behaviors.
+Buffer keeps a number of objects in reserve available for immediate reading. This is helpful with async iterators as it will prefetch results so you don't have to wait for them to load. For sync iterables it will precompute up to `size` values and keep them in reserve. The internal buffer will start to be filled once `.next()` is called for the first time and will continue to fill until the source `iterable` is exhausted or the buffer is full. Errors from the source `iterable` will be raised after all buffered values are yielded.
 
 ```ts
 import { buffer } from 'streaming-iterables'
@@ -150,7 +150,7 @@ function collect<T>(iterable: Iterable<T>): T[]
 function collect<T>(iterable: AsyncIterable<T>): Promise<T[]>
 ```
 
-Collect all the values from an iterable into an array. Returns an array if you pass it an iterable and a promise for an array if you pass it an async iterable.
+Collect all the values from an iterable into an array. Returns an array if you pass it an iterable and a promise for an array if you pass it an async iterable. Errors from the source `iterable` are raised immediately.
 
 ```ts
 import { collect } from 'streaming-iterables'
@@ -166,7 +166,7 @@ function concat(...iterables: Array<Iterable<any>>): IterableIterator<any>
 function concat(...iterables: Array<AnyIterable<any>>): AsyncIterableIterator<any>
 ```
 
-Combine multiple iterators into a single iterable. Reads each iterable completely one at a time. Returns a sync iterator if all `iterables` are sync, otherwise it returns an async iterable.
+Combine multiple iterators into a single iterable. Reads each iterable completely one at a time. Returns a sync iterator if all `iterables` are sync, otherwise it returns an async iterable. Errors from the source `iterable` are raised immediately.
 
 ```ts
 import { concat } from 'streaming-iterables'
@@ -184,11 +184,11 @@ for await (const hero of concat(getPokemon(2), getTransformers(2))) {
 
 ### consume
 ```ts
-export function consume<T>(iterator: Iterable<T>): void
-export function consume<T>(iterator: AsyncIterable<T>): Promise<void>
+export function consume<T>(iterable: Iterable<T>): void
+export function consume<T>(iterable: AsyncIterable<T>): Promise<void>
 ```
 
-A promise that resolves after the function drains the iterable of all data. Useful for processing a pipeline of data.
+A promise that resolves after the function drains the iterable of all data. Useful for processing a pipeline of data. Errors from the source `iterable` are raised immediately.
 
 ```ts
 import { consume, map } from 'streaming-iterables'
@@ -208,9 +208,9 @@ Map `func` over the `iterable`, flatten the result and then ignore all null or u
 (func, iterable) => filter(i => i !== undefined && i !== null, flatten(map(func, iterable)))
 ```
 
-The return value for `func` is `FlatMapValue<B>`. Typescript doesn't have recursive types but you can nest iterables as deep as you like.
+*note*: The return value for `func` is `FlatMapValue<B>`. Typescript doesn't have recursive types but you can nest iterables as deep as you like.
 
-The ordering of the results is guaranteed.
+The ordering of the results is guaranteed. Errors from the source `iterable` are raised after all mapped values are yielded. Errors from `func` are raised after all previously mapped values are yielded.
 
 ```ts
 import { flatMap } from 'streaming-iterables'
@@ -236,7 +236,7 @@ for await (const gym of flatMap(getDefeatedGyms, getPokemon())) {
 function flatten<B>(iterable: AnyIterable<B | AnyIterable<B>>): AsyncIterableIterator<B>
 ```
 
-Returns a new iterator by pulling every item out of `iterable` (and all its sub iterables) and yielding them depth-first. Checks for the iterable interfaces and iterates it if it exists. If the value is a string it is not iterated as that ends up in an infinite loop.
+Returns a new iterator by pulling every item out of `iterable` (and all its sub iterables) and yielding them depth-first. Checks for the iterable interfaces and iterates it if it exists. If the value is a string it is not iterated as that ends up in an infinite loop. Errors from the source `iterable` are raised immediately.
 
 *note*: Typescript doesn't have recursive types but you can nest iterables as deep as you like.
 
@@ -268,10 +268,9 @@ const filterEmpty = filter(i => i !== undefined && i !== null)
 ```
 
 
-The return value for `func` is `FlatMapValue<B>`. Typescript doesn't have recursive types but you can nest iterables as deep as you like. Only directly returned async iterables are processed concurrently. (Eg, an async generator function's output will be processed concurrently, however returning an async generator's output in an array will not be processed concurrently.)
+*note*: The return value for `func` is `FlatMapValue<B>`. Typescript doesn't have recursive types but you can nest iterables as deep as you like. However only directly returned async iterables are processed concurrently. (Eg, if you use an async generator function as `func` it's output will be processed concurrently, but if it's nested inside other iterables it will be processed sequentially.)
 
-Order is determined by when async operations resolve. And it will run up to `concurrency` async operations at once. This includes promises and async iterables returned from `func`.
-
+Order is determined by when async operations resolve. And it will run up to `concurrency` async operations at once. This includes promises and async iterables returned from `func`. Errors from the source `iterable` are raised after all transformed values are yielded. Errors from `func` are raised after all previously transformed values are yielded.
 
 Promise Example;
 ```ts
@@ -367,7 +366,7 @@ Get the iterator from any iterable or just return an iterator itself.
 ```ts
 function map<T, B>(func: (data: T) => B | Promise<B>, iterable: AnyIterable<T>): AsyncIterableIterator<B>
 ```
-Map a function or async function over all the values of an iterable.
+Map a function or async function over all the values of an iterable. Errors from the source `iterable` and `func` are raised immediately.
 
 ```ts
 import { consume, map } from 'streaming-iterables'
@@ -394,7 +393,9 @@ Combine multiple iterators into a single iterable. Reads one item off each itera
 function parallelMap<T, R>(concurrency: number, func: (data: T) => R | Promise<R>, iterable: AnyIterable<T>): AsyncIterableIterator<R>
 ```
 
-Map a function or async function over all the values of an iterable and do them concurrently. Just like [`map()`](#map). If you don't care about order, see the faster [`transform()`](#transform) function.
+Map a function or async function over all the values of an iterable and do them concurrently. Errors from the source `iterable` are raised after all mapped values are yielded. Errors from `func` are raised after all previously mapped values are yielded. Just like [`map()`](#map).
+
+If you don't care about order, see the faster [`transform()`](#transform) function.
 
 ```ts
 import { consume, map } from 'streaming-iterables'
@@ -413,7 +414,7 @@ for await (page of download(urls)) {
 ```ts
 function parallelMerge<T>(...iterables: Array<AnyIterable<T>>): AsyncIterableIterator<T>
 ```
-Combine multiple iterators into a single iterable. Reads one item off of every iterable and yields them as they resolve. This is useful for pulling items out of a collection of iterables as soon as they're available.
+Combine multiple iterators into a single iterable. Reads one item off of every iterable and yields them as they resolve. This is useful for pulling items out of a collection of iterables as soon as they're available. Errors `iterables` are raised immediately.
 
 ```ts
 import { parallelMerge } from 'streaming-iterables'
@@ -438,7 +439,7 @@ for await (const hero of heros) {
 function pipeline(firstFn: Function, ...fns: Function[]): any;
 ```
 
-Calls `firstFn` and then every function in `fns` with the result of the previous function.
+Calls `firstFn` and then every function in `fns` with the result of the previous function. The final return is the result of the last function in `fns`.
 
 ```ts
 import { pipeline, map, collect } from 'streaming-iterables'
@@ -459,14 +460,14 @@ function reduce<T, B>(func: (acc: B, value: T) => B, start: B, iterable: AnyIter
 
 An async function that takes a reducer function, an initial value and .
 
-Reduces an iterable to a value which is the accumulated result of running each value from the iterable thru `func`, where each successive invocation is supplied the return value of the previous.
+Reduces an iterable to a value which is the accumulated result of running each value from the iterable thru `func`, where each successive invocation is supplied the return value of the previous. Errors are immediate raised.
 
 ### take
 ```ts
 function take<T>(count: number, iterable: AnyIterable<T>): AsyncIterableIterator<T>
 ```
 
-Returns a new iterator that reads a specific number of items from `iterable`.
+Returns a new iterator that reads a specific number of items from `iterable`. When used with generators it advances the generator, when used with arrays it always starts from the beginning.
 
 ### tap
 ```ts
@@ -479,7 +480,7 @@ Returns a new iterator that yields the data it consumes passing the data through
 ```ts
 function transform<T, R>(concurrency: number, func: (data: T) => R | Promise<R>, iterable: AnyIterable<T>): AsyncIterableIterator<R>
 ```
-Map a function or async function over all the values of an iterable. Order is determined by when `func` resolves. And it will run up to `concurrency` async `func` operations at once. If you care about order see [`parallelMap()`](#parallelmap).
+Map a function or async function over all the values of an iterable. Order is determined by when `func` resolves. And it will run up to `concurrency` async `func` operations at once. If you care about order see [`parallelMap()`](#parallelmap). Errors from the source `iterable` are raised after all transformed values are yielded. Errors from `func` are raised after all previously transformed values are yielded.
 
 ```ts
 import { consume, transform } from 'streaming-iterables'

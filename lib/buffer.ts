@@ -1,78 +1,81 @@
 import { getIterator } from './get-iterator'
 import { AnyIterable } from './types'
+import { defer, IDeferred } from './defer'
 
-interface IDeferred {
-  promise: Promise<any>
-  resolve: (value?: any) => void
-  reject: (error?: Error) => void
-}
-
-function defer<T>() {
-  let reject
-  let resolve
-  const promise = new Promise<T>((resolveFunc, rejectFunc) => {
-    resolve = resolveFunc
-    reject = rejectFunc
-  })
-  return {
-    promise,
-    reject,
-    resolve,
-  }
-}
-
-function endReadQueue(readQueue, endValue) {
-  while (readQueue.length > 0) {
-    const { resolve } = readQueue.shift() as IDeferred
-    resolve(endValue)
-  }
+interface IValueObj<T> {
+  error?: Error
+  value?: T
 }
 
 function _buffer<T>(size: number, iterable: AsyncIterable<T>): AsyncIterableIterator<T> {
   const iterator = getIterator(iterable)
-  const valueQueue: Array<IteratorResult<T>> = []
-  const readQueue: IDeferred[] = []
+  const resultQueue: Array<IValueObj<T>> = []
+  const readQueue: Array<IDeferred<IteratorResult<T>>> = []
 
   let reading = false
-  let endValue: null | IteratorResult<T> = null
+  let ended: boolean = false
+
+  function fulfillReadQueue() {
+    while (readQueue.length > 0 && resultQueue.length > 0) {
+      const readDeferred = readQueue.shift() as IDeferred<IteratorResult<T>>
+      const { error, value } = resultQueue.shift() as IValueObj<T>
+      if (error) {
+        readDeferred.reject(error)
+      } else {
+        readDeferred.resolve({ done: false, value } as any)
+      }
+    }
+    while (readQueue.length > 0 && ended) {
+      const { resolve } = readQueue.shift() as IDeferred<IteratorResult<T>>
+      resolve({ done: true, value: undefined } as any)
+    }
+  }
 
   async function fillQueue() {
-    if (reading === true) {
+    if (ended) {
       return
     }
-    if (valueQueue.length >= size) {
+    if (reading) {
+      return
+    }
+    if (resultQueue.length >= size) {
       return
     }
     reading = true
-    const nextValue = await iterator.next()
-    if (nextValue.done) {
-      endValue = nextValue
-      endReadQueue(readQueue, nextValue)
-      return
+    try {
+      const { done, value } = await iterator.next()
+      if (done) {
+        ended = true
+      } else {
+        resultQueue.push({ value })
+      }
+    } catch (error) {
+      ended = true
+      resultQueue.push({ error })
     }
-    if (readQueue.length > 0) {
-      const readDeferred = readQueue.shift() as IDeferred
-      readDeferred.resolve(nextValue)
-    } else {
-      valueQueue.push(nextValue)
-    }
+    fulfillReadQueue()
     reading = false
     fillQueue()
   }
 
   async function next() {
-    if (valueQueue.length === 0) {
-      if (endValue) {
-        return endValue
+    if (resultQueue.length > 0) {
+      const { error, value } = resultQueue.shift() as IValueObj<T>
+      if (error) {
+        throw error
       }
-      const deferred = defer<IteratorResult<T>>()
-      readQueue.push(deferred)
       fillQueue()
-      return deferred.promise
+      return { done: false, value } as IteratorResult<T>
     }
-    const nextValue = valueQueue.shift() as IteratorResult<T>
+
+    if (ended) {
+      return { done: true, value: undefined } as any // stupid ts
+    }
+
+    const deferred = defer<IteratorResult<T>>()
+    readQueue.push(deferred)
     fillQueue()
-    return nextValue
+    return deferred.promise
   }
 
   const asyncIterableIterator = {
@@ -85,16 +88,23 @@ function _buffer<T>(size: number, iterable: AsyncIterable<T>): AsyncIterableIter
 
 function* syncBuffer<T>(size: number, iterable: Iterable<T>): IterableIterator<T> {
   const valueQueue: T[] = []
-
-  for (const value of iterable) {
-    valueQueue.push(value)
-    if (valueQueue.length <= size) {
-      continue
+  let e
+  try {
+    for (const value of iterable) {
+      valueQueue.push(value)
+      if (valueQueue.length <= size) {
+        continue
+      }
+      yield valueQueue.shift() as T
     }
-    yield valueQueue.shift() as T
+  } catch (error) {
+    e = error
   }
   for (const value of valueQueue) {
     yield value
+  }
+  if (e) {
+    throw e
   }
 }
 

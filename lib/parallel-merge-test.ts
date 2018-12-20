@@ -1,10 +1,7 @@
 import { assert } from 'chai'
 import { parallelMerge, fromStream } from './'
 import { PassThrough } from 'stream'
-
-function promiseImmediate<T>(data?: T): Promise<T> {
-  return new Promise(resolve => setImmediate(() => resolve(data)))
-}
+import { promiseImmediate } from './util-test'
 
 function* numbers() {
   yield 4

@@ -1,23 +1,7 @@
 import { assert } from 'chai'
 import { transform, fromStream } from '.'
 import { PassThrough } from 'stream'
-
-function promiseImmediate<T>(data?: T) {
-  return new Promise(resolve => setImmediate(() => resolve(data))) as Promise<T>
-}
-
-async function delayTicks<T>(count = 1, data?: T) {
-  for (let i = 0; i < count; i++) {
-    await promiseImmediate()
-  }
-  return data
-}
-
-async function* asyncFromArray<T>(arr: T[]) {
-  for (const value of arr) {
-    yield value
-  }
-}
+import { promiseImmediate, delayTicks, asyncFromArray, makeDelay } from './util-test'
 
 describe('transform', () => {
   it('runs a concurrent number of functions at a time', async () => {
@@ -30,13 +14,13 @@ describe('transform', () => {
       })
     const loadIterator = transform(2, load, ids)[Symbol.asyncIterator]()
     assert.equal(loaded, 0)
-    assert.deepEqual((await loadIterator.next()).value, { id: 1 })
+    assert.deepEqual(await loadIterator.next(), { value: { id: 1 }, done: false })
     assert.equal(loaded, 2)
-    assert.deepEqual((await loadIterator.next()).value, { id: 2 })
+    assert.deepEqual(await loadIterator.next(), { value: { id: 2 }, done: false })
     assert.equal(loaded, 2)
-    assert.deepEqual((await loadIterator.next()).value, { id: 3 })
+    assert.deepEqual(await loadIterator.next(), { value: { id: 3 }, done: false })
     assert.equal(loaded, 4)
-    assert.deepEqual((await loadIterator.next()).value, { id: 4 })
+    assert.deepEqual(await loadIterator.next(), { value: { id: 4 }, done: false })
     assert.equal(loaded, 4)
     assert.deepEqual((await loadIterator.next()).done, true)
   })
@@ -129,10 +113,54 @@ describe('transform', () => {
   it('tolerates resolving out of order', async () => {
     const values: any[] = []
     const source = asyncFromArray([3, 2, 1])
-    const waitTicks = i => delayTicks(i, i)
+    const waitTicks = i => delayTicks(i * 2, i)
     for await (const val of transform(Infinity, waitTicks, source)) {
       values.push(val)
     }
     assert.deepEqual(values, [1, 2, 3])
+  })
+
+  it('propagates source errors after the transforms have finished', async () => {
+    async function* source() {
+      yield 1
+      yield 2
+      yield 3
+      throw new Error('All done!')
+    }
+    const itr = transform(5, makeDelay(10), source())[Symbol.asyncIterator]()
+    assert.equal((await itr.next()).value, 1)
+    assert.equal((await itr.next()).value, 2)
+    assert.equal((await itr.next()).value, 3)
+    try {
+      await itr.next()
+      throw new Error('next should have errored')
+    } catch (error) {
+      assert.equal(error.message, 'All done!')
+    }
+    assert.deepEqual((await itr.next()) as any, { done: true, value: undefined })
+  })
+  it('propagates transform errors after other transforms finish', async () => {
+    async function* source() {
+      yield 1
+      yield 2
+      yield 3
+    }
+    const throwafter2 = async value => {
+      await promiseImmediate()
+      if (value === 2) {
+        throw new Error('I dont like 2')
+      }
+      return value
+    }
+    const itr = transform(5, throwafter2, source())[Symbol.asyncIterator]()
+    assert.equal((await itr.next()).value, 1)
+    assert.equal((await itr.next()).value, 3)
+    try {
+      await itr.next()
+      throw new Error('next should have errored')
+    } catch (error) {
+      assert.equal(error.message, 'I dont like 2')
+    }
+    assert.deepEqual((await itr.next()) as any, { done: true, value: undefined })
   })
 })

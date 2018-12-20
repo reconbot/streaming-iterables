@@ -1,16 +1,6 @@
 import { assert } from 'chai'
 import { buffer } from './'
-
-function promiseImmediate<T>(data?: T): Promise<T> {
-  return new Promise(resolve => setImmediate(() => resolve(data)))
-}
-
-async function* asyncArray<T>(array: T[]) {
-  for (const value of array) {
-    await promiseImmediate()
-    yield value
-  }
-}
+import { promiseImmediate, asyncFromArray } from './util-test'
 
 describe('buffer', () => {
   it('buffers async data', async () => {
@@ -66,9 +56,48 @@ describe('buffer', () => {
   })
   it('deals with an infinite size', async () => {
     const values: number[] = []
-    for await (const value of buffer(Infinity, asyncArray([1, 2, 3, 4]))) {
+    for await (const value of buffer(Infinity, asyncFromArray([1, 2, 3, 4]))) {
       values.push(value)
     }
     assert.deepEqual(values, [1, 2, 3, 4])
+  })
+  it('propagates errors after buffer drains sync', () => {
+    const source = function*() {
+      yield 1
+      yield 2
+      yield 3
+      throw new Error('All done!') // this is how my friend's kid finishes dinner
+    }
+    // const itr = buffer(5, source())[Symbol.iterator]()
+    const itr = source()[Symbol.iterator]()
+    assert.equal(itr.next().value, 1)
+    assert.equal(itr.next().value, 2)
+    assert.equal(itr.next().value, 3)
+    try {
+      itr.next()
+      throw new Error('next should have errored')
+    } catch (error) {
+      assert.equal(error.message, 'All done!')
+    }
+    assert.deepEqual(itr.next() as any, { done: true, value: undefined })
+  })
+  it('propagates errors after buffer drains async', async () => {
+    const source = async function*() {
+      yield 1
+      yield 2
+      yield 3
+      throw new Error('All done!')
+    }
+    const itr = buffer(5, source())[Symbol.asyncIterator]()
+    assert.equal((await itr.next()).value, 1)
+    assert.equal((await itr.next()).value, 2)
+    assert.equal((await itr.next()).value, 3)
+    try {
+      await itr.next()
+      throw new Error('next should have errored')
+    } catch (error) {
+      assert.equal(error.message, 'All done!')
+    }
+    assert.deepEqual((await itr.next()) as any, { done: true, value: undefined })
   })
 })

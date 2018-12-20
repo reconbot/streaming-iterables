@@ -1,21 +1,11 @@
 import { assert } from 'chai'
 import { parallelMap, fromStream } from './'
 import { PassThrough } from 'stream'
+import { asyncString, makeDelay, delayTicks } from './util-test'
 
-async function asyncString(str) {
-  return String(str)
-}
-
-function promiseImmediate<T>(data?: T) {
-  return new Promise(resolve => setImmediate(() => resolve(data))) as Promise<T>
-}
-
-async function delayTicks<T>(count = 1, data?: T) {
-  for (let i = 0; i < count; i++) {
-    await promiseImmediate()
-  }
-  return data
-}
+process.on('unhandledRejection', error => {
+  throw error
+})
 
 describe('parallelMap', () => {
   it('iterates a sync function over an async value', async () => {
@@ -79,5 +69,47 @@ describe('parallelMap', () => {
       values.push(val)
     }
     assert.deepEqual(values, ['1', '2', '3'])
+  })
+  it('propagates source errors after the maps have finished', async () => {
+    async function* source() {
+      yield 1
+      yield 2
+      yield 3
+      throw new Error('All done!')
+    }
+    const itr = parallelMap(5, makeDelay(10), source())[Symbol.asyncIterator]()
+    assert.equal((await itr.next()).value, 1)
+    assert.equal((await itr.next()).value, 2)
+    assert.equal((await itr.next()).value, 3)
+    try {
+      await itr.next()
+      throw new Error('next should have errored')
+    } catch (error) {
+      assert.equal(error.message, 'All done!')
+    }
+    assert.deepEqual((await itr.next()) as any, { done: true, value: undefined })
+  })
+  it('propagates map errors after other maps finish', async () => {
+    async function* source() {
+      yield 1
+      yield 2
+      yield 3
+    }
+    const throwafter2 = async value => {
+      await delayTicks(10)
+      if (value >= 2) {
+        throw new Error('I dont like 2')
+      }
+      return value
+    }
+    const itr = parallelMap(5, throwafter2, source())[Symbol.asyncIterator]()
+    assert.equal((await itr.next()).value, 1)
+    try {
+      await itr.next()
+      throw new Error('next should have errored')
+    } catch (error) {
+      assert.equal(error.message, 'I dont like 2')
+    }
+    assert.deepEqual((await itr.next()) as any, { done: true, value: undefined })
   })
 })

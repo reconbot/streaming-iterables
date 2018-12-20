@@ -1,9 +1,6 @@
 import { assert } from 'chai'
 import { consume } from './'
-
-function promiseImmediate<T>(data?: T): Promise<T> {
-  return new Promise(resolve => setImmediate(() => resolve(data)))
-}
+import { promiseImmediate } from './util-test'
 
 describe('consume', () => {
   it('consumes the entire async iterator', async () => {

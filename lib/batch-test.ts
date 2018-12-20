@@ -1,9 +1,6 @@
 import { assert } from 'chai'
 import { batch } from './'
-
-function promiseImmediate<T>(data?: T): Promise<T> {
-  return new Promise(resolve => setImmediate(() => resolve(data)))
-}
+import { promiseImmediate } from './util-test'
 
 async function* asyncNumbers(max: number) {
   let num = 1

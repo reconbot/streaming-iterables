@@ -1,12 +1,6 @@
 import { assert } from 'chai'
 import { flatMap } from '.'
-import { AnyIterable } from './types'
-
-async function* asyncValues<T>(values: AnyIterable<T>) {
-  for await (const value of values) {
-    yield value
-  }
-}
+import { asyncFromArray } from './util-test'
 
 describe('flatmap', () => {
   it('flattens arrays', async () => {
@@ -19,7 +13,7 @@ describe('flatmap', () => {
 
   it('flattens async and sync iterables', async () => {
     const numbers: number[] = []
-    const values = asyncValues([1, 2, asyncValues([3, 4, 5, 6]), 7, [8]])
+    const values = asyncFromArray([1, 2, asyncFromArray([3, 4, 5, 6]), 7, [8]])
     for await (const num of flatMap(i => i, values)) {
       numbers.push(num)
     }
@@ -27,7 +21,7 @@ describe('flatmap', () => {
   })
   it('ignores null and undefined values', async () => {
     const numbers: number[] = []
-    const values = asyncValues([1, undefined, null, 2, asyncValues([3, 4, undefined, 5, 6]), 7, [8], null])
+    const values = asyncFromArray([1, undefined, null, 2, asyncFromArray([3, 4, undefined, 5, 6]), 7, [8], null])
     for await (const num of flatMap(i => i, values)) {
       numbers.push(num as number)
     }

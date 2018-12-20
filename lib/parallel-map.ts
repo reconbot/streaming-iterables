@@ -2,16 +2,44 @@ import { AnyIterable } from './types'
 import { buffer } from './buffer'
 import { pipeline } from './pipeline'
 import { map } from './map'
+import { getIterator } from './get-iterator'
 
 async function* _parallelMap<T, R>(
   concurrency: number,
   func: (data: T) => R | Promise<R>,
   iterable: AnyIterable<T>
 ): AsyncIterableIterator<R> {
-  const wrapFunc = value => ({ value: func(value) })
-  const output = pipeline(() => iterable, buffer(1), map(wrapFunc), buffer(concurrency))
-  for await (const { value } of output) {
-    yield await value
+  let transformError: Error | null = null
+  const wrapFunc = value => ({
+    value: func(value),
+  })
+
+  const stopOnError = async function*(source) {
+    for await (const value of source) {
+      if (transformError) {
+        return
+      }
+      yield value
+    }
+  }
+  const output = pipeline(() => iterable, buffer(1), stopOnError, map(wrapFunc), buffer(concurrency))
+  const itr = getIterator<{ value: Promise<R> | R }>(output)
+  while (true) {
+    const { value, done } = await itr.next()
+    if (done) {
+      break
+    }
+    try {
+      const val = await value.value
+      if (!transformError) {
+        yield val
+      }
+    } catch (error) {
+      transformError = error
+    }
+  }
+  if (transformError) {
+    throw transformError
   }
 }
 

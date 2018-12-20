@@ -1,12 +1,6 @@
 import { assert } from 'chai'
 import { filter } from './'
-import { AnyIterable } from './types'
-
-async function* asyncValues<T>(values: AnyIterable<T>) {
-  for await (const value of values) {
-    yield value
-  }
-}
+import { asyncFromArray } from './util-test'
 
 describe('filter', () => {
   it('filters iterators', async () => {
@@ -18,7 +12,7 @@ describe('filter', () => {
   })
   it('filters async iterators', async () => {
     const numbers: number[] = []
-    for await (const num of filter(i => !!i, asyncValues([1, 2, null, undefined, 3]))) {
+    for await (const num of filter(i => !!i, asyncFromArray([1, 2, null, undefined, 3]))) {
       numbers.push(num as number)
     }
     assert.deepEqual(numbers, [1, 2, 3])
@@ -33,7 +27,7 @@ describe('filter', () => {
 
   it('is curryable', async () => {
     const numbers: number[] = []
-    const values = asyncValues([1, 2, null, 3])
+    const values = asyncFromArray([1, 2, null, 3])
     const filterFalsy = filter(i => !!i)
     for await (const num of filterFalsy(values)) {
       numbers.push(num as number)

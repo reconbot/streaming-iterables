@@ -1,23 +1,6 @@
 import { assert } from 'chai'
 import { flatTransform } from '.'
-
-function promiseImmediate<T>(data?: T) {
-  return new Promise(resolve => setImmediate(() => resolve(data))) as Promise<T>
-}
-
-async function delayTicks<T>(count = 1, data?: T) {
-  for (let i = 0; i < count; i++) {
-    await promiseImmediate()
-  }
-  return data
-}
-
-async function* asyncFromArray<T>(arr: T[]) {
-  for (const value of arr) {
-    await promiseImmediate()
-    yield value
-  }
-}
+import { promiseImmediate, delayTicks, makeDelay, asyncFromArray } from './util-test'
 
 describe('flatTransform', () => {
   it('runs a concurrent number of functions at a time', async () => {
@@ -134,5 +117,76 @@ describe('flatTransform', () => {
       values.push(val)
     }
     assert.deepEqual(values, [4, 5, 6, 1, 7, 2, 8, 3, 9])
+  })
+  it('propagates source errors after the transforms have finished', async () => {
+    async function* source() {
+      yield 1
+      yield 2
+      yield 3
+      throw new Error('All done!')
+    }
+    const itr = flatTransform(5, makeDelay(10), source())[Symbol.asyncIterator]()
+    assert.equal((await itr.next()).value, 1)
+    assert.equal((await itr.next()).value, 2)
+    assert.equal((await itr.next()).value, 3)
+    try {
+      await itr.next()
+      throw new Error('next should have errored')
+    } catch (error) {
+      assert.equal(error.message, 'All done!')
+    }
+    assert.deepEqual((await itr.next()) as any, { done: true, value: undefined })
+  })
+  it('propagates transform errors after other transforms finish', async () => {
+    async function* source() {
+      yield 1
+      yield 2
+      yield 3
+    }
+    const throwafter2 = async value => {
+      await promiseImmediate()
+      if (value === 2) {
+        throw new Error('I dont like 2')
+      }
+      return [value]
+    }
+    const itr = flatTransform(5, throwafter2, source())[Symbol.asyncIterator]()
+    assert.equal((await itr.next()).value, 1)
+    assert.equal((await itr.next()).value, 3)
+    try {
+      await itr.next()
+      throw new Error('next should have errored')
+    } catch (error) {
+      assert.equal(error.message, 'I dont like 2')
+    }
+    assert.deepEqual((await itr.next()) as any, { done: true, value: undefined })
+  })
+  it('propagates transform errors after other generators finish', async () => {
+    async function* source() {
+      yield 1
+      yield 2
+      yield 3
+    }
+    const throwafter2 = async function*(value) {
+      await promiseImmediate()
+      yield value
+      if (value === 2) {
+        throw new Error('I dont like 2')
+      }
+      yield value
+    }
+    const itr = flatTransform(5, throwafter2, source())[Symbol.asyncIterator]()
+    assert.equal((await itr.next()).value, 1)
+    assert.equal((await itr.next()).value, 2)
+    assert.equal((await itr.next()).value, 3)
+    assert.equal((await itr.next()).value, 1)
+    assert.equal((await itr.next()).value, 3)
+    try {
+      await itr.next()
+      throw new Error('next should have errored')
+    } catch (error) {
+      assert.equal(error.message, 'I dont like 2')
+    }
+    assert.deepEqual((await itr.next()) as any, { done: true, value: undefined })
   })
 })
