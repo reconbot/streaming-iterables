@@ -117,6 +117,8 @@ function batch<T>(size: number, iterable: Iterable<T>): IterableIterator<T[]>
 
 Batch objects from `iterable` into arrays of `size` length. The final array may be shorter than size if there is not enough items. Returns a sync iterator if the `iterable` is sync, otherwise an async iterator. Errors from the source `iterable` are immediately raised.
 
+`size` can be betweeen 1 and `Infinity`.
+
 ```ts
 import { batch } from 'streaming-iterables'
 import { getPokemon } from 'iterable-pokedex'
@@ -133,6 +135,8 @@ function buffer<T>(size: number, iterable: AsyncIterable<T>): AsyncIterableItera
 function buffer<T>(size: number, iterable: Iterable<T>): IterableIterator<T>
 ```
 Buffer keeps a number of objects in reserve available for immediate reading. This is helpful with async iterators as it will prefetch results so you don't have to wait for them to load. For sync iterables it will precompute up to `size` values and keep them in reserve. The internal buffer will start to be filled once `.next()` is called for the first time and will continue to fill until the source `iterable` is exhausted or the buffer is full. Errors from the source `iterable` will be raised after all buffered values are yielded.
+
+`size` can be betweeen 1 and `Infinity`.
 
 ```ts
 import { buffer } from 'streaming-iterables'
@@ -272,6 +276,8 @@ const filterEmpty = filter(i => i !== undefined && i !== null)
 
 Order is determined by when async operations resolve. And it will run up to `concurrency` async operations at once. This includes promises and async iterables returned from `func`. Errors from the source `iterable` are raised after all transformed values are yielded. Errors from `func` are raised after all previously transformed values are yielded.
 
+`concurrency` can be betweeen 1 and `Infinity`.
+
 Promise Example;
 ```ts
 import { flatTransform } from 'streaming-iterables'
@@ -395,6 +401,8 @@ function parallelMap<T, R>(concurrency: number, func: (data: T) => R | Promise<R
 
 Map a function or async function over all the values of an iterable and do them concurrently. Errors from the source `iterable` are raised after all mapped values are yielded. Errors from `func` are raised after all previously mapped values are yielded. Just like [`map()`](#map).
 
+`concurrency` can be betweeen 1 and `Infinity`.
+
 If you don't care about order, see the faster [`transform()`](#transform) function.
 
 ```ts
@@ -481,6 +489,8 @@ Returns a new iterator that yields the data it consumes passing the data through
 function transform<T, R>(concurrency: number, func: (data: T) => R | Promise<R>, iterable: AnyIterable<T>): AsyncIterableIterator<R>
 ```
 Map a function or async function over all the values of an iterable. Order is determined by when `func` resolves. And it will run up to `concurrency` async `func` operations at once. If you care about order see [`parallelMap()`](#parallelmap). Errors from the source `iterable` are raised after all transformed values are yielded. Errors from `func` are raised after all previously transformed values are yielded.
+
+`concurrency` can be betweeen 1 and `Infinity`.
 
 ```ts
 import { consume, transform } from 'streaming-iterables'
