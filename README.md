@@ -463,7 +463,7 @@ await pipeline(getPokemon, getName, collect)
 
 ### reduce
 ```ts
-function reduce<T, B>(func: (acc: B, value: T) => B, start: B, iterable: AnyIterable<T>): Promise<B>;
+function reduce<T, B>(func: (acc: B, value: T) => B, start: B, iterable: AnyIterable<T>): Promise<B>
 ```
 
 An async function that takes a reducer function, an initial value and .
@@ -484,6 +484,34 @@ function tap<T>(func: (data: T) => any, iterable: AnyIterable<T>): AsyncIterable
 
 Returns a new iterator that yields the data it consumes passing the data through to a function. If you provide an async function the iterator will wait for the promise to resolve before yielding the value. This is useful for logging, or processing information and passing it along.
 
+### time
+```ts
+function time<T>(config?: ITimeConfig, iterable: AsyncIterable<R>): AsyncIterableIterator<R>
+function time<T>(config?: ITimeConfig, iterable: Iterable<R>): IterableIterator<R>
+
+interface ITimeConfig {
+    progress?: (delta: [number, number], total: [number, number]) => any;
+    total?: (time: [number, number]) => any;
+}
+```
+Returns a new iterator that yields the data it consumes and calls the `progress` and `total` callbacks with the [`hrtime`](https://nodejs.org/api/process.html#process_process_hrtime_time) it took for `iterable` to provide a value when `.next()` was called on it. That is to say, the time returned is the time this iterator spent waiting for data, not the time it took to finish being read. The `hrtime` tuple looks like `[seconds, nanoseconds]`.
+
+
+```ts
+import { consume, transform, time } from 'streaming-iterables'
+import got from 'got'
+
+const urls = ['https://http.cat/200', 'https://http.cat/201', 'https://http.cat/202']
+const download = transform(1000, got)
+const timer = time({
+  total: total => console.log(`Spent ${total[0]} seconds and ${total[1]}ns downloading cats`),
+})
+// download all of these at the same time
+for await (page of timer(download(urls))) {
+  console.log(page)
+}
+
+```
 ### transform
 ```ts
 function transform<T, R>(concurrency: number, func: (data: T) => R | Promise<R>, iterable: AnyIterable<T>): AsyncIterableIterator<R>
