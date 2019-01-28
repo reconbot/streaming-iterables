@@ -106,6 +106,7 @@ if ((Symbol as any).asyncIterator === undefined) {
 - [`reduce()`](#reduce)
 - [`take()`](#take)
 - [`tap()`](#tap)
+- [`time()`](#time)
 - [`transform()`](#transform)
 - [`writeToStream()`](#writetostream)
 
