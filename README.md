@@ -1,6 +1,6 @@
 # streaming-iterables 🏄‍♂️
 
-[![Build Status](https://travis-ci.org/reconbot/streaming-iterables.svg?branch=master)](https://travis-ci.org/reconbot/streaming-iterables) [![Try streaming-iterables on RunKit](https://badge.runkitcdn.com/streaming-iterables.svg)](https://npm.runkit.com/streaming-iterables) [![install size](https://packagephobia.now.sh/badge?p=streaming-iterables)](https://packagephobia.now.sh/result?p=streaming-iterables)
+[![Build Status](https://travis-ci.org/bustle/streaming-iterables.svg?branch=master)](https://travis-ci.org/bustle/streaming-iterables) [![Try streaming-iterables on RunKit](https://badge.runkitcdn.com/streaming-iterables.svg)](https://npm.runkit.com/streaming-iterables) [![install size](https://packagephobia.now.sh/badge?p=streaming-iterables)](https://packagephobia.now.sh/result?p=streaming-iterables)
 
 A Swiss army knife for [async iterables](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of). Designed to help replace your streams. These utilities have a comparable speed, friendlier error handling, and are easier to understand than most stream based workloads.
 
@@ -13,50 +13,6 @@ There are no dependencies.
 
 ```bash
 npm install streaming-iterables
-```
-
-## Example
-
-Download a bunch of pokemon ([try it here!](https://npm.runkit.com/streaming-iterables))
-
-```ts
-const { buffer, flatten, pipeline, transform } = require('streaming-iterables')
-const got = require('got')
-
-// A generator to fetch all the pokemon from the pokemon api
-const pokedex = async function* () {
-  let offset = 0
-  while(true) {
-    const url = `https://pokeapi.co/api/v2/pokemon/?offset=${offset}`
-    const { body: { results: pokemon } } = await got(url, { json: true })
-    if (pokemon.length === 0) {
-      return
-    }
-    offset += pokemon.length
-    yield pokemon
-  }
-}
-
-// lets buffer two pages so they're ready when we want them
-const bufferTwo = buffer(2)
-
-// a transform iterator that will load the monsters two at a time and yield them as soon as they're ready
-const pokeLoader = transform(2, async ({ url }) => {
-  const { body } = await got(url, { json: true })
-  return body
-})
-
-// string together all our functions
-const pokePipe = pipeline(pokedex, bufferTwo, flatten, pokeLoader)
-
-// lets do it team!
-const run = async () => {
-  for await (const pokemon of pokePipe){
-    console.log(`${pokemon.name} ${pokemon.sprites.front_default}`)
-  }
-}
-
-run().then(() => console.log('caught them all!'))
 ```
 
 ## Overview
@@ -473,10 +429,10 @@ Reduces an iterable to a value which is the accumulated result of running each v
 
 ### take
 ```ts
-function take<T>(count: number, iterable: AnyIterable<T>): AsyncIterableIterator<T>
+function take<T>(count: number, iterable: AsyncIterable<T>): AsyncIterableIterator<T>
+function take<T>(count: number, iterable: Iterable<T>): IterableIterator<T>
 ```
-
-Returns a new iterator that reads a specific number of items from `iterable`. When used with generators it advances the generator, when used with arrays it always starts from the beginning.
+Returns a new iterator that reads a specific number of items from `iterable`. When used with generators it advances the generator, when used with arrays it gets a new iterator and starts from the beginning.
 
 ### tap
 ```ts

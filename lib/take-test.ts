@@ -15,24 +15,24 @@ describe('take', () => {
     }
     assert.deepEqual(values, [1, 2])
   })
-  it('Returns the first n elements of the given sync iterable', async () => {
+  it('Returns the first n elements of the given sync iterable', () => {
     const values: number[] = []
-    for await (const val of take(2, [1, 2, 3])) {
+    for (const val of take(2, [1, 2, 3])) {
       values.push(val)
     }
     assert.deepEqual(values, [1, 2])
   })
-  it('lets you ask for more', async () => {
+  it('lets you ask for more', () => {
     const values: number[] = []
-    for await (const val of take(99, [1, 2, 3])) {
+    for (const val of take(99, [1, 2, 3])) {
       values.push(val)
     }
     assert.deepEqual(values, [1, 2, 3])
   })
-  it('lets you curry the count', async () => {
+  it('lets you curry the count', () => {
     const values: any[] = []
     const take1 = take(1)
-    for await (const val of take1([1, 2, 3])) {
+    for (const val of take1([1, 2, 3])) {
       values.push(val)
     }
     assert.deepEqual(values, [1])
