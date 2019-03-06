@@ -1,6 +1,6 @@
 import { getIterator } from './get-iterator'
-import { AnyIterable } from './types'
 import { defer, IDeferred } from './defer'
+import { AnyIterable } from './types'
 
 interface IValueObj<T> {
   error?: Error
@@ -108,21 +108,22 @@ function* syncBuffer<T>(size: number, iterable: Iterable<T>): IterableIterator<T
   }
 }
 
-export function buffer<T>(
-  size: number
-): {
-  (curriedIterable: AsyncIterable<T>): AsyncIterableIterator<T>
-  (curriedIterable: Iterable<T>): IterableIterator<T>
-}
-export function buffer<T>(size: number, iterable: AsyncIterable<T>): AsyncIterableIterator<T>
-export function buffer<T>(size: number, iterable: Iterable<T>): IterableIterator<T>
-export function buffer<T>(size: number, iterable?: AnyIterable<T>) {
+type UnwrapAnyIterable<M extends AnyIterable<any>> = M extends Iterable<infer T>
+  ? Iterable<T>
+  : M extends AsyncIterable<infer B>
+  ? AsyncIterable<B>
+  : never
+type CurriedBufferResult = <T, M extends AnyIterable<T>>(curriedIterable: M) => UnwrapAnyIterable<M>
+
+export function buffer(size: number): CurriedBufferResult
+export function buffer<T, M extends AnyIterable<T>>(size: number, iterable: M): UnwrapAnyIterable<M>
+export function buffer(size: number, iterable?: AnyIterable<any>): CurriedBufferResult | UnwrapAnyIterable<any> {
   if (iterable === undefined) {
     return curriedIterable => buffer(size, curriedIterable)
   }
   if (iterable[Symbol.asyncIterator]) {
-    return _buffer(size, iterable as AsyncIterable<T>)
+    return _buffer(size, iterable as AsyncIterable<any>)
   }
 
-  return syncBuffer(size, iterable as Iterable<T>)
+  return syncBuffer(size, iterable as Iterable<any>)
 }

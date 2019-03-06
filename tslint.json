@@ -7,19 +7,33 @@
     "jsRules": {},
     "rules": {
         "adjacent-overload-signatures": false,
-        "arrow-parens": [true, "ban-single-arg-parens"],
+        "arrow-parens": [
+            true,
+            "ban-single-arg-parens"
+        ],
         "max-line-length": false,
         "no-empty-interface": false,
+        "interface-over-type-literal": false,
         "no-empty": false,
         "ordered-imports": false,
-        "prettier": [true, {
-            "semi": false,
-            "singleQuote": true,
-            "printWidth": 120,
-            "trailingComma": "es5"
-        }],
-        "quotemark": [true, "single", "avoid-escape", "avoid-template"],
-        "trailing-comma": [false]
+        "prettier": [
+            true,
+            {
+                "semi": false,
+                "singleQuote": true,
+                "printWidth": 120,
+                "trailingComma": "es5"
+            }
+        ],
+        "quotemark": [
+            true,
+            "single",
+            "avoid-escape",
+            "avoid-template"
+        ],
+        "trailing-comma": [
+            false
+        ]
     },
     "rulesDirectory": [
         "tslint-plugin-prettier"

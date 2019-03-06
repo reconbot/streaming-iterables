@@ -6,7 +6,11 @@ import { map } from './map'
 describe('reduce', () => {
   it('calls an argument list of functions', async () => {
     const getData = () => [1, 2, 3]
-    const makeString = map(i => String(i))
+    function* makeString(arr: number[]) {
+      for (const i of arr) {
+        yield String(i)
+      }
+    }
     const manual = await collect(makeString(getData()))
     const pipelined = await pipeline(getData, makeString, collect)
     assert.deepEqual(manual, pipelined)

@@ -60,22 +60,26 @@ function* _syncTime<T>(config: ITimeConfig, iterable: Iterable<T>) {
   }
 }
 
-export function time(
-  config?: ITimeConfig
-): {
-  <R>(iterable: AsyncIterable<R>): AsyncIterableIterator<R>
-  <R>(iterable: Iterable<R>): IterableIterator<R>
-}
+type UnwrapAnyIterable<M extends AnyIterable<any>> = M extends Iterable<infer T>
+  ? Iterable<T>
+  : M extends AsyncIterable<infer B>
+  ? AsyncIterable<B>
+  : never
+type CurriedTimeResult = <T, M extends AnyIterable<T>>(curriedIterable: M) => UnwrapAnyIterable<M>
 
-export function time<T>(config: ITimeConfig | undefined, iterable: AnyIterable<T>): AsyncIterableIterator<T>
-export function time<T>(config: ITimeConfig = {}, iterable?: AnyIterable<T>) {
+export function time(config?: ITimeConfig): CurriedTimeResult
+export function time<T, M extends AnyIterable<T>>(config: ITimeConfig, iterable: M): UnwrapAnyIterable<M>
+export function time(
+  config: ITimeConfig = {},
+  iterable?: AnyIterable<any>
+): CurriedTimeResult | UnwrapAnyIterable<any> {
   if (iterable === undefined) {
-    return <R>(curriedIterable: AnyIterable<R>) => time<R>(config, curriedIterable)
+    return curriedIterable => time(config, curriedIterable)
   }
 
   if (iterable[Symbol.asyncIterator] !== undefined) {
-    return _asyncTime(config, iterable as AsyncIterable<T>)
+    return _asyncTime(config, iterable as AsyncIterable<any>)
   } else {
-    return _syncTime(config, iterable as Iterable<T>)
+    return _syncTime(config, iterable as Iterable<any>)
   }
 }

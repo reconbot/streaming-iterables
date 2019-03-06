@@ -9,7 +9,7 @@ export function map<T, B>(func: (data: T) => B | Promise<B>): (iterable: AnyIter
 export function map<T, B>(func: (data: T) => B | Promise<B>, iterable: AnyIterable<T>): AsyncIterableIterator<B>
 export function map<T, B>(func: (data: T) => B | Promise<B>, iterable?: AnyIterable<T>) {
   if (iterable === undefined) {
-    return (curriedIterable: AnyIterable<T>) => _map(func, curriedIterable)
+    return curriedIterable => _map(func, curriedIterable)
   }
   return _map(func, iterable)
 }
