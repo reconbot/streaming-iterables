@@ -7,7 +7,7 @@ describe('collect', () => {
     const value = await collect(asyncFromArray([1, 2, 3, 4]))
     assert.deepEqual(value, [1, 2, 3, 4])
   })
-  it('collects sync iterable data', async () => {
+  it('collects sync iterable data', () => {
     function* numbers() {
       yield* [1, 2, 3, 4]
     }
