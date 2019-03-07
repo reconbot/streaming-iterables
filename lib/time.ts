@@ -1,3 +1,4 @@
+/// <reference lib="esnext.asynciterable" />
 import { AnyIterable } from './types'
 
 interface ITimeConfig {

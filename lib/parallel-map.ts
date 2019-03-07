@@ -1,3 +1,4 @@
+/// <reference lib="esnext.asynciterable" />
 import { AnyIterable } from './types'
 import { buffer } from './buffer'
 import { pipeline } from './pipeline'

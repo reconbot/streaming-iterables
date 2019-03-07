@@ -7,3 +7,8 @@ tsconfig-build.json
 tsconfig.json
 tslint.json
 benchmark
+dist-ts
+rollup.config-esm.js
+rollup.config-umd.js
+budle-types.js
+dist/tsdoc-metadata.json

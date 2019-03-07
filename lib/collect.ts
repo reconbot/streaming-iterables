@@ -1,3 +1,4 @@
+/// <reference lib="esnext.asynciterable" />
 async function _collect<T>(iterable: AsyncIterable<T>) {
   const values: T[] = []
   for await (const value of iterable) {

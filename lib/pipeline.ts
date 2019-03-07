@@ -1,4 +1,3 @@
-// export function pipeline<T>(firstFn: () => T, ...fns: Array<(arg: T) => T>): T
 export function pipeline<T0>(firstFn: () => T0): T0
 export function pipeline<T0, T1>(a0: () => T0, a1: (a: T0) => T1): T1
 export function pipeline<T0, T1, T2>(a0: () => T0, a1: (a: T0) => T1, a2: (a: T1) => T2): T2

@@ -1,3 +1,4 @@
+/// <reference lib="esnext.asynciterable" />
 import { Iterableish } from './types'
 
 export function getIterator<T>(iterable: Iterable<T> | Iterator<T>): Iterator<T>

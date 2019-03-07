@@ -1,4 +1,5 @@
-import { AnyIterable, FlatMapValue } from './types'
+/// <reference lib="esnext.asynciterable" />
+import { AnyIterable } from './types'
 import { flatten } from './flatten'
 import { filter } from './filter'
 import { parallelMap } from './parallel-map'

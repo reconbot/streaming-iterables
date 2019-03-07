@@ -1,3 +1,4 @@
+/// <reference lib="esnext.asynciterable" />
 import { getIterator } from './get-iterator'
 import { defer, IDeferred } from './defer'
 import { AnyIterable } from './types'

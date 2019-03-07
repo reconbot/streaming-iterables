@@ -1,3 +1,4 @@
+/// <reference lib="esnext.asynciterable" />
 import { AnyIterable } from './types'
 
 async function* _batch<T>(size: number, iterable: AsyncIterable<T>) {

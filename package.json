@@ -2,7 +2,8 @@
   "name": "streaming-iterables",
   "version": "3.5.0",
   "description": "A collection of utilities for async iterables. Designed to replace your streams.",
-  "main": "dist",
+  "main": "dist/index.js",
+  "module": "dist/index-esm.js",
   "types": "dist/index.d.ts",
   "repository": "git@github.com:reconbot/streaming-iterables.git",
   "homepage": "https://github.com/reconbot/streaming-iterables",
@@ -12,7 +13,7 @@
     "unit-test": "mocha --opts lib/mocha.opts",
     "lint": "tsc && tslint lib/*.ts",
     "format": "tslint lib/*.ts --fix",
-    "build": "tsc -p tsconfig-build.json",
+    "build": "tsc -p tsconfig-build.json && rollup -c rollup.config-esm.js && rollup -c rollup.config-umd.js && node bundle-types.js",
     "prepare": "npm run build"
   },
   "keywords": [
@@ -35,6 +36,7 @@
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
+    "@microsoft/api-extractor": "^6.3.0",
     "@types/chai": "^4.1.7",
     "@types/mocha": "^5.2.5",
     "@types/node": "^10.12.4",
@@ -43,12 +45,15 @@
     "chai": "^4.2.0",
     "mocha": "^5.2.0",
     "prettier": "^1.15.2",
+    "rollup": "^1.4.1",
+    "rollup-plugin-node-resolve": "^4.0.1",
     "through2-concurrent": "^2.0.0",
     "ts-node": "^7.0.1",
+    "tslib": "^1.9.3",
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.16.0",
     "tslint-plugin-prettier": "^2.0.1",
-    "typescript": "^3.1.6"
+    "typescript": "^3.3.3333"
   },
   "engines": {
     "node": ">=8"

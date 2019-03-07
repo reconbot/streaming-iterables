@@ -1,3 +1,4 @@
+/// <reference lib="esnext.asynciterable" />
 import { AnyIterable } from './types'
 async function* _concat(iterables: Array<AnyIterable<any>>) {
   for await (const iterable of iterables) {
