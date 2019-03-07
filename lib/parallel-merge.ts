@@ -1,8 +1,10 @@
 /// <reference lib="esnext.asynciterable" />
 import { getIterator } from './get-iterator'
-import { AnyIterable } from './types'
+import { AnyIterable, UnArrayAnyIterable } from './types'
 
-export async function* parallelMerge<T>(...iterables: Array<AnyIterable<T>>): AsyncIterableIterator<T> {
+export async function* parallelMerge<I extends Array<AnyIterable<any>>>(
+  ...iterables: I
+): AsyncIterable<UnArrayAnyIterable<I>> {
   const inputs = iterables.map(getIterator)
   const concurrentWork = new Set()
   const values = new Map()

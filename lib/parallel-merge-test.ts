@@ -39,7 +39,7 @@ async function* fastStrings() {
 describe('parallelMerge', () => {
   it('iterates sync iterators', async () => {
     const values: any[] = []
-    const merged = parallelMerge<any>(numbers(), strings())
+    const merged = parallelMerge(numbers(), strings())
     for await (const val of merged) {
       values.push(val)
     }
@@ -47,7 +47,7 @@ describe('parallelMerge', () => {
   })
   it('iterates async iterators', async () => {
     const values: any[] = []
-    const merged = parallelMerge<any>(slowNumbers(), fastStrings())
+    const merged = parallelMerge(slowNumbers(), fastStrings())
     for await (const val of merged) {
       values.push(val)
     }
@@ -55,7 +55,7 @@ describe('parallelMerge', () => {
   })
   it('iterates iterables', async () => {
     const values: any[] = []
-    const merged = parallelMerge<any>([1, 2, 3], ['Borekh-Habo', 'Wilkomme', 'Benvenuto'])
+    const merged = parallelMerge([1, 2, 3], ['Borekh-Habo', 'Wilkomme', 'Benvenuto'])
     for await (const val of merged) {
       values.push(val)
     }
@@ -63,7 +63,7 @@ describe('parallelMerge', () => {
   })
   it('a mix of sync and async iterators and iterables', async () => {
     const values: any[] = []
-    const merged = parallelMerge<any>(slowNumbers(), numbers(), fastStrings())
+    const merged = parallelMerge(slowNumbers(), numbers(), fastStrings())
     for await (const val of merged) {
       values.push(val)
     }

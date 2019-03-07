@@ -1,23 +1,20 @@
 /// <reference lib="esnext.asynciterable" />
-import { AnyIterable } from './types'
-async function* _concat(iterables: Array<AnyIterable<any>>) {
+import { AnyIterable, UnArrayAnyIterable } from './types'
+
+async function* _concat<I extends Array<AnyIterable<any>>>(iterables: I): AsyncIterable<UnArrayAnyIterable<I>> {
   for await (const iterable of iterables) {
-    for await (const value of iterable) {
-      yield value
-    }
+    yield* iterable
   }
 }
 
-function* _syncConcat(iterables: Array<Iterable<any>>) {
+function* _syncConcat<I extends Array<Iterable<any>>>(iterables: I): Iterable<UnArrayAnyIterable<I>> {
   for (const iterable of iterables) {
-    for (const value of iterable) {
-      yield value
-    }
+    yield* iterable
   }
 }
 
-export function concat(...iterables: Array<Iterable<any>>): IterableIterator<any>
-export function concat(...iterables: Array<AnyIterable<any>>): AsyncIterableIterator<any>
+export function concat<I extends Array<Iterable<any>>>(...iterables: I): Iterable<UnArrayAnyIterable<I>>
+export function concat<I extends Array<AnyIterable<any>>>(...iterables: I): AsyncIterable<UnArrayAnyIterable<I>>
 export function concat(...iterables: Array<AnyIterable<any>>) {
   const hasAnyAsync = iterables.find(itr => itr[Symbol.asyncIterator] !== undefined)
   if (hasAnyAsync) {

@@ -7,18 +7,19 @@ describe('concat', () => {
       yield 1
     }
     async function* two() {
-      yield 2
+      yield '2'
     }
-    assert.deepEqual(await collect(concat(one(), two())), [1, 2])
+    const itr = concat(one(), two())
+    assert.deepEqual(await collect(itr), [1, '2'])
   })
   it('concatenates multiple sync iterables', async () => {
     function* one() {
       yield 1
     }
     function* two() {
-      yield 2
+      yield '2'
     }
-    assert.deepEqual(collect(concat(one(), two())), [1, 2])
+    assert.deepEqual(collect(concat(one(), two())), [1, '2'])
   })
   it('concatenates mixed sync and async iterables', async () => {
     function* one() {

@@ -1,8 +1,8 @@
 /// <reference lib="esnext.asynciterable" />
+import { AnyIterable, UnArrayAnyIterable } from './types'
 import { getIterator } from './get-iterator'
-import { AnyIterable } from './types'
 
-export async function* merge(...iterables: Array<AnyIterable<any>>) {
+export async function* merge<I extends Array<AnyIterable<any>>>(...iterables: I): AsyncIterable<UnArrayAnyIterable<I>> {
   const sources = new Set(iterables.map(getIterator))
   while (sources.size > 0) {
     for (const iterator of sources) {
@@ -10,7 +10,7 @@ export async function* merge(...iterables: Array<AnyIterable<any>>) {
       if (nextVal.done) {
         sources.delete(iterator)
       } else {
-        yield nextVal.value
+        yield nextVal.value as any
       }
     }
   }
