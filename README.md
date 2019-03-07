@@ -15,6 +15,8 @@ There are no dependencies.
 npm install streaming-iterables
 ```
 
+We ship esm, umd and types.
+
 ## Overview
 Every function is curryable, you can call it with any number of arguments. For example:
 
