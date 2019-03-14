@@ -286,7 +286,7 @@ for await (const pokemon of flatTransform(10, findFriends, getPokemon())) {
 function fromStream<T>(stream: Readable): AsyncIterable<T>
 ```
 
-If you are on a node before node 10, you will have to use `fromStream` to turn the stream into an async iterator. If this function is used and the stream already has one, the one already present on the stream is used. This recommended for backwards compatibility.
+If you are on a node before node 10, you will have to use `fromStream` to turn the stream into an async iterator. If this function is used and the stream already has one, the one already present on the stream is used. This is recommended for backwards compatibility.
 
 ```ts
 import { fromStream } from 'streaming-iterables'
