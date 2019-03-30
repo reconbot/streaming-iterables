@@ -7,17 +7,17 @@ describe('transform', () => {
   it('runs a concurrent number of functions at a time', async () => {
     const ids = [1, 2, 3, 4]
     let loaded = 0
-    const load = id =>
-      promiseImmediate({ id }).then(val => {
-        loaded++
-        return val
-      })
+    async function load(id) {
+      loaded++
+      const val = await promiseImmediate({ id })
+      return val
+    }
     const loadIterator = transform(2, load, ids)[Symbol.asyncIterator]()
     assert.equal(loaded, 0)
     assert.deepEqual(await loadIterator.next(), { value: { id: 1 }, done: false })
-    assert.equal(loaded, 2)
+    assert.equal(loaded, 3)
     assert.deepEqual(await loadIterator.next(), { value: { id: 2 }, done: false })
-    assert.equal(loaded, 2)
+    assert.equal(loaded, 4)
     assert.deepEqual(await loadIterator.next(), { value: { id: 3 }, done: false })
     assert.equal(loaded, 4)
     assert.deepEqual(await loadIterator.next(), { value: { id: 4 }, done: false })

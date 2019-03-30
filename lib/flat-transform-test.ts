@@ -173,6 +173,7 @@ describe('flatTransform', () => {
       if (value === 2) {
         throw new Error('I dont like 2')
       }
+      await promiseImmediate()
       yield value
     }
     const itr = flatTransform(5, throwafter2, source())[Symbol.asyncIterator]()
