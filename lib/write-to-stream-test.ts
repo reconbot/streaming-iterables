@@ -1,6 +1,6 @@
 import { assert } from 'chai'
 import { writeToStream } from './'
-import { PassThrough, Transform } from 'stream'
+import { PassThrough, Transform, Writable } from 'stream'
 import { promiseImmediate } from './util-test'
 
 describe('writeToStream', () => {
@@ -59,5 +59,66 @@ describe('writeToStream', () => {
     const stream = new PassThrough({ highWaterMark: 4, objectMode: true })
     stream.resume()
     await writeToStream(stream, values)
+  })
+  it('throws the first stream error it sees', async () => {
+    const values = [1, 2, 3, 4, 5]
+    const stream = new Writable({ objectMode: true })
+    stream._write = (value, env, cb) => {
+      if (value % 2 === 0) {
+        cb(new Error(`Even numbers are not allowed: ${value}`))
+      } else {
+        cb()
+      }
+    }
+    try {
+      await writeToStream(stream, values)
+      assert.fail('writeToStream did not throw')
+    } catch (err) {
+      assert.equal(err.message, 'Even numbers are not allowed: 2')
+    }
+  })
+  it('stops pulling values from the iterator after an error', async () => {
+    let iterations = 0
+    function* values() {
+      for (let i = 1; i <= 5; i++) {
+        yield i
+        iterations++
+      }
+    }
+    const stream = new Writable({ objectMode: true })
+    stream._write = (value, env, cb) => {
+      if (value % 2 === 0) {
+        cb(new Error(`Even numbers are not allowed: ${value}`))
+      } else {
+        cb()
+      }
+    }
+    try {
+      await writeToStream(stream, values())
+      assert.fail('writeToStream did not throw')
+    } catch (err) {
+      assert.equal(err.message, 'Even numbers are not allowed: 2')
+      assert.equal(iterations, 2)
+    }
+  })
+  it('leaves no dangling error handlers on success', async () => {
+    const values = [1, 2, 3]
+    const stream = new PassThrough({ highWaterMark: 4, objectMode: true })
+    await writeToStream(stream, values)
+    assert.equal(stream.listenerCount('error'), 0)
+  })
+  it('leaves no dangling error handlers on error', async () => {
+    const values = [1, 2, 3]
+    const stream = new Writable({ objectMode: true })
+    stream._write = (value, env, cb) => {
+      cb(new Error('nope'))
+    }
+    try {
+      await writeToStream(stream, values)
+      assert.fail('writeToStream did not throw')
+    } catch (err) {
+      assert.equal(err.message, 'nope')
+      assert.equal(stream.listenerCount('error'), 0)
+    }
   })
 })
