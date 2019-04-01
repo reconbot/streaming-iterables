@@ -62,14 +62,16 @@ describe('writeToStream', () => {
   })
   it('throws the first stream error it sees', async () => {
     const values = [1, 2, 3, 4, 5]
-    const stream = new Writable({ objectMode: true })
-    stream._write = (value, env, cb) => {
-      if (value % 2 === 0) {
-        cb(new Error(`Even numbers are not allowed: ${value}`))
-      } else {
-        cb()
-      }
-    }
+    const stream = new Writable({
+      objectMode: true,
+      write(value, encoding, cb) {
+        if (value % 2 === 0) {
+          cb(new Error(`Even numbers are not allowed: ${value}`))
+        } else {
+          cb()
+        }
+      },
+    })
     try {
       await writeToStream(stream, values)
       assert.fail('writeToStream did not throw')
@@ -81,8 +83,8 @@ describe('writeToStream', () => {
     let iterations = 0
     function* values() {
       for (let i = 1; i <= 5; i++) {
-        yield i
         iterations++
+        yield i
       }
     }
     const stream = new Writable({ objectMode: true })

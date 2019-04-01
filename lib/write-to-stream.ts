@@ -13,22 +13,30 @@ function once(event: string, stream: IWritable): Promise<any> {
   })
 }
 
-async function _writeToStream(stream: IWritable, iterable: AnyIterable<any>) {
+async function _writeToStream(stream: IWritable, iterable: AnyIterable<any>): Promise<void> {
   let errorListener
+  let error
   const errorPromise = new Promise((resolve, reject) => {
-    errorListener = reject
-    stream.once('error', reject)
-  })
+    errorListener = err => {
+      error = err
+      reject(err)
+    }
+    stream.once('error', errorListener)
+  }) as Promise<void>
 
   for await (const value of iterable) {
-    await Promise.race([errorPromise, Promise.resolve()])
     if (stream.write(value) === false) {
       await Promise.race([errorPromise, once('drain', stream)])
+    }
+    if (error) {
+      return errorPromise
     }
   }
 
   stream.removeListener('error', errorListener)
-  await Promise.race([errorPromise, Promise.resolve()])
+  if (error) {
+    return errorPromise
+  }
 }
 
 export function writeToStream(stream: IWritable): (iterable: AnyIterable<any>) => Promise<void>
