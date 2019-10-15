@@ -34,4 +34,21 @@ describe('filter', () => {
     }
     assert.deepEqual(numbers, [1, 2, 3])
   })
+
+  it('narrows type', async () => {
+    const numbers: number[] = []
+    for await (const num of filter((i): i is number => typeof i === 'number', [1, 'a', 2, 'b', 3])) {
+      numbers.push(num)
+    }
+    assert.deepEqual(numbers, [1, 2, 3])
+  })
+  it('narrows type after currying', async () => {
+    const numbers: number[] = []
+    const values = asyncFromArray([1, 'a', 2, 'b', 3])
+    const filterNumber = filter((i): i is number => typeof i === 'number')
+    for await (const num of filterNumber(values)) {
+      numbers.push(num)
+    }
+    assert.deepEqual(numbers, [1, 2, 3])
+  })
 })
