@@ -1,7 +1,7 @@
 /// <reference lib="esnext.asynciterable" />
 interface IReadable {
-  once: any
-  read: any
+  once(event: string, cb: (value: any) => void): any
+  read(): any
 }
 
 async function onceReadable(stream: IReadable) {
