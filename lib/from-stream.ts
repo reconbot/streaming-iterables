@@ -4,25 +4,29 @@ interface IReadable {
   read(): any
 }
 
-async function onceReadable(stream: IReadable) {
+async function once(stream: IReadable, event: string) {
   return new Promise(resolve => {
-    stream.once('readable', () => {
-      resolve()
-    })
+    stream.once(event, resolve)
   })
 }
 
+const ENDED = Symbol('Stream has ended')
+
 async function* _fromStream(stream: IReadable) {
+  const ended = once(stream, 'end').then(() => ENDED)
+  const errored = once(stream, 'error').then(error => Promise.reject(error))
+
   while (true) {
     const data = stream.read()
     if (data !== null) {
       yield data
       continue
     }
-    if ((stream as any)._readableState.ended) {
+
+    const state = await Promise.race([ended, errored, once(stream, 'readable')])
+    if (state === ENDED) {
       return
     }
-    await onceReadable(stream)
   }
 }
 
