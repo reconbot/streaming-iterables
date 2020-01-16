@@ -9,6 +9,35 @@ export async function* parallelMerge<I extends Array<AnyIterable<any>>>(
   const concurrentWork = new Set()
   const values = new Map()
 
+  type NullOrFunction = null | ((anything: any) => void)
+
+  let lastError = null
+  let errCb: NullOrFunction = null
+  let valueCb: NullOrFunction = null
+
+  const notifyError = err => {
+    lastError = err
+    if (errCb) {
+      errCb(err)
+    }
+  }
+
+  const notifyDone = value => {
+    if (valueCb) {
+      valueCb(value)
+    }
+  }
+
+  const waitForQueue = () =>
+    new Promise((resolve, reject) => {
+      if (lastError) {
+        reject(lastError)
+      }
+      valueCb = resolve
+      errCb = reject
+      return this
+    })
+
   const queueNext = input => {
     const nextVal = Promise.resolve(input.next()).then(async ({ done, value }) => {
       if (!done) {
@@ -17,6 +46,7 @@ export async function* parallelMerge<I extends Array<AnyIterable<any>>>(
       concurrentWork.delete(nextVal)
     })
     concurrentWork.add(nextVal)
+    nextVal.then(notifyDone, notifyError)
   }
 
   for (const input of inputs) {
@@ -27,7 +57,7 @@ export async function* parallelMerge<I extends Array<AnyIterable<any>>>(
     if (concurrentWork.size === 0) {
       return
     }
-    await Promise.race(concurrentWork)
+    await waitForQueue()
     for (const [input, value] of values) {
       values.delete(input)
       yield value
