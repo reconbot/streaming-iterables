@@ -35,7 +35,6 @@ export async function* parallelMerge<I extends Array<AnyIterable<any>>>(
       }
       valueCb = resolve
       errCb = reject
-      return this
     })
 
   const queueNext = input => {
