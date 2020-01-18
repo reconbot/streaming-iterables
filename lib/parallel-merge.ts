@@ -31,6 +31,9 @@ export async function* parallelMerge<I extends Array<AnyIterable<any>>>(
       if (lastError) {
         reject(lastError)
       }
+      if (values.size > 0) {
+        return resolve()
+      }
       valueCb = resolve
       errCb = reject
     })
@@ -51,7 +54,7 @@ export async function* parallelMerge<I extends Array<AnyIterable<any>>>(
   }
 
   while (true) {
-    if (concurrentWork.size === 0) {
+    if (concurrentWork.size === 0 && values.size === 0) {
       return
     }
     await waitForQueue()
