@@ -54,6 +54,9 @@ export async function* parallelMerge<I extends Array<AnyIterable<any>>>(
   }
 
   while (true) {
+    // We technically don't have to check `values.size` as the for loop should have emptied it
+    // However I haven't yet found specs verifying that behavior, only tests
+    // the guard in waitForQueue() checking for values is in place for the same reason
     if (concurrentWork.size === 0 && values.size === 0) {
       return
     }
