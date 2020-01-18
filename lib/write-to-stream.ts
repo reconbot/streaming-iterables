@@ -1,5 +1,5 @@
 /// <reference lib="esnext.asynciterable" />
-import { AnyIterable } from './types'
+import { AnyIterable, NullOrFunction } from './types'
 
 interface IWritable {
   once: any
@@ -14,28 +14,52 @@ function once(event: string, stream: IWritable): Promise<any> {
 }
 
 async function _writeToStream(stream: IWritable, iterable: AnyIterable<any>): Promise<void> {
-  let errorListener
-  let error
-  const errorPromise = new Promise((resolve, reject) => {
-    errorListener = err => {
-      error = err
-      reject(err)
-    }
-    stream.once('error', errorListener)
-  }) as Promise<void>
+  let lastError = null
+  let errCb: NullOrFunction = null
+  let drainCb: NullOrFunction = null
 
-  for await (const value of iterable) {
-    if (stream.write(value) === false) {
-      await Promise.race([errorPromise, once('drain', stream)])
-    }
-    if (error) {
-      return errorPromise
+  const notifyError = err => {
+    lastError = err
+    if (errCb) {
+      errCb(err)
     }
   }
 
-  stream.removeListener('error', errorListener)
-  if (error) {
-    return errorPromise
+  const notifyDrain = () => {
+    if (drainCb) {
+      drainCb()
+    }
+  }
+
+  const cleanup = () => {
+    stream.removeListener('error', notifyError)
+    stream.removeListener('drain', notifyDrain)
+  }
+
+  stream.once('error', notifyError)
+
+  const waitForDrain = () =>
+    new Promise((resolve, reject) => {
+      if (lastError) {
+        return reject(lastError)
+      }
+      stream.once('drain', notifyDrain)
+      drainCb = resolve
+      errCb = reject
+    })
+
+  for await (const value of iterable) {
+    if (stream.write(value) === false) {
+      await waitForDrain()
+    }
+    if (lastError) {
+      break
+    }
+  }
+
+  cleanup()
+  if (lastError) {
+    throw lastError
   }
 }
 
