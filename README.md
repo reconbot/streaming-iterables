@@ -1,6 +1,6 @@
 # streaming-iterables 🏄‍♂️
 
-[![Build Status](https://travis-ci.org/bustle/streaming-iterables.svg?branch=master)](https://travis-ci.org/bustle/streaming-iterables) [![Try streaming-iterables on RunKit](https://badge.runkitcdn.com/streaming-iterables.svg)](https://npm.runkit.com/streaming-iterables) [![install size](https://packagephobia.now.sh/badge?p=streaming-iterables)](https://packagephobia.now.sh/result?p=streaming-iterables)
+![Node CI](https://github.com/reconbot/streaming-iterables/workflows/Node%20CI/badge.svg?branch=master) [![Try streaming-iterables on RunKit](https://badge.runkitcdn.com/streaming-iterables.svg)](https://npm.runkit.com/streaming-iterables) [![install size](https://packagephobia.now.sh/badge?p=streaming-iterables)](https://packagephobia.now.sh/result?p=streaming-iterables)
 
 A Swiss army knife for [async iterables](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of). Designed to help replace your streams. These utilities have a comparable speed, friendlier error handling, and are easier to understand than most stream based workloads.
 
