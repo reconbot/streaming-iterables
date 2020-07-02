@@ -1,6 +1,6 @@
 {
   "name": "streaming-iterables",
-  "version": "4.1.2",
+  "version": "5.0.0",
   "description": "A collection of utilities for async iterables. Designed to replace your streams.",
   "main": "dist/index.js",
   "module": "dist/index-esm.js",
@@ -60,7 +60,10 @@
   },
   "mocha": {
     "bail": true,
-    "require": ["ts-node/register", "chai/register-assert"],
+    "require": [
+      "ts-node/register",
+      "chai/register-assert"
+    ],
     "spec": "lib/*-test.ts"
   }
 }
