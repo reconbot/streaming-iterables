@@ -35,13 +35,7 @@ for await (const str of stringable([1,2,3])) {
 // "1", "2", "3"
 ```
 
-Since this works with async iterators it polyfills the symbol `Symbol.asyncIterator` if it doesn't exist. (Not needed after node 10.)
-
-```ts
-if ((Symbol as any).asyncIterator === undefined) {
-  ;(Symbol as any).asyncIterator = Symbol.for('asyncIterator')
-}
-```
+Since this works with async iterators it requires node 10 or higher.
 
 ## API
 

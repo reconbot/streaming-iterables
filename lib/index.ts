@@ -1,9 +1,5 @@
 /// <reference lib="esnext.asynciterable" />
 
-if ((Symbol as any).asyncIterator === undefined) {
-  ;(Symbol as any).asyncIterator = Symbol.for('asyncIterator')
-}
-
 export { batch, CurriedBatchResult, UnwrapAnyIterableArray } from './batch'
 export { buffer, CurriedBufferResult } from './buffer'
 export { collect } from './collect'
