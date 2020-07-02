@@ -62,7 +62,7 @@ describe('buffer', () => {
     assert.deepEqual(values, [1, 2, 3, 4])
   })
   it('propagates errors after buffer drains sync', () => {
-    const source = function*() {
+    const source = function* () {
       yield 1
       yield 2
       yield 3
@@ -82,7 +82,7 @@ describe('buffer', () => {
     assert.deepEqual(itr.next() as any, { done: true, value: undefined })
   })
   it('propagates errors after buffer drains async', async () => {
-    const source = async function*() {
+    const source = async function* () {
       yield 1
       yield 2
       yield 3

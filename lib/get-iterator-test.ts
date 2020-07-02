@@ -11,7 +11,7 @@ describe('getIterator', () => {
   })
   it('gives a sync iterator for a sync iterator', () => {
     const iterator = getIterator(
-      (function*() {
+      (function* () {
         yield 1
       })()
     )
@@ -35,7 +35,7 @@ describe('getIterator', () => {
     })
   })
   it('gives an async iterator for an async iterator', async () => {
-    const asyncIterator = async function*() {
+    const asyncIterator = async function* () {
       yield 1
     }
     const iterator = getIterator(asyncIterator())
