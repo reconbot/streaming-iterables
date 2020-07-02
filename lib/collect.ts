@@ -9,13 +9,13 @@ async function _collect<T>(iterable: AsyncIterable<T>) {
   return values
 }
 
-type UnwrapAnyIterable<M extends AnyIterable<any>> = M extends Iterable<infer T>
+export type UnwrapToPromiseOrAsyncIterable<M extends AnyIterable<any>> = M extends Iterable<infer T>
   ? T[]
   : M extends AsyncIterable<infer B>
   ? Promise<B[]>
   : never
 
-export function collect<T, M extends AnyIterable<T>>(iterable: M): UnwrapAnyIterable<M>
+export function collect<T, M extends AnyIterable<T>>(iterable: M): UnwrapToPromiseOrAsyncIterable<M>
 export function collect<T>(iterable: AnyIterable<T>) {
   if (iterable[Symbol.asyncIterator]) {
     return _collect(iterable as AsyncIterable<any>)

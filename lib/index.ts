@@ -2,7 +2,7 @@
 
 export { batch, CurriedBatchResult, UnwrapAnyIterableArray } from './batch'
 export { buffer, CurriedBufferResult } from './buffer'
-export { collect } from './collect'
+export { collect, UnwrapToPromiseOrAsyncIterable } from './collect'
 export { concat } from './concat'
 export { consume } from './consume'
 export { filter } from './filter'
