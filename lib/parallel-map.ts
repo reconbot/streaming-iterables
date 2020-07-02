@@ -15,7 +15,7 @@ async function* _parallelMap<T, R>(
     value: func(value),
   })
 
-  const stopOnError = async function*<P>(source: AnyIterable<P>) {
+  const stopOnError = async function* <P>(source: AnyIterable<P>) {
     for await (const value of source) {
       if (transformError) {
         return

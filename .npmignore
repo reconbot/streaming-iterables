@@ -12,3 +12,6 @@ rollup.config-esm.js
 rollup.config-umd.js
 budle-types.js
 dist/tsdoc-metadata.json
+SECURITY.md
+api-extractor.json
+.github

@@ -1,10 +1,10 @@
 /// <reference lib="esnext.asynciterable" />
-interface IReadable {
+export interface ReadableStreamish {
   once: any
   read: any
 }
 
-async function onceReadable(stream: IReadable) {
+async function onceReadable(stream: ReadableStreamish) {
   return new Promise(resolve => {
     stream.once('readable', () => {
       resolve()
@@ -12,7 +12,7 @@ async function onceReadable(stream: IReadable) {
   })
 }
 
-async function* _fromStream(stream: IReadable) {
+async function* _fromStream(stream: ReadableStreamish) {
   while (true) {
     const data = stream.read()
     if (data !== null) {
@@ -26,7 +26,7 @@ async function* _fromStream(stream: IReadable) {
   }
 }
 
-export function fromStream<T>(stream: IReadable): AsyncIterable<T> {
+export function fromStream<T>(stream: ReadableStreamish): AsyncIterable<T> {
   if (typeof stream[Symbol.asyncIterator] === 'function') {
     return stream as any
   }

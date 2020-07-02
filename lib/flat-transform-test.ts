@@ -167,7 +167,7 @@ describe('flatTransform', () => {
       yield 2
       yield 3
     }
-    const throwafter2 = async function*(value) {
+    const throwafter2 = async function* (value) {
       await promiseImmediate()
       yield value
       if (value === 2) {

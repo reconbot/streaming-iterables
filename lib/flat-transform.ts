@@ -13,7 +13,7 @@ function _flatTransform<T, R>(
   const iterator = getIterator(iterable)
 
   const resultQueue: R[] = []
-  const readQueue: Array<IDeferred<IteratorResult<R>>> = []
+  const readQueue: IDeferred<IteratorResult<R>>[] = []
 
   let ended = false
   let reading = false
@@ -111,18 +111,18 @@ function _flatTransform<T, R>(
 export function flatTransform<T, R>(
   concurrency: number
 ): {
-  (func: (data: T) => FlatMapValue<R>, iterable: AnyIterable<T>): AsyncIterableIterator<R>
-  (func: (data: T) => FlatMapValue<R>): (iterable: AnyIterable<T>) => AsyncIterableIterator<R>
+  (func: (data: T) => FlatMapValue<R>, iterable: AnyIterable<T>): AsyncGenerator<R>
+  (func: (data: T) => FlatMapValue<R>): (iterable: AnyIterable<T>) => AsyncGenerator<R>
 }
 export function flatTransform<T, R>(
   concurrency: number,
   func: (data: T) => FlatMapValue<R>
-): (iterable: AnyIterable<T>) => AsyncIterableIterator<R>
+): (iterable: AnyIterable<T>) => AsyncGenerator<R>
 export function flatTransform<T, R>(
   concurrency: number,
   func: (data: T) => FlatMapValue<R>,
   iterable: AnyIterable<T>
-): AsyncIterableIterator<R>
+): AsyncGenerator<R>
 export function flatTransform<T, R>(
   concurrency: number,
   func?: (data: T) => FlatMapValue<R>,

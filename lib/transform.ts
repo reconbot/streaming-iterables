@@ -11,7 +11,7 @@ function _transform<T, R>(
   const iterator = getIterator(iterable)
 
   const resultQueue: R[] = []
-  const readQueue: Array<IDeferred<IteratorResult<R>>> = []
+  const readQueue: IDeferred<IteratorResult<R>>[] = []
 
   let ended = false
   let reading = false

@@ -2,7 +2,7 @@
 import { getIterator } from './get-iterator'
 import { AnyIterable, UnArrayAnyIterable, NullOrFunction } from './types'
 
-export async function* parallelMerge<I extends Array<AnyIterable<any>>>(
+export async function* parallelMerge<I extends AnyIterable<any>[]>(
   ...iterables: I
 ): AsyncIterable<UnArrayAnyIterable<I>> {
   const inputs = iterables.map(getIterator)

@@ -1,7 +1,7 @@
 /// <reference lib="esnext.asynciterable" />
 import { getIterator } from './get-iterator'
 import { defer, IDeferred } from './defer'
-import { AnyIterable } from './types'
+import { AnyIterable, UnwrapAnyIterable } from './types'
 
 interface IValueObj<T> {
   error?: Error
@@ -10,8 +10,8 @@ interface IValueObj<T> {
 
 function _buffer<T>(size: number, iterable: AsyncIterable<T>): AsyncIterableIterator<T> {
   const iterator = getIterator(iterable)
-  const resultQueue: Array<IValueObj<T>> = []
-  const readQueue: Array<IDeferred<IteratorResult<T>>> = []
+  const resultQueue: IValueObj<T>[] = []
+  const readQueue: IDeferred<IteratorResult<T>>[] = []
 
   let reading = false
   let ended: boolean = false
@@ -109,12 +109,7 @@ function* syncBuffer<T>(size: number, iterable: Iterable<T>): IterableIterator<T
   }
 }
 
-type UnwrapAnyIterable<M extends AnyIterable<any>> = M extends Iterable<infer T>
-  ? Iterable<T>
-  : M extends AsyncIterable<infer B>
-  ? AsyncIterable<B>
-  : never
-type CurriedBufferResult = <T, M extends AnyIterable<T>>(curriedIterable: M) => UnwrapAnyIterable<M>
+export type CurriedBufferResult = <T, M extends AnyIterable<T>>(curriedIterable: M) => UnwrapAnyIterable<M>
 
 export function buffer(size: number): CurriedBufferResult
 export function buffer<T, M extends AnyIterable<T>>(size: number, iterable: M): UnwrapAnyIterable<M>

@@ -1,19 +1,19 @@
 /// <reference lib="esnext.asynciterable" />
 import { AnyIterable, NullOrFunction } from './types'
 
-interface IWritable {
+export interface WritableStreamish {
   once: any
   write: any
   removeListener: any
 }
 
-function once(event: string, stream: IWritable): Promise<any> {
+function once(event: string, stream: WritableStreamish): Promise<any> {
   return new Promise(resolve => {
     stream.once(event, resolve)
   })
 }
 
-async function _writeToStream(stream: IWritable, iterable: AnyIterable<any>): Promise<void> {
+async function _writeToStream(stream: WritableStreamish, iterable: AnyIterable<any>): Promise<void> {
   let lastError = null
   let errCb: NullOrFunction = null
   let drainCb: NullOrFunction = null
@@ -63,9 +63,9 @@ async function _writeToStream(stream: IWritable, iterable: AnyIterable<any>): Pr
   }
 }
 
-export function writeToStream(stream: IWritable): (iterable: AnyIterable<any>) => Promise<void>
-export function writeToStream(stream: IWritable, iterable: AnyIterable<any>): Promise<void>
-export function writeToStream(stream: IWritable, iterable?: AnyIterable<any>) {
+export function writeToStream(stream: WritableStreamish): (iterable: AnyIterable<any>) => Promise<void>
+export function writeToStream(stream: WritableStreamish, iterable: AnyIterable<any>): Promise<void>
+export function writeToStream(stream: WritableStreamish, iterable?: AnyIterable<any>) {
   if (iterable === undefined) {
     return (curriedIterable: AnyIterable<any>) => _writeToStream(stream, curriedIterable)
   }

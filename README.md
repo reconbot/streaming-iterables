@@ -70,8 +70,8 @@ if ((Symbol as any).asyncIterator === undefined) {
 
 ### batch
 ```ts
-function batch<T>(size: number, iterable: AsyncIterable<T>): AsyncIterableIterator<T[]>
-function batch<T>(size: number, iterable: Iterable<T>): IterableIterator<T[]>
+function batch<T>(size: number, iterable: AsyncIterable<T>): AsyncGenerator<T[]>
+function batch<T>(size: number, iterable: Iterable<T>): Generator<T[]>
 ```
 
 Batch objects from `iterable` into arrays of `size` length. The final array may be shorter than size if there is not enough items. Returns a sync iterator if the `iterable` is sync, otherwise an async iterator. Errors from the source `iterable` are immediately raised.
@@ -90,8 +90,8 @@ for await (const pokemons of batch(10, getPokemon())) {
 
 ### buffer
 ```ts
-function buffer<T>(size: number, iterable: AsyncIterable<T>): AsyncIterableIterator<T>
-function buffer<T>(size: number, iterable: Iterable<T>): IterableIterator<T>
+function buffer<T>(size: number, iterable: AsyncIterable<T>): AsyncIterable<T>
+function buffer<T>(size: number, iterable: Iterable<T>): AsyncIterable<T>
 ```
 Buffer keeps a number of objects in reserve available for immediate reading. This is helpful with async iterators as it will prefetch results so you don't have to wait for them to load. For sync iterables it will precompute up to `size` values and keep them in reserve. The internal buffer will start to be filled once `.next()` is called for the first time and will continue to fill until the source `iterable` is exhausted or the buffer is full. Errors from the source `iterable` will be raised after all buffered values are yielded.
 
@@ -125,8 +125,8 @@ console.log(await collect(getPokemon()))
 
 ### concat
 ```ts
-function concat(...iterables: Array<Iterable<any>>): IterableIterator<any>
-function concat(...iterables: Array<AnyIterable<any>>): AsyncIterableIterator<any>
+function concat(...iterables: Array<Iterable<any>>): Iterable<any>
+function concat(...iterables: Array<AnyIterable<any>>): AsyncIterable<any>
 ```
 
 Combine multiple iterators into a single iterable. Reads each iterable completely one at a time. Returns a sync iterator if all `iterables` are sync, otherwise it returns an async iterable. Errors from the source `iterable` are raised immediately.
@@ -163,7 +163,7 @@ await consume(train(getPokemon())) // load all the pokemon and train them!
 
 ### flatMap
 ```ts
-function flatMap<T, B>(func: (data: T) => FlatMapValue<B>, iterable: AnyIterable<T>): AsyncIterableIterator<B>
+function flatMap<T, B>(func: (data: T) => FlatMapValue<B>, iterable: AnyIterable<T>): AsyncGenerator<B>
 ```
 
 Map `func` over the `iterable`, flatten the result and then ignore all null or undefined values. It's the transform function we've always needed. It's equivalent to;
