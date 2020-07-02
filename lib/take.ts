@@ -1,5 +1,5 @@
 /// <reference lib="esnext.asynciterable" />
-import { AnyIterable } from './types'
+import { AnyIterable, UnwrapAnyIterable } from './types'
 
 async function* _take<T>(count: number, iterable: AsyncIterable<T>) {
   let taken = 0
@@ -23,12 +23,7 @@ function* _syncTake<T>(count: number, iterable: Iterable<T>) {
   }
 }
 
-type UnwrapAnyIterable<M extends AnyIterable<any>> = M extends Iterable<infer T>
-  ? Iterable<T>
-  : M extends AsyncIterable<infer B>
-  ? AsyncIterable<B>
-  : never
-type CurriedTakeResult = <T, M extends AnyIterable<T>>(curriedIterable: M) => UnwrapAnyIterable<M>
+export type CurriedTakeResult = <T, M extends AnyIterable<T>>(curriedIterable: M) => UnwrapAnyIterable<M>
 
 export function take(count: number): CurriedTakeResult
 export function take<T, M extends AnyIterable<T>>(count: number, iterable: M): UnwrapAnyIterable<M>

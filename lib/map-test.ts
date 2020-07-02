@@ -1,11 +1,12 @@
 import { assert } from 'chai'
 import { map } from './'
-import { makeDelay, asyncString } from './util-test'
+import { makeDelay, asyncString, asyncFromArray } from './util-test'
 
 describe('map', () => {
   it('iterates a sync function over an async value', async () => {
     const values: any[] = []
-    for await (const val of map(String, [1, 2, 3])) {
+    const asyncArray = asyncFromArray([1, 2, 3])
+    for await (const val of map(String, asyncArray)) {
       values.push(val)
     }
     assert.deepEqual(values, ['1', '2', '3'])
@@ -19,7 +20,8 @@ describe('map', () => {
   })
   it('iterates an async function over an async value', async () => {
     const values: any[] = []
-    for await (const val of map(asyncString, [1, 2, 3])) {
+    const asyncArray = asyncFromArray([1, 2, 3])
+    for await (const val of map(asyncString, asyncArray)) {
       values.push(val)
     }
     assert.deepEqual(values, ['1', '2', '3'])

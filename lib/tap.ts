@@ -8,8 +8,8 @@ async function* _asyncTap<T>(func: (data: T) => any, iterable: AnyIterable<T>) {
   }
 }
 
-export function tap<T>(func: (data: T) => any): (iterable: AnyIterable<T>) => AsyncIterableIterator<T>
-export function tap<T>(func: (data: T) => any, iterable: AnyIterable<T>): AsyncIterableIterator<T>
+export function tap<T>(func: (data: T) => any): (iterable: AnyIterable<T>) => AsyncGenerator<T>
+export function tap<T>(func: (data: T) => any, iterable: AnyIterable<T>): AsyncGenerator<T>
 export function tap<T>(func: (data: T) => any, iterable?: AnyIterable<T>) {
   if (iterable === undefined) {
     return (curriedIterable: AnyIterable<T>) => _asyncTap(func, curriedIterable)

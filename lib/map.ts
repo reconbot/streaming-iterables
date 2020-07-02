@@ -6,8 +6,8 @@ async function* _map<T, B>(func: (data: T) => B | Promise<B>, iterable: AnyItera
   }
 }
 
-export function map<T, B>(func: (data: T) => B | Promise<B>): (iterable: AnyIterable<T>) => AsyncIterableIterator<B>
-export function map<T, B>(func: (data: T) => B | Promise<B>, iterable: AnyIterable<T>): AsyncIterableIterator<B>
+export function map<T, B>(func: (data: T) => B | Promise<B>): (iterable: AnyIterable<T>) => AsyncGenerator<B>
+export function map<T, B>(func: (data: T) => B | Promise<B>, iterable: AnyIterable<T>): AsyncGenerator<B>
 export function map<T, B>(func: (data: T) => B | Promise<B>, iterable?: AnyIterable<T>) {
   if (iterable === undefined) {
     return curriedIterable => _map(func, curriedIterable)

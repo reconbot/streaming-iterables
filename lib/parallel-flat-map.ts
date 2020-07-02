@@ -7,18 +7,18 @@ import { parallelMap } from './parallel-map'
 export function parallelFlatMap<T, R>(
   concurrency: number
 ): {
-  (func: (data: T) => R | Promise<R>, iterable: AnyIterable<T>): AsyncIterableIterator<R>
-  (func: (data: T) => R | Promise<R>): (iterable: AnyIterable<T>) => AsyncIterableIterator<R>
+  (func: (data: T) => R | Promise<R>, iterable: AnyIterable<T>): AsyncGenerator<R>
+  (func: (data: T) => R | Promise<R>): (iterable: AnyIterable<T>) => AsyncGenerator<R>
 }
 export function parallelFlatMap<T, R>(
   concurrency: number,
   func: (data: T) => R | Promise<R>
-): (iterable: AnyIterable<T>) => AsyncIterableIterator<R>
+): (iterable: AnyIterable<T>) => AsyncGenerator<R>
 export function parallelFlatMap<T, R>(
   concurrency: number,
   func: (data: T) => R | Promise<R>,
   iterable: AnyIterable<T>
-): AsyncIterableIterator<R>
+): AsyncGenerator<R>
 export function parallelFlatMap<T, R>(
   concurrency: number,
   func?: (data: T) => R | Promise<R>,

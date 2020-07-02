@@ -10,10 +10,10 @@
   "runkitExampleFilename": "example.js",
   "scripts": {
     "test": "npm run unit-test && npm run lint",
-    "unit-test": "mocha --opts lib/mocha.opts",
+    "unit-test": "mocha",
     "lint": "tsc && tslint lib/*.ts",
     "format": "tslint lib/*.ts --fix",
-    "build": "tsc -p tsconfig-build.json && rollup -c rollup.config-esm.js && rollup -c rollup.config-umd.js && node bundle-types.js",
+    "build": "tsc -p tsconfig-build.json && rollup -c rollup.config-esm.js && rollup -c rollup.config-umd.js && api-extractor run --local --verbose",
     "prepare": "npm run build"
   },
   "keywords": [
@@ -36,26 +36,31 @@
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
-    "@microsoft/api-extractor": "^6.3.0",
-    "@types/chai": "^4.1.7",
-    "@types/mocha": "^5.2.5",
-    "@types/node": "^10.12.4",
+    "@microsoft/api-extractor": "^7.8.15",
+    "@types/chai": "^4.2.11",
+    "@types/mocha": "^7.0.2",
+    "@types/node": "^14.0.14",
     "benchmark": "^2.1.4",
     "bluestream": "^10.3.3",
     "chai": "^4.2.0",
-    "mocha": "^5.2.0",
-    "prettier": "^1.15.2",
-    "rollup": "^1.4.1",
-    "rollup-plugin-node-resolve": "^4.0.1",
+    "mocha": "^8.0.1",
+    "prettier": "^2.0.5",
+    "rollup": "^2.18.1",
+    "rollup-plugin-node-resolve": "^5.2.0",
     "through2-concurrent": "^2.0.0",
-    "ts-node": "^7.0.1",
-    "tslib": "^1.9.3",
-    "tslint": "^5.11.0",
-    "tslint-config-prettier": "^1.16.0",
-    "tslint-plugin-prettier": "^2.0.1",
-    "typescript": "^3.3.3333"
+    "ts-node": "^8.10.2",
+    "tslib": "^2.0.0",
+    "tslint": "^6.1.2",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-plugin-prettier": "^2.3.0",
+    "typescript": "3.9.6"
   },
   "engines": {
     "node": ">=8"
+  },
+  "mocha": {
+    "bail": true,
+    "require": ["ts-node/register", "chai/register-assert"],
+    "spec": "lib/*-test.ts"
   }
 }

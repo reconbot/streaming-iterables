@@ -2,7 +2,7 @@
 import { AnyIterable, UnArrayAnyIterable } from './types'
 import { getIterator } from './get-iterator'
 
-export async function* merge<I extends Array<AnyIterable<any>>>(...iterables: I): AsyncIterable<UnArrayAnyIterable<I>> {
+export async function* merge<I extends AnyIterable<any>[]>(...iterables: I): AsyncIterable<UnArrayAnyIterable<I>> {
   const sources = new Set(iterables.map(getIterator))
   while (sources.size > 0) {
     for (const iterator of sources) {

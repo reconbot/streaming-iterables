@@ -29,16 +29,17 @@ function* _syncBatch<T>(size: number, iterable: Iterable<T>) {
   }
 }
 
-type UnwrapAnyIterable<M extends AnyIterable<any>> = M extends Iterable<infer T>
-  ? Iterable<T[]>
+export type UnwrapAnyIterableArray<M extends AnyIterable<any>> = M extends Iterable<infer T>
+  ? Generator<T[]>
   : M extends AsyncIterable<infer B>
-  ? AsyncIterable<B[]>
+  ? AsyncGenerator<B[]>
   : never
-type CurriedBatchResult = <T, M extends AnyIterable<T>>(curriedIterable: M) => UnwrapAnyIterable<M>
+
+export type CurriedBatchResult = <T, M extends AnyIterable<T>>(curriedIterable: M) => UnwrapAnyIterableArray<M>
 
 export function batch(size: number): CurriedBatchResult
-export function batch<T, M extends AnyIterable<T>>(size: number, iterable: M): UnwrapAnyIterable<M>
-export function batch<T>(size: number, iterable?: AnyIterable<T>): CurriedBatchResult | UnwrapAnyIterable<any> {
+export function batch<T, M extends AnyIterable<T>>(size: number, iterable: M): UnwrapAnyIterableArray<M>
+export function batch<T>(size: number, iterable?: AnyIterable<T>): CurriedBatchResult | UnwrapAnyIterableArray<any> {
   if (iterable === undefined) {
     return curriedIterable => batch(size, curriedIterable)
   }

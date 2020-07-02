@@ -1,7 +1,6 @@
 import { assert } from 'chai'
 import { pipeline } from './'
 import { collect } from './collect'
-import { map } from './map'
 
 describe('reduce', () => {
   it('calls an argument list of functions', async () => {

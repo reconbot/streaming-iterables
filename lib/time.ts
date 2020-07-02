@@ -1,7 +1,7 @@
 /// <reference lib="esnext.asynciterable" />
-import { AnyIterable } from './types'
+import { AnyIterable, UnwrapAnyIterable } from './types'
 
-interface ITimeConfig {
+export interface TimeConfig {
   progress?: (delta: [number, number], total: [number, number]) => any
   total?: (time: [number, number]) => any
 }
@@ -19,7 +19,7 @@ function addTime(a: [number, number], b: [number, number]): [number, number] {
   return [seconds, nanoseconds]
 }
 
-async function* _asyncTime<T>(config: ITimeConfig, iterable: AsyncIterable<T>) {
+async function* _asyncTime<T>(config: TimeConfig, iterable: AsyncIterable<T>) {
   const itr = iterable[Symbol.asyncIterator]()
   let total: [number, number] = [0, 0]
   while (true) {
@@ -40,7 +40,7 @@ async function* _asyncTime<T>(config: ITimeConfig, iterable: AsyncIterable<T>) {
   }
 }
 
-function* _syncTime<T>(config: ITimeConfig, iterable: Iterable<T>) {
+function* _syncTime<T>(config: TimeConfig, iterable: Iterable<T>) {
   const itr = iterable[Symbol.iterator]()
   let total: [number, number] = [0, 0]
   while (true) {
@@ -61,19 +61,11 @@ function* _syncTime<T>(config: ITimeConfig, iterable: Iterable<T>) {
   }
 }
 
-type UnwrapAnyIterable<M extends AnyIterable<any>> = M extends Iterable<infer T>
-  ? Iterable<T>
-  : M extends AsyncIterable<infer B>
-  ? AsyncIterable<B>
-  : never
-type CurriedTimeResult = <T, M extends AnyIterable<T>>(curriedIterable: M) => UnwrapAnyIterable<M>
+export type CurriedTimeResult = <T, M extends AnyIterable<T>>(curriedIterable: M) => UnwrapAnyIterable<M>
 
-export function time(config?: ITimeConfig): CurriedTimeResult
-export function time<T, M extends AnyIterable<T>>(config: ITimeConfig, iterable: M): UnwrapAnyIterable<M>
-export function time(
-  config: ITimeConfig = {},
-  iterable?: AnyIterable<any>
-): CurriedTimeResult | UnwrapAnyIterable<any> {
+export function time(config?: TimeConfig): CurriedTimeResult
+export function time<T, M extends AnyIterable<T>>(config: TimeConfig, iterable: M): UnwrapAnyIterable<M>
+export function time(config: TimeConfig = {}, iterable?: AnyIterable<any>): CurriedTimeResult | UnwrapAnyIterable<any> {
   if (iterable === undefined) {
     return curriedIterable => time(config, curriedIterable)
   }
