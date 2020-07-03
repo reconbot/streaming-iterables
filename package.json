@@ -2,8 +2,12 @@
   "name": "streaming-iterables",
   "version": "5.0.1",
   "description": "A collection of utilities for async iterables. Designed to replace your streams.",
-  "main": "dist/index.js",
-  "module": "dist/index-esm.js",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "exports": {
+    "require": "./dist/index.js",
+    "import": "./dist/index.mjs"
+  },
   "types": "dist/index.d.ts",
   "repository": "git@github.com:reconbot/streaming-iterables.git",
   "homepage": "https://github.com/reconbot/streaming-iterables",
@@ -13,7 +17,7 @@
     "unit-test": "mocha",
     "lint": "tsc && tslint lib/*.ts",
     "format": "tslint lib/*.ts --fix",
-    "build": "tsc -p tsconfig-build.json && rollup -c rollup.config-esm.js && rollup -c rollup.config-umd.js && api-extractor run --local --verbose",
+    "build": "tsc -p tsconfig-build.json && rollup -c && api-extractor run --local --verbose",
     "prepare": "npm run build"
   },
   "keywords": [
