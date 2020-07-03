@@ -7,7 +7,7 @@ async function* _take<T>(count: number, iterable: AsyncIterable<T>) {
     yield await val
     taken++
     if (taken >= count) {
-      return
+      break
     }
   }
 }
@@ -18,7 +18,7 @@ function* _syncTake<T>(count: number, iterable: Iterable<T>) {
     yield val
     taken++
     if (taken >= count) {
-      return
+      break
     }
   }
 }

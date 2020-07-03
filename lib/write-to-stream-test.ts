@@ -12,6 +12,15 @@ describe('writeToStream', () => {
     assert.equal(stream.read(), 2)
     assert.equal(stream.read(), 3)
   })
+  it('curries', async () => {
+    const values = [1, 2, 3]
+    const stream = new PassThrough({ highWaterMark: 4, objectMode: true })
+    const streamWrite = writeToStream(stream)
+    await streamWrite(values)
+    assert.equal(stream.read(), 1)
+    assert.equal(stream.read(), 2)
+    assert.equal(stream.read(), 3)
+  })
   it('respects backpressure', async () => {
     let lastYield = 0
     function* values() {

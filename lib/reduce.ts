@@ -19,7 +19,7 @@ export function reduce<T, B>(func: (acc: B, value: T) => B, start: B, iterable: 
 export function reduce<T, B>(func: (acc: B, value: T) => B, start?: B, iterable?: AnyIterable<T>) {
   if (start === undefined) {
     return (curriedStart: B, curriedIterable?: AnyIterable<T>) =>
-      curriedIterable ? reduce(func, curriedStart, curriedIterable) : reduce(func, curriedStart)
+      curriedIterable ? _reduce(func, curriedStart, curriedIterable) : reduce(func, curriedStart)
   }
   if (iterable === undefined) {
     return (curriedIterable: AnyIterable<T>) => reduce(func, start, curriedIterable)

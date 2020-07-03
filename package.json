@@ -14,7 +14,8 @@
   "runkitExampleFilename": "example.js",
   "scripts": {
     "test": "npm run unit-test && npm run lint",
-    "unit-test": "mocha",
+    "unit-test": "c8 -r html -r text mocha",
+    "check-coverage": "c8 check-coverage --lines 95 --functions 95 --branches 95",
     "lint": "tsc && tslint lib/*.ts",
     "format": "tslint lib/*.ts --fix",
     "build": "tsc -p tsconfig-build.json && rollup -c && api-extractor run --local --verbose",
@@ -46,6 +47,7 @@
     "@types/node": "^14.0.14",
     "benchmark": "^2.1.4",
     "bluestream": "^10.3.3",
+    "c8": "^7.2.0",
     "chai": "^4.2.0",
     "mocha": "^8.0.1",
     "prettier": "^2.0.5",

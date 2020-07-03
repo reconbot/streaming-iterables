@@ -46,4 +46,9 @@ describe('getIterator', () => {
       value: 1,
     })
   })
+  it("throws if it's not an iterator", () => {
+    assert.throw(() => {
+      getIterator(4 as any)
+    })
+  })
 })

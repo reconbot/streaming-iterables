@@ -5,6 +5,7 @@
 api-extractor.json
 benchmark
 budle-types.js
+coverage
 dist-ts
 lib
 package-lock.json

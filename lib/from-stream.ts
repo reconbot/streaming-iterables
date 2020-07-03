@@ -20,7 +20,7 @@ async function* _fromStream(stream: ReadableStreamish) {
       continue
     }
     if ((stream as any)._readableState.ended) {
-      return
+      break
     }
     await onceReadable(stream)
   }

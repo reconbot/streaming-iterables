@@ -7,12 +7,6 @@ export interface WritableStreamish {
   removeListener: any
 }
 
-function once(event: string, stream: WritableStreamish): Promise<any> {
-  return new Promise(resolve => {
-    stream.once(event, resolve)
-  })
-}
-
 async function _writeToStream(stream: WritableStreamish, iterable: AnyIterable<any>): Promise<void> {
   let lastError = null
   let errCb: NullOrFunction = null
