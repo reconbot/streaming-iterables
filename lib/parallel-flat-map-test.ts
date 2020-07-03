@@ -41,6 +41,15 @@ describe('parallelFlatMap', () => {
     }
     assert.deepEqual(values, ['1', '2', '3'])
   })
+  it('lets you curry a function and then fill the contract', async () => {
+    const values: any[] = []
+    const doubleTime = parallelFlatMap(2)
+    const stringParallelFlatMap = doubleTime(asyncStringArr, [1, 2, 3])
+    for await (const val of stringParallelFlatMap) {
+      values.push(val)
+    }
+    assert.deepEqual(values, ['1', '2', '3'])
+  })
   it('runs concurrent mapping operations', async () => {
     let mapCount = 0
     const counter = () => mapCount++

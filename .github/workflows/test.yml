@@ -20,3 +20,7 @@ jobs:
         npm test
       env:
         CI: true
+    - name: Check Coverage Levels
+      if: ${{ matrix.node-version != '10.x' }}
+      run: |
+        npm run check-coverage

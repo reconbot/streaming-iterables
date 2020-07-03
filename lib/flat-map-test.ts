@@ -27,4 +27,12 @@ describe('flatmap', () => {
     }
     assert.deepEqual(numbers, [1, 2, 3, 4, 5, 6, 7, 8])
   })
+  it('curries', async () => {
+    const numbers: number[] = []
+    const mapNothing = flatMap(i => i)
+    for await (const num of mapNothing([1, 2, [3, 4, 5, 6], 7, [8]])) {
+      numbers.push(num as any)
+    }
+    assert.deepEqual(numbers, [1, 2, 3, 4, 5, 6, 7, 8])
+  })
 })

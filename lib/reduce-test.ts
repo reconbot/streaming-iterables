@@ -31,4 +31,9 @@ describe('reduce', () => {
     const addZero = addAble(0)
     assert.equal(await addZero([1, 2, 3]), 6)
   })
+  it('supports an undefined start after currying', async () => {
+    const reduceAdd = reduce((num1?: number, num2?: number) => (num1 || 0) + (num2 || 0))
+    const addZero = reduceAdd(undefined, [1, 2, 3])
+    assert.equal(await addZero, 6)
+  })
 })
