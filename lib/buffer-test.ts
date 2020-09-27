@@ -44,7 +44,6 @@ describe('buffer', () => {
     assert.equal(5, (await itr.next()).value)
     assert.equal(6, (await itr.next()).value)
   })
-
   it('is curryable', async () => {
     const itr = buffer(2)([1, 2, 3, 4, 5, 6])[Symbol.iterator]()
     assert.equal(1, (await itr.next()).value)
@@ -57,6 +56,13 @@ describe('buffer', () => {
   it('deals with an infinite size', async () => {
     const values: number[] = []
     for await (const value of buffer(Infinity, asyncFromArray([1, 2, 3, 4]))) {
+      values.push(value)
+    }
+    assert.deepEqual(values, [1, 2, 3, 4])
+  })
+  it('deals with an no size', async () => {
+    const values: number[] = []
+    for await (const value of buffer(0, asyncFromArray([1, 2, 3, 4]))) {
       values.push(value)
     }
     assert.deepEqual(values, [1, 2, 3, 4])

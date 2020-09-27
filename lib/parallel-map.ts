@@ -23,7 +23,7 @@ async function* _parallelMap<T, R>(
       yield value
     }
   }
-  const output = pipeline(() => iterable, buffer(1), stopOnError, map(wrapFunc), buffer(concurrency))
+  const output = pipeline(() => iterable, buffer(1), stopOnError, map(wrapFunc), buffer(concurrency - 1))
   const itr: AsyncIterator<{ value: Promise<R> | R }> = getIterator(output)
   while (true) {
     const { value, done } = await itr.next()
@@ -65,6 +65,9 @@ export function parallelMap<T, R>(concurrency: number, func?: (data: T) => R | P
   }
   if (iterable === undefined) {
     return curriedIterable => parallelMap(concurrency, func, curriedIterable)
+  }
+  if (concurrency === 1) {
+    return map(func, iterable)
   }
   return _parallelMap(concurrency, func, iterable)
 }

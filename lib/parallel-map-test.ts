@@ -2,6 +2,7 @@ import { assert } from 'chai'
 import { parallelMap, fromStream } from './'
 import { PassThrough } from 'stream'
 import { asyncString, makeDelay, delayTicks } from './util-test'
+import { consume } from './consume'
 
 process.on('unhandledRejection', error => {
   throw error
@@ -56,6 +57,19 @@ describe('parallelMap', () => {
     await itr.next()
     assert.isAtLeast(mapCount, 3)
   })
+  it('never runs more mapping operations than specified', async () => {
+    let mapCount = 0
+    const counter = async () => {
+      mapCount++
+      if (mapCount > 2) {
+        throw new Error(`mapCount is ${mapCount} > 2`)
+      }
+      await delayTicks(5)
+      mapCount--
+    }
+    const iterable = parallelMap(2, counter, [1, 2, 3, 4, 5, 6])
+    await consume(iterable)
+  })
   it('can have a concurrency more than the items in a stream', async () => {
     const stream = new PassThrough()
     stream.end()
@@ -66,6 +80,13 @@ describe('parallelMap', () => {
   it('allows infinite parallelism', async () => {
     const values: any[] = []
     for await (const val of parallelMap(Infinity, asyncString, [1, 2, 3])) {
+      values.push(val)
+    }
+    assert.deepEqual(values, ['1', '2', '3'])
+  })
+  it('allows no parallelism', async () => {
+    const values: any[] = []
+    for await (const val of parallelMap(1, asyncString, [1, 2, 3])) {
       values.push(val)
     }
     assert.deepEqual(values, ['1', '2', '3'])
