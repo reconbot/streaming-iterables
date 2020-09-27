@@ -89,7 +89,7 @@ function buffer<T>(size: number, iterable: Iterable<T>): AsyncIterable<T>
 ```
 Buffer keeps a number of objects in reserve available for immediate reading. This is helpful with async iterators as it will prefetch results so you don't have to wait for them to load. For sync iterables it will precompute up to `size` values and keep them in reserve. The internal buffer will start to be filled once `.next()` is called for the first time and will continue to fill until the source `iterable` is exhausted or the buffer is full. Errors from the source `iterable` will be raised after all buffered values are yielded.
 
-`size` can be betweeen 1 and `Infinity`.
+`size` can be between 0 and `Infinity`.
 
 ```ts
 import { buffer } from 'streaming-iterables'

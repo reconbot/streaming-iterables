@@ -117,6 +117,9 @@ export function buffer(size: number, iterable?: AnyIterable<any>): CurriedBuffer
   if (iterable === undefined) {
     return curriedIterable => buffer(size, curriedIterable)
   }
+  if (size === 0) {
+    return iterable
+  }
   if (iterable[Symbol.asyncIterator]) {
     return _buffer(size, iterable as AsyncIterable<any>)
   }

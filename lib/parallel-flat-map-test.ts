@@ -57,7 +57,7 @@ describe('parallelFlatMap', () => {
     const itr = iterable[Symbol.asyncIterator]()
     await itr.next()
     await delayTicks(5)
-    await assert.equal(mapCount, 4)
+    await assert.equal(mapCount, 3)
   })
   it('can have a concurrency more than the items in a stream', async () => {
     const stream = new PassThrough()
