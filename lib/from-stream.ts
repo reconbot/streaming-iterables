@@ -5,7 +5,7 @@ export interface ReadableStreamish {
 }
 
 async function onceReadable(stream: ReadableStreamish) {
-  return new Promise(resolve => {
+  return new Promise<void>(resolve => {
     stream.once('readable', () => {
       resolve()
     })

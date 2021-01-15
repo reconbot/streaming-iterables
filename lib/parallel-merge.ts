@@ -26,7 +26,7 @@ export async function* parallelMerge<I extends AnyIterable<any>[]>(
     }
   }
 
-  const waitForQueue = () =>
+  const waitForQueue = (): Promise<void> =>
     new Promise((resolve, reject) => {
       if (lastError) {
         reject(lastError)
