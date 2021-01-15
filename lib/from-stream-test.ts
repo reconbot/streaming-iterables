@@ -40,4 +40,17 @@ describe('fromStream', () => {
       throw new Error(`${value} shouldn't have been resolved`)
     }
   })
+  it('propagates errors', async () => {
+    const stream = new PassThrough({ objectMode: true })
+    const itr = fromStream(stream)[Symbol.asyncIterator]()
+    const promise = itr.next()
+    stream.emit('error', new Error('what happened?'))
+    try {
+      await promise
+    } catch (e) {
+      assert.equal(e.message, 'what happened?')
+      return
+    }
+    throw new Error('did not propagate error')
+  })
 })
