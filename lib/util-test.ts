@@ -7,7 +7,7 @@ export async function asyncStringArr(str) {
 }
 
 export function promiseImmediate<T>(data?: T) {
-  return new Promise(resolve => setImmediate(() => resolve(data))) as Promise<T>
+  return new Promise<undefined | T>(resolve => setImmediate(() => resolve(data))) as Promise<T>
 }
 
 export async function delayTicks<T>(count = 1, data?: T) {
