@@ -359,11 +359,11 @@ Map a function or async function over all the values of an iterable and do them 
 If you don't care about order, see the faster [`transform()`](#transform) function.
 
 ```ts
-import { consume, map } from 'streaming-iterables'
+import { consume, parallelMap } from 'streaming-iterables'
 import got from 'got'
 
 const urls = ['https://http.cat/200', 'https://http.cat/201', 'https://http.cat/202']
-const download = map(2, got)
+const download = parallelMap(2, got)
 
 // download two at a time
 for await (page of download(urls)) {
@@ -419,7 +419,7 @@ await pipeline(getPokemon, getName, collect)
 function reduce<T, B>(func: (acc: B, value: T) => B, start: B, iterable: AnyIterable<T>): Promise<B>
 ```
 
-An async function that takes a reducer function, an initial value and .
+An async function that takes a reducer function, an initial value and an iterable.
 
 Reduces an iterable to a value which is the accumulated result of running each value from the iterable thru `func`, where each successive invocation is supplied the return value of the previous. Errors are immediate raised.
 
@@ -435,7 +435,7 @@ Returns a new iterator that reads a specific number of items from `iterable`. Wh
 function tap<T>(func: (data: T) => any, iterable: AnyIterable<T>): AsyncIterableIterator<T>
 ```
 
-Returns a new iterator that yields the data it consumes passing the data through to a function. If you provide an async function the iterator will wait for the promise to resolve before yielding the value. This is useful for logging, or processing information and passing it along.
+Returns a new iterator that yields the data it consumes, passing the data through to a function. If you provide an async function, the iterator will wait for the promise to resolve before yielding the value. This is useful for logging, or processing information and passing it along.
 
 ### time
 ```ts
