@@ -4,9 +4,11 @@
 
 A Swiss army knife for [async iterables](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of). Designed to help replace your streams. These utilities have a comparable speed, friendlier error handling, and are easier to understand than most stream based workloads.
 
-Streams were our last best hope for processing unbounded amounts of data. Now with Node 10 they have become something greater, they've become async iterable. With async iterators you can have less code, do more work, faster.
+Streams were our last best hope for processing unbounded amounts of data. Since Node 10 they have become something greater, they've become async iterable. With async iterators you can have less code, do more work, faster.
 
 If you still need streams with async functions, check out sister project [`bluestream`🏄‍♀️](https://www.npmjs.com/package/bluestream)!
+
+We support and test against LTS node releases, but may work with older versions of node.
 
 ## Install
 There are no dependencies.
@@ -280,7 +282,9 @@ for await (const pokemon of flatTransform(10, findFriends, getPokemon())) {
 function fromStream<T>(stream: Readable): AsyncIterable<T>
 ```
 
-If you are on a node before node 10, you will have to use `fromStream` to turn the stream into an async iterator. If this function is used and the stream already has one, the one already present on the stream is used. This is recommended for backwards compatibility.
+Wraps the stream in an async iterator or returns the stream if it already is an async iterator.
+
+*note*: Since Node 10, streams already async iterators. This function may be used to ensure compatibility with older versions of Node.
 
 ```ts
 import { fromStream } from 'streaming-iterables'

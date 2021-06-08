@@ -2,6 +2,7 @@ import { assert } from 'chai'
 import { writeToStream } from './'
 import { PassThrough, Transform, Writable } from 'stream'
 import { promiseImmediate } from './util-test'
+import { defer } from './defer'
 
 describe('writeToStream', () => {
   it('writes values to a stream', async () => {
@@ -36,24 +37,25 @@ describe('writeToStream', () => {
       yield 5
     }
     let lastWrite: null | number = null
+    const { promise: streamPaused, resolve } = defer<void>()
     const stream = new Transform({
       highWaterMark: 0,
       objectMode: true,
       transform(value: number, encoding: string, cb: any) {
         lastWrite = value
-        cb(null, value)
+        if (value > 2) {
+          resolve()
+        } else {
+          cb(null, value)
+        }
       },
     })
     writeToStream(stream, values())
-    assert.isNull(stream.read())
+    stream.resume()
+    await streamPaused
     await promiseImmediate()
-    assert.isAtMost(lastYield, 2)
-    assert.equal(lastWrite, 1)
-    assert.equal(stream.read(), 1)
-    await promiseImmediate()
-    assert.equal(stream.read(), 2)
-    assert.isAtMost(lastYield, 3)
-    assert.equal(lastWrite, 2)
+    assert.isAtMost(lastYield, 4)
+    assert.equal(lastWrite, 3)
   })
   it("doesn't close the stream", async () => {
     const values = [1, 2, 3]
