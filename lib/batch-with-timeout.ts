@@ -32,6 +32,7 @@ async function* _batchWithTimeout<T>(
   let timer: Promise<unknown> | undefined;
   let clearTimer: () => void | undefined;
   const startTimer = () => {
+    deleteTimer();
     [timer, clearTimer] = createTimer(timeout);
   };
   const deleteTimer = () => {
@@ -110,11 +111,7 @@ export function batchWithTimeout<T>(
       batchWithTimeout(size, timeout, curriedIterable);
   }
   if (iterable[Symbol.asyncIterator]) {
-    return _batchWithTimeout(
-      size,
-      timeout as number,
-      iterable as AsyncIterable<T>
-    );
+    return _batchWithTimeout(size, timeout, iterable as AsyncIterable<T>);
   }
   // For sync iterables the timeout is irrelevant so just fallback to regular `batch`.
   return batch(size, iterable as Iterable<T>);
@@ -133,7 +130,7 @@ export function batchWithTimeout<T>(
 //   yield { _id: "3" };
 //   await sleep(600);
 //   yield { _id: "4" };
-//   await sleep(100);
+//   await sleep(300);
 //   yield { _id: "5" };
 //   await sleep(100);
 //   yield { _id: "6" };
@@ -143,7 +140,7 @@ export function batchWithTimeout<T>(
 //   yield { _id: "8" };
 //   await sleep(200);
 //   yield { _id: "9" };
-//   await sleep(100);
+//   await sleep(50);
 //   yield { _id: "10" };
 // }
 
