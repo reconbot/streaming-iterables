@@ -24,12 +24,12 @@ const createTimer = (
 async function* _batchWithTimeout<T>(
   size: number,
   timeout: number,
-  iterable: AnyIterable<T>
+  iterable: AsyncIterable<T>
 ) {
   const iterator = iterable[Symbol.asyncIterator]();
-  let pendingData: any;
-  let batchData: any[] = [];
-  let timer: Promise<unknown> | undefined;
+  let pendingData: Promise<IteratorResult<T, any>> | undefined;
+  let batchData: T[] = [];
+  let timer: Promise<typeof TIMEOUT> | undefined;
   let clearTimer: () => void | undefined;
   const startTimer = () => {
     deleteTimer();
@@ -56,7 +56,8 @@ async function* _batchWithTimeout<T>(
       }
       deleteTimer();
       // And exit appropriately
-      if (res.done) {
+      if (res !== TIMEOUT) {
+        // done
         break;
       }
       continue;
@@ -110,45 +111,9 @@ export function batchWithTimeout<T>(
     return (curriedIterable) =>
       batchWithTimeout(size, timeout, curriedIterable);
   }
-  if (iterable[Symbol.asyncIterator]) {
+  if (iterable[Symbol.asyncIterator] && timeout !== Infinity) {
     return _batchWithTimeout(size, timeout, iterable as AsyncIterable<T>);
   }
-  // For sync iterables the timeout is irrelevant so just fallback to regular `batch`.
+  // For sync iterables or an infinite timeout, the timeout is irrelevant so just fallback to regular `batch`.
   return batch(size, iterable as Iterable<T>);
 }
-
-// TODO: Delete the below and write unit tests for the timeout logic.
-
-// const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-// async function* src() {
-//   await sleep(200);
-//   yield { _id: "1" };
-//   await sleep(400);
-//   yield { _id: "2" };
-//   await sleep(100);
-//   yield { _id: "3" };
-//   await sleep(600);
-//   yield { _id: "4" };
-//   await sleep(300);
-//   yield { _id: "5" };
-//   await sleep(100);
-//   yield { _id: "6" };
-//   await sleep(50);
-//   yield { _id: "7" };
-//   await sleep(150);
-//   yield { _id: "8" };
-//   await sleep(200);
-//   yield { _id: "9" };
-//   await sleep(50);
-//   yield { _id: "10" };
-// }
-
-// const main = async () => {
-//   for await (let thing of batchWithTimeout(2, 200, src())) {
-//     console.log(thing);
-//   }
-//   console.log("DONE");
-// };
-
-// main().catch((ex) => console.error(ex));
