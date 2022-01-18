@@ -1,119 +1,102 @@
 /// <reference lib="esnext.asynciterable" />
 
-import { AnyIterable } from "./types";
-import { batch } from "./batch";
+import { AnyIterable } from './types'
+import { batch, UnwrapAnyIterableArray } from './batch'
 
-const TIMEOUT = Symbol("TIMEOUT");
+const TIMEOUT = Symbol('TIMEOUT')
 
-const createTimer = (
-  duration: number
-): [Promise<typeof TIMEOUT>, () => void] => {
-  let timeoutId;
+const createTimer = (duration: number): [Promise<typeof TIMEOUT>, () => void] => {
+  let timeoutId
   return [
-    new Promise((resolve) => {
-      timeoutId = setTimeout(() => resolve(TIMEOUT), duration);
+    new Promise(resolve => {
+      timeoutId = setTimeout(() => resolve(TIMEOUT), duration)
     }),
     () => {
-      clearTimeout(timeoutId);
+      clearTimeout(timeoutId)
     },
-  ];
-};
+  ]
+}
 
 // Like `batch` but flushes early if the `timeout` is reached
 // NOTE: The strategy is to only hold onto a single item for a maximum of `timeout` ms.
-async function* _batchWithTimeout<T>(
-  size: number,
-  timeout: number,
-  iterable: AsyncIterable<T>
-) {
-  const iterator = iterable[Symbol.asyncIterator]();
-  let pendingData: Promise<IteratorResult<T, any>> | undefined;
-  let batchData: T[] = [];
-  let timer: Promise<typeof TIMEOUT> | undefined;
-  let clearTimer: () => void | undefined;
+async function* _batchWithTimeout<T>(size: number, timeout: number, iterable: AsyncIterable<T>) {
+  const iterator = iterable[Symbol.asyncIterator]()
+  let pendingData: Promise<IteratorResult<T, any>> | undefined
+  let batchData: T[] = []
+  let timer: Promise<typeof TIMEOUT> | undefined
+  let clearTimer: () => void | undefined
   const startTimer = () => {
-    deleteTimer();
-    [timer, clearTimer] = createTimer(timeout);
-  };
+    deleteTimer()
+    ;[timer, clearTimer] = createTimer(timeout)
+  }
   const deleteTimer = () => {
     if (clearTimer) {
-      clearTimer();
+      clearTimer()
     }
-    timer = undefined;
-  };
-  pendingData = iterator.next();
+    timer = undefined
+  }
+  pendingData = iterator.next()
 
   while (true) {
-    const res = await (timer
-      ? Promise.race([pendingData, timer])
-      : pendingData);
+    const res = await (timer ? Promise.race([pendingData, timer]) : pendingData)
 
     if (res === TIMEOUT || res.done) {
       // Flush early (before we reach the batch size)
       if (batchData.length) {
-        yield batchData;
-        batchData = [];
+        yield batchData
+        batchData = []
       }
-      deleteTimer();
+      deleteTimer()
       // And exit appropriately
       if (res !== TIMEOUT) {
         // done
-        break;
+        break
       }
-      continue;
+      continue
     }
 
     // Fetch next item early doors (before we potentially yield)
-    pendingData = iterator.next();
+    pendingData = iterator.next()
 
     // Then handle the value
-    batchData.push(res.value);
+    batchData.push(res.value)
     if (batchData.length === 1) {
       // Start timer once we have at least 1 item ready to go
-      startTimer();
+      startTimer()
     }
     if (batchData.length >= size) {
-      yield batchData;
-      batchData = [];
-      deleteTimer();
-      continue;
+      yield batchData
+      batchData = []
+      deleteTimer()
+      continue
     }
   }
 }
 
-export type UnwrapAnyIterableArray<
-  M extends AnyIterable<any>
-> = M extends Iterable<infer T>
-  ? Generator<T[]>
-  : M extends AsyncIterable<infer B>
-  ? AsyncGenerator<B[]>
-  : never;
-
 export type CurriedBatchWithTimeoutResult = <T, M extends AnyIterable<T>>(
   curriedIterable: M
-) => UnwrapAnyIterableArray<M>;
+) => UnwrapAnyIterableArray<M>
 
 export function batchWithTimeout<T, M extends AnyIterable<T>>(
   size: number,
   timeout: number
-): CurriedBatchWithTimeoutResult;
+): CurriedBatchWithTimeoutResult
 export function batchWithTimeout<T, M extends AnyIterable<T>>(
   size: number,
   timeout: number,
   iterable: M
-): UnwrapAnyIterableArray<M>;
+): UnwrapAnyIterableArray<M>
 export function batchWithTimeout<T>(
   size: number,
   timeout: number,
   iterable?: AnyIterable<T>
 ): CurriedBatchWithTimeoutResult | UnwrapAnyIterableArray<any> {
   if (iterable === undefined) {
-    return (curriedIterable) =>
-      batchWithTimeout(size, timeout, curriedIterable);
+    return curriedIterable => batchWithTimeout(size, timeout, curriedIterable)
   }
   if (iterable[Symbol.asyncIterator] && timeout !== Infinity) {
-    return _batchWithTimeout(size, timeout, iterable as AsyncIterable<T>);
+    return _batchWithTimeout(size, timeout, iterable as AsyncIterable<T>)
   }
   // For sync iterables or an infinite timeout, the timeout is irrelevant so just fallback to regular `batch`.
-  return batch(size, iterable as Iterable<T>);
+  return batch(size, iterable as Iterable<T>)
 }
