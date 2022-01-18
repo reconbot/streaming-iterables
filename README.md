@@ -42,6 +42,7 @@ Since this works with async iterators it requires node 10 or higher.
 ## API
 
 - [`batch()`](#batch)
+- [`batchWithTimeout()`](#batchwithtimeout)
 - [`buffer()`](#buffer)
 - [`collect()`](#collect)
 - [`concat()`](#concat)
@@ -81,6 +82,27 @@ import { getPokemon } from 'iterable-pokedex'
 // batch 10 pokemon while we process them
 for await (const pokemons of batch(10, getPokemon())) {
   console.log(pokemons) // 10 pokemon at a time!
+}
+```
+
+### batchWithTimeout
+```ts
+function batchWithTimeout<T>(size: number, timeout: number, iterable: AsyncIterable<T>): AsyncGenerator<T[]>
+function batchWithTimeout<T>(size: number, timeout: number, iterable: Iterable<T>): Generator<T[]>
+```
+
+Like [`batch`](#batch) but flushes early if the `timeout` is reached. The batches may be shorter than size if there are not enough items. Returns a sync iterator if the `iterable` is sync, otherwise an async iterator. Errors from the source `iterable` are immediately raised.
+
+`size` can be between 1 and `Infinity`.
+`timeout` can be between 0 and `Infinity`.
+
+```ts
+import { batchWithTimeout } from 'streaming-iterables'
+import { getPokemon } from 'iterable-pokedex'
+
+// batch 10 pokemon while we process them
+for await (const pokemons of batchWithTimeout(10, 100, getPokemon())) {
+  console.log(pokemons) // Up to 10 pokemon at a time!
 }
 ```
 
