@@ -73,7 +73,7 @@ describe("batchWithTimeout", () => {
     async function* delayedAsyncNumbers() {
       await sleep(400);
       yield 0;
-      await sleep(0);
+      await sleep(1);
       yield 1;
       await sleep(100);
       yield 2;
@@ -87,7 +87,7 @@ describe("batchWithTimeout", () => {
       yield 6;
     }
 
-    it("batches delayedAsyncNumbers() with an infinite timeout ", async () => {
+    it("batches with an infinite timeout", async () => {
       const src = batchWithTimeout(3, Infinity, delayedAsyncNumbers());
       const promisedBatches: Promise<any>[] = [
         src.next(),
@@ -102,7 +102,7 @@ describe("batchWithTimeout", () => {
       assert.equal((await src.next()).done, true);
     });
 
-    it("batches delayedAsyncNumbers() with a 2000ms timeout ", async () => {
+    it("batches with a 2000ms timeout", async () => {
       const src = batchWithTimeout(3, 2000, delayedAsyncNumbers());
       const promisedBatches: Promise<any>[] = [
         src.next(),
@@ -117,7 +117,7 @@ describe("batchWithTimeout", () => {
       assert.equal((await src.next()).done, true);
     });
 
-    it("batches delayedAsyncNumbers() with a 200ms timeout ", async () => {
+    it("batches with a 200ms timeout", async () => {
       const src = batchWithTimeout(3, 200, delayedAsyncNumbers());
       const promisedBatches: Promise<any>[] = [
         src.next(),
@@ -133,7 +133,7 @@ describe("batchWithTimeout", () => {
       assert.equal((await src.next()).done, true);
     });
 
-    it("batches delayedAsyncNumbers() with a 20ms timeout ", async () => {
+    it("batches with a 20ms timeout", async () => {
       const src = batchWithTimeout(3, 20, delayedAsyncNumbers());
       const promisedBatches: Promise<any>[] = [
         src.next(),
@@ -148,6 +148,72 @@ describe("batchWithTimeout", () => {
         ({ value }) => value
       );
       assert.deepEqual(batches, [[0, 1], [2], [3], [4], [5], [6]]);
+      assert.equal((await src.next()).done, true);
+    });
+
+    it("batches with a 0ms timeout", async () => {
+      const src = batchWithTimeout(3, 0, delayedAsyncNumbers());
+      const promisedBatches: Promise<any>[] = [
+        src.next(),
+        src.next(),
+        src.next(),
+        src.next(),
+        src.next(),
+        src.next(),
+        src.next(),
+      ];
+      clock.runAllAsync();
+      const batches = (await Promise.all(promisedBatches)).map(
+        ({ value }) => value
+      );
+      assert.deepEqual(batches, [[0], [1], [2], [3], [4], [5], [6]]);
+      assert.equal((await src.next()).done, true);
+    });
+
+    it("batches with an infinite size and infinite timeout", async () => {
+      const src = batchWithTimeout(Infinity, Infinity, delayedAsyncNumbers());
+      const promisedBatches: Promise<any>[] = [src.next()];
+      clock.runAllAsync();
+      const batches = (await Promise.all(promisedBatches)).map(
+        ({ value }) => value
+      );
+      assert.deepEqual(batches, [[0, 1, 2, 3, 4, 5, 6]]);
+      assert.equal((await src.next()).done, true);
+    });
+
+    it("batches with an infinite size and 200ms timeout", async () => {
+      const src = batchWithTimeout(Infinity, 200, delayedAsyncNumbers());
+      const promisedBatches: Promise<any>[] = [
+        src.next(),
+        src.next(),
+        src.next(),
+        src.next(),
+      ];
+      clock.runAllAsync();
+      const batches = (await Promise.all(promisedBatches)).map(
+        ({ value }) => value
+      );
+      assert.deepEqual(batches, [[0, 1, 2], [3, 4], [5], [6]]);
+      assert.equal((await src.next()).done, true);
+    });
+
+    // TODO: Is this correct? `batch` actually treats `0` as `Infinity` 🤔
+    it("treats size 0 as 1", async () => {
+      const src = batchWithTimeout(0, 10, delayedAsyncNumbers());
+      const promisedBatches: Promise<any>[] = [
+        src.next(),
+        src.next(),
+        src.next(),
+        src.next(),
+        src.next(),
+        src.next(),
+        src.next(),
+      ];
+      clock.runAllAsync();
+      const batches = (await Promise.all(promisedBatches)).map(
+        ({ value }) => value
+      );
+      assert.deepEqual(batches, [[0], [1], [2], [3], [4], [5], [6]]);
       assert.equal((await src.next()).done, true);
     });
   });
