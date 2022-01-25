@@ -25,7 +25,6 @@ async function* _throttle<T>(
     // yielding the previous values.
     const elapsedMs = Date.now() - time!;
     const waitFor = ms - elapsedMs;
-    time = undefined;
     if (waitFor > 0) {
       await sleep(waitFor);
     }
