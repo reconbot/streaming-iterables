@@ -3,8 +3,6 @@ import { AnyIterable } from './types'
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
-// TODO: Rewrite as the `time = Date.now()` is repetitive / clumsy, maybe a `while`
-// loop will make it simpler + should be able to call `next` earlier, while sleeping?
 async function* _throttle<T>(num: number, ms: number, iterable: AnyIterable<T>) {
   let sent = 0
   let time: number | undefined
