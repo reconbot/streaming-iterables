@@ -3,36 +3,47 @@ import { AnyIterable } from './types'
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
-async function* _throttle<T>(num: number, ms: number, iterable: AnyIterable<T>) {
-  let sent = 0
-  let time: number | undefined
-  for await (const val of iterable) {
-    if (sent < num) {
-      if (typeof time === 'undefined') {
-        time = Date.now()
-      }
-      sent++
-      yield val
-      continue
-    }
-    // Only wait if the window hasn't already passed while we were
-    // yielding the previous values.
-    const elapsedMs = Date.now() - time!
-    const waitFor = ms - elapsedMs
-    if (waitFor > 0) {
-      await sleep(waitFor)
-    }
-    time = Date.now()
-    sent = 1
-    yield val
+function _throttle<T>(limit: number, interval: number, iterable: AnyIterable<T>) {
+  if (!Number.isFinite(limit)) {
+    throw new TypeError('Expected `limit` to be a finite number')
   }
+  if (limit <= 0) {
+    throw new TypeError('Expected `limit` to be greater than 0')
+  }
+  if (!Number.isFinite(interval)) {
+    throw new TypeError('Expected `interval` to be a finite number')
+  }
+  return (async function* __throttle() {
+    let sent = 0
+    let time: number | undefined
+    for await (const val of iterable) {
+      if (sent < limit) {
+        if (typeof time === 'undefined') {
+          time = Date.now()
+        }
+        sent++
+        yield val
+        continue
+      }
+      // Only wait if the interval hasn't already passed while we were
+      // yielding the previous values.
+      const elapsedMs = Date.now() - time!
+      const waitFor = interval - elapsedMs
+      if (waitFor > 0) {
+        await sleep(waitFor)
+      }
+      time = Date.now()
+      sent = 1
+      yield val
+    }
+  })()
 }
 
-export function throttle<T>(num: number, ms: number): (iterable: AnyIterable<T>) => AsyncGenerator<T>
-export function throttle<T>(num: number, ms: number, iterable: AnyIterable<T>): AsyncGenerator<T>
-export function throttle<T>(num: number, ms: number, iterable?: AnyIterable<T>) {
+export function throttle<T>(limit: number, interval: number): (iterable: AnyIterable<T>) => AsyncGenerator<T>
+export function throttle<T>(limit: number, interval: number, iterable: AnyIterable<T>): AsyncGenerator<T>
+export function throttle<T>(limit: number, interval: number, iterable?: AnyIterable<T>) {
   if (iterable === undefined) {
-    return (curriedIterable: AnyIterable<T>) => _throttle(num, ms, curriedIterable)
+    return (curriedIterable: AnyIterable<T>) => _throttle(limit, interval, curriedIterable)
   }
-  return _throttle(num, ms, iterable)
+  return _throttle(limit, interval, iterable)
 }

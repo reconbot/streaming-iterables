@@ -38,6 +38,21 @@ describe('throttle', () => {
     }
   }
 
+  it('throws if `limit` is not a finite number', () => {
+    assert.throws(() => throttle(Infinity, 1000, numbers(5)), 'Expected `limit` to be a finite number')
+    assert.throws(() => throttle(-Infinity, 1000)(numbers(5)), 'Expected `limit` to be a finite number')
+  })
+
+  it('throws if `interval` is not a finite number', () => {
+    assert.throws(() => throttle(1, -Infinity, numbers(5)), 'Expected `interval` to be a finite number')
+    assert.throws(() => throttle(1, Infinity)(numbers(5)), 'Expected `interval` to be a finite number')
+  })
+
+  it('throws if limit is <= 0', () => {
+    assert.throws(() => throttle(0, 1000, numbers(5)), 'Expected `limit` to be greater than 0')
+    assert.throws(() => throttle(-1, 1000, numbers(5)), 'Expected `limit` to be greater than 0')
+  })
+
   it('throttles sync iterators, 1 every 1s', async () => {
     const src = withTimestamp(throttle(1, 1000, numbers(5)))
     const promisedValues = new Promise(async resolve => {
