@@ -39,11 +39,13 @@ describe('throttle', () => {
   }
 
   it('throws if `limit` is not a finite number', () => {
-    assert.throws(() => throttle(Infinity, 1000, numbers(5)), 'Expected `limit` to be a finite number')
+    assert.throws(() => throttle('1' as any, 1000, numbers(5)), 'Expected `limit` to be a finite number')
+    assert.throws(() => throttle(-Infinity, 1000)(numbers(5)), 'Expected `limit` to be a finite number')
     assert.throws(() => throttle(-Infinity, 1000)(numbers(5)), 'Expected `limit` to be a finite number')
   })
 
   it('throws if `interval` is not a finite number', () => {
+    assert.throws(() => throttle(1, '1000' as any, numbers(5)), 'Expected `interval` to be a finite number')
     assert.throws(() => throttle(1, -Infinity, numbers(5)), 'Expected `interval` to be a finite number')
     assert.throws(() => throttle(1, Infinity)(numbers(5)), 'Expected `interval` to be a finite number')
   })
