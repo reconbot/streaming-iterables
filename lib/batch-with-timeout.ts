@@ -64,7 +64,7 @@ async function* _batchWithTimeout<T>(size: number, timeout: number, iterable: As
       // Start timer once we have at least 1 item ready to go
       startTimer()
     }
-    if (batchData.length >= size) {
+    if (batchData.length === size) {
       yield batchData
       batchData = []
       deleteTimer()

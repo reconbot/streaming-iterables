@@ -35,6 +35,22 @@ describe('batch', () => {
     assert.deepEqual(batches, [[1, 2, 3, 4, 5], [6, 7, 8, 9, 10], [11]])
   })
 
+  it('batches with size Infinity', async () => {
+    const batches: number[][] = []
+    for await (const numberBatch of batch(Infinity, numbers(11))) {
+      batches.push(numberBatch)
+    }
+    assert.deepEqual(batches, [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]])
+  })
+
+  it('treats size 0 as Infinity', async () => {
+    const batches: number[][] = []
+    for await (const numberBatch of batch(0, numbers(11))) {
+      batches.push(numberBatch)
+    }
+    assert.deepEqual(batches, [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]])
+  })
+
   it('is curryable', async () => {
     const batches: number[][] = []
     const batch5 = batch(5)

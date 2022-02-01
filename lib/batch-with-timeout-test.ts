@@ -150,21 +150,12 @@ describe('batchWithTimeout', () => {
       assert.equal((await src.next()).done, true)
     })
 
-    // TODO: Is this correct? `batch` actually treats `0` as `Infinity` 🤔
-    it('treats size 0 as 1', async () => {
-      const src = batchWithTimeout(0, 10, delayedAsyncNumbers())
-      const promisedBatches: Promise<any>[] = [
-        src.next(),
-        src.next(),
-        src.next(),
-        src.next(),
-        src.next(),
-        src.next(),
-        src.next(),
-      ]
+    it('treats size 0 as Infinity (same as `batch`)', async () => {
+      const src = batchWithTimeout(0, Infinity, delayedAsyncNumbers())
+      const promisedBatches: Promise<any>[] = [src.next()]
       clock.runAllAsync()
       const batches = (await Promise.all(promisedBatches)).map(({ value }) => value)
-      assert.deepEqual(batches, [[0], [1], [2], [3], [4], [5], [6]])
+      assert.deepEqual(batches, [[0, 1, 2, 3, 4, 5, 6]])
       assert.equal((await src.next()).done, true)
     })
   })
