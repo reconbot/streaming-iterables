@@ -81,82 +81,114 @@ describe('batchWithTimeout', () => {
 
     it('batches with an infinite timeout', async () => {
       const src = batchWithTimeout(3, Infinity, delayedAsyncNumbers())
-      const promisedBatches: Promise<any>[] = [src.next(), src.next(), src.next()]
+      const promisedBatches = new Promise(async resolve => {
+        const vals: any[] = []
+        for await (const value of src) {
+          vals.push(value)
+        }
+        resolve(vals)
+      })
       clock.runAllAsync()
-      const batches = (await Promise.all(promisedBatches)).map(({ value }) => value)
+      const batches = await promisedBatches
       assert.deepEqual(batches, [[0, 1, 2], [3, 4, 5], [6]])
-      assert.equal((await src.next()).done, true)
     })
 
     it('batches with a 2000ms timeout', async () => {
       const src = batchWithTimeout(3, 2000, delayedAsyncNumbers())
-      const promisedBatches: Promise<any>[] = [src.next(), src.next(), src.next()]
+      const promisedBatches = new Promise(async resolve => {
+        const vals: any[] = []
+        for await (const value of src) {
+          vals.push(value)
+        }
+        resolve(vals)
+      })
       clock.runAllAsync()
-      const batches = (await Promise.all(promisedBatches)).map(({ value }) => value)
+      const batches = await promisedBatches
       assert.deepEqual(batches, [[0, 1, 2], [3, 4, 5], [6]])
-      assert.equal((await src.next()).done, true)
     })
 
     it('batches with a 200ms timeout', async () => {
       const src = batchWithTimeout(3, 200, delayedAsyncNumbers())
-      const promisedBatches: Promise<any>[] = [src.next(), src.next(), src.next(), src.next()]
+      const promisedBatches = new Promise(async resolve => {
+        const vals: any[] = []
+        for await (const value of src) {
+          vals.push(value)
+        }
+        resolve(vals)
+      })
       clock.runAllAsync()
-      const batches = (await Promise.all(promisedBatches)).map(({ value }) => value)
+      const batches = await promisedBatches
       assert.deepEqual(batches, [[0, 1, 2], [3, 4], [5], [6]])
-      assert.equal((await src.next()).done, true)
     })
 
     it('batches with a 20ms timeout', async () => {
       const src = batchWithTimeout(3, 20, delayedAsyncNumbers())
-      const promisedBatches: Promise<any>[] = [src.next(), src.next(), src.next(), src.next(), src.next(), src.next()]
+      const promisedBatches = new Promise(async resolve => {
+        const vals: any[] = []
+        for await (const value of src) {
+          vals.push(value)
+        }
+        resolve(vals)
+      })
       clock.runAllAsync()
-      const batches = (await Promise.all(promisedBatches)).map(({ value }) => value)
+      const batches = await promisedBatches
       assert.deepEqual(batches, [[0, 1], [2], [3], [4], [5], [6]])
-      assert.equal((await src.next()).done, true)
     })
 
     it('batches with a 0ms timeout', async () => {
       const src = batchWithTimeout(3, 0, delayedAsyncNumbers())
-      const promisedBatches: Promise<any>[] = [
-        src.next(),
-        src.next(),
-        src.next(),
-        src.next(),
-        src.next(),
-        src.next(),
-        src.next(),
-      ]
+      const promisedBatches = new Promise(async resolve => {
+        const vals: any[] = []
+        for await (const value of src) {
+          vals.push(value)
+        }
+        resolve(vals)
+      })
       clock.runAllAsync()
-      const batches = (await Promise.all(promisedBatches)).map(({ value }) => value)
+      const batches = await promisedBatches
       assert.deepEqual(batches, [[0], [1], [2], [3], [4], [5], [6]])
-      assert.equal((await src.next()).done, true)
     })
 
     it('batches with an infinite size and infinite timeout', async () => {
       const src = batchWithTimeout(Infinity, Infinity, delayedAsyncNumbers())
-      const promisedBatches: Promise<any>[] = [src.next()]
+      const promisedBatches = new Promise(async resolve => {
+        const vals: any[] = []
+        for await (const value of src) {
+          vals.push(value)
+        }
+        resolve(vals)
+      })
       clock.runAllAsync()
-      const batches = (await Promise.all(promisedBatches)).map(({ value }) => value)
+      const batches = await promisedBatches
       assert.deepEqual(batches, [[0, 1, 2, 3, 4, 5, 6]])
-      assert.equal((await src.next()).done, true)
     })
 
     it('batches with an infinite size and 200ms timeout', async () => {
       const src = batchWithTimeout(Infinity, 200, delayedAsyncNumbers())
-      const promisedBatches: Promise<any>[] = [src.next(), src.next(), src.next(), src.next()]
+      const promisedBatches = new Promise(async resolve => {
+        const vals: any[] = []
+        for await (const value of src) {
+          vals.push(value)
+        }
+        resolve(vals)
+      })
       clock.runAllAsync()
-      const batches = (await Promise.all(promisedBatches)).map(({ value }) => value)
+      const batches = await promisedBatches
       assert.deepEqual(batches, [[0, 1, 2], [3, 4], [5], [6]])
-      assert.equal((await src.next()).done, true)
     })
 
     it('treats size 0 as Infinity (same as `batch`)', async () => {
       const src = batchWithTimeout(0, Infinity, delayedAsyncNumbers())
-      const promisedBatches: Promise<any>[] = [src.next()]
+      const promisedBatches = new Promise(async resolve => {
+        const vals: any[] = []
+        for await (const value of src) {
+          vals.push(value)
+        }
+        resolve(vals)
+      })
       clock.runAllAsync()
-      const batches = (await Promise.all(promisedBatches)).map(({ value }) => value)
+      const batches = await promisedBatches
       assert.deepEqual(batches, [[0, 1, 2, 3, 4, 5, 6]])
-      assert.equal((await src.next()).done, true)
     })
   })
 })
