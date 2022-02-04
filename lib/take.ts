@@ -1,4 +1,3 @@
-/// <reference lib="esnext.asynciterable" />
 import { AnyIterable, UnwrapAnyIterable } from './types'
 
 async function* _take<T>(count: number, iterable: AsyncIterable<T>) {

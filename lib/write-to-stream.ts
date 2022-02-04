@@ -1,4 +1,3 @@
-/// <reference lib="esnext.asynciterable" />
 import { AnyIterable, NullOrFunction } from './types'
 
 export interface WritableStreamish {

@@ -1,4 +1,3 @@
-/// <reference lib="esnext.asynciterable" />
 export interface ReadableStreamish {
   once: any
   read: any

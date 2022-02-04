@@ -1,4 +1,3 @@
-/// <reference lib="esnext.asynciterable" />
 import { AnyIterable } from './types'
 import { flatten } from './flatten'
 import { filter } from './filter'

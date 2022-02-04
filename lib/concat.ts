@@ -1,4 +1,3 @@
-/// <reference lib="esnext.asynciterable" />
 import { AnyIterable, UnArrayAnyIterable } from './types'
 
 async function* _concat<I extends AnyIterable<any>[]>(iterables: I): AsyncIterable<UnArrayAnyIterable<I>> {

@@ -1,4 +1,3 @@
-/// <reference lib="esnext.asynciterable" />
 import { AnyIterable } from './types'
 
 async function* _asyncTap<T>(func: (data: T) => any, iterable: AnyIterable<T>) {
