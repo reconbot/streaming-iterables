@@ -1,6 +1,7 @@
 /// <reference lib="esnext.asynciterable" />
 
 export { batch, CurriedBatchResult, UnwrapAnyIterableArray } from './batch'
+export { batchWithTimeout, CurriedBatchWithTimeoutResult } from './batch-with-timeout'
 export { buffer, CurriedBufferResult } from './buffer'
 export { collect, UnwrapToPromiseOrAsyncIterable } from './collect'
 export { concat } from './concat'
