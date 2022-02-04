@@ -1,5 +1,3 @@
-/// <reference lib="esnext.asynciterable" />
-
 import { AnyIterable } from './types'
 import { batch, UnwrapAnyIterableArray } from './batch'
 

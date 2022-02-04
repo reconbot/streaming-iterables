@@ -1,4 +1,3 @@
-/// <reference lib="esnext.asynciterable" />
 import { getIterator } from './get-iterator'
 import { AnyIterable, UnArrayAnyIterable, NullOrFunction } from './types'
 
