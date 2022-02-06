@@ -1,6 +1,6 @@
 {
   "name": "streaming-iterables",
-  "version": "6.1.0",
+  "version": "6.2.0",
   "description": "A collection of utilities for async iterables. Designed to replace your streams.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
