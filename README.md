@@ -61,6 +61,7 @@ Since this works with async iterators it requires node 10 or higher.
 - [`reduce()`](#reduce)
 - [`take()`](#take)
 - [`tap()`](#tap)
+- [`throttle()`](#throttle)
 - [`time()`](#time)
 - [`transform()`](#transform)
 - [`writeToStream()`](#writetostream)
@@ -462,6 +463,26 @@ function tap<T>(func: (data: T) => any, iterable: AnyIterable<T>): AsyncIterable
 ```
 
 Returns a new iterator that yields the data it consumes, passing the data through to a function. If you provide an async function, the iterator will wait for the promise to resolve before yielding the value. This is useful for logging, or processing information and passing it along.
+
+### throttle
+```ts
+function throttle<T>(limit: number, interval: number, iterable: AnyIterable<T>): AsyncGenerator<T>
+```
+
+Throttles `iterable` at a rate of `limit` per `interval` without discarding data. Useful for throttling rate limited APIs.
+
+`limit` can be greater than 0 but less than `Infinity`.
+`interval` can be greater than or equal to 0 but less than `Infinity`.
+
+```ts
+import { throttle } from 'streaming-iterables'
+import { getPokemon, trainMonster } from 'iterable-pokedex'
+
+// load monsters at a maximum rate of 1 per second
+for await (const monster of throttle(1, 1000, getPokemon())) {
+  await trainMonster(monster)
+}
+```
 
 ### time
 ```ts
