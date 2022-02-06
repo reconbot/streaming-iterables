@@ -474,6 +474,16 @@ Throttles `iterable` at a rate of `limit` per `interval` without discarding data
 `limit` can be greater than 0 but less than `Infinity`.
 `interval` can be greater than or equal to 0 but less than `Infinity`.
 
+```ts
+import { throttle } from 'streaming-iterables'
+import { getPokemon, trainMonster } from 'iterable-pokedex'
+
+// load monsters at a maximum rate of 1 per second
+for await (const monster of throttle(1, 1000, getPokemon())) {
+  await trainMonster(monster)
+}
+```
+
 ### time
 ```ts
 function time<T>(config?: ITimeConfig, iterable: AsyncIterable<R>): AsyncIterableIterator<R>
