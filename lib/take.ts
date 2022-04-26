@@ -24,7 +24,6 @@ function* _syncTake<T>(count: number, iterable: Iterable<T>) {
 
 export type CurriedTakeResult = <T, M extends AnyIterable<T>>(curriedIterable: M) => UnwrapAnyIterable<M>
 
-
 /**
  * Returns a new iterator that reads a specific number of items from `iterable`. When used with generators it advances the generator, when used with arrays it gets a new iterator and starts from the beginning.
 

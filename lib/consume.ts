@@ -5,7 +5,6 @@ export async function _consume<T>(iterable: AnyIterable<T>) {
   }
 }
 
-
 /**
  * A promise that resolves after the function drains the iterable of all data. Useful for processing a pipeline of data. Errors from the source `iterable` are raised immediately.
 

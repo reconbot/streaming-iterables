@@ -75,7 +75,6 @@ export type CurriedBatchWithTimeoutResult = <T, M extends AnyIterable<T>>(
   curriedIterable: M
 ) => UnwrapAnyIterableArray<M>
 
-
 /**
  * Like `batch` but flushes early if the `timeout` is reached. The batches may be shorter than size if there are not enough items. Returns a sync iterator if the `iterable` is sync, otherwise an async iterator. Errors from the source `iterable` are immediately raised.
 
