@@ -49,7 +49,7 @@ Since this works with async iterators it requires node 10 or higher.
 - [`collect()`](#collect)
 - [`concat()`](#concat)
 - [`consume()`](#consume)
-- [`drop()`][#drop]
+- [`drop()`](#drop)
 - [`flatMap()`](#flatmap)
 - [`flatten()`](#flatten)
 - [`flatTransform()`](#flattransform)
