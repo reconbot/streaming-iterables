@@ -36,6 +36,21 @@ export type UnwrapAnyIterableArray<M extends AnyIterable<any>> = M extends Itera
 
 export type CurriedBatchResult = <T, M extends AnyIterable<T>>(curriedIterable: M) => UnwrapAnyIterableArray<M>
 
+/**
+ * Batch objects from `iterable` into arrays of `size` length. The final array may be shorter than size if there is not enough items. Returns a sync iterator if the `iterable` is sync, otherwise an async iterator. Errors from the source `iterable` are immediately raised.
+
+`size` can be between 1 and `Infinity`.
+
+```ts
+import { batch } from 'streaming-iterables'
+import { getPokemon } from 'iterable-pokedex'
+
+// batch 10 pokemon while we process them
+for await (const pokemons of batch(10, getPokemon())) {
+  console.log(pokemons) // 10 pokemon at a time!
+}
+```
+ */
 export function batch(size: number): CurriedBatchResult
 export function batch<T, M extends AnyIterable<T>>(size: number, iterable: M): UnwrapAnyIterableArray<M>
 export function batch<T>(size: number, iterable?: AnyIterable<T>): CurriedBatchResult | UnwrapAnyIterableArray<any> {

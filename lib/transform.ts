@@ -99,6 +99,24 @@ function _transform<T, R>(
   return asyncIterableIterator
 }
 
+/**
+ * Map a function or async function over all the values of an iterable. Order is determined by when `func` resolves. And it will run up to `concurrency` async `func` operations at once. If you care about order see [`parallelMap()`](#parallelmap). Errors from the source `iterable` are raised after all transformed values are yielded. Errors from `func` are raised after all previously transformed values are yielded.
+
+`concurrency` can be between 1 and `Infinity`.
+
+```ts
+import { consume, transform } from 'streaming-iterables'
+import got from 'got'
+
+const urls = ['https://http.cat/200', 'https://http.cat/201', 'https://http.cat/202']
+const download = transform(1000, got)
+
+// download all of these at the same time
+for await (page of download(urls)) {
+  console.log(page)
+}
+```
+ */
 export function transform<T, R>(
   concurrency: number
 ): {

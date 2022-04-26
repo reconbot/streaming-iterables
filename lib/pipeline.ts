@@ -1,3 +1,18 @@
+/**
+ * Calls `firstFn` and then every function in `fns` with the result of the previous function. The final return is the result of the last function in `fns`.
+
+```ts
+import { pipeline, map, collect } from 'streaming-iterables'
+import { getPokemon } from 'iterable-pokedex'
+const getName = map(pokemon => pokemon.name)
+
+// equivalent to `await collect(getName(getPokemon()))`
+await pipeline(getPokemon, getName, collect)
+// charmander
+// bulbasaur
+// MissingNo.
+```
+ */
 export function pipeline<T0>(firstFn: () => T0): T0
 export function pipeline<T0, T1>(a0: () => T0, a1: (a: T0) => T1): T1
 export function pipeline<T0, T1, T2>(a0: () => T0, a1: (a: T0) => T1, a2: (a: T1) => T2): T2

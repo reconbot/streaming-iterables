@@ -8,6 +8,23 @@ async function* _filter<T>(filterFunc: (data: T) => boolean | Promise<boolean>, 
   }
 }
 
+/**
+ * Takes a `filterFunc` and a `iterable`, and returns a new async iterator of the same type containing the members of the given iterable which cause the `filterFunc` to return true.
+
+```ts
+import { filter } from 'streaming-iterables'
+import { getPokemon } from 'iterable-pokedex'
+
+const filterWater = filter(pokemon => pokemon.types.include('Water'))
+
+for await (const pokemon of filterWater(getPokemon())) {
+  console.log(pokemon)
+}
+// squirtle
+// vaporeon
+// magikarp
+```
+ */
 export function filter<T, S extends T>(
   filterFunc: (data: T) => data is S
 ): <A extends T>(curriedIterable: AnyIterable<A>) => AsyncGenerator<S>

@@ -1,6 +1,27 @@
 import { getIterator } from './get-iterator'
 import { AnyIterable, UnArrayAnyIterable, NullOrFunction } from './types'
 
+/**
+ *Combine multiple iterators into a single iterable. Reads one item off of every iterable and yields them as they resolve. This is useful for pulling items out of a collection of iterables as soon as they're available. Errors `iterables` are raised immediately.
+
+```ts
+import { parallelMerge } from 'streaming-iterables'
+import { getPokemon, getTransformer } from 'iterable-pokedex'
+
+// pokemon are much faster to load btw
+const heros = parallelMerge(getPokemon(), getTransformer())
+for await (const hero of heros) {
+  console.log(hero)
+}
+// charmander
+// bulbasaur
+// megatron
+// pikachu
+// eevee
+// bumblebee
+// jazz
+```
+ */
 export async function* parallelMerge<I extends AnyIterable<any>[]>(
   ...iterables: I
 ): AsyncIterable<UnArrayAnyIterable<I>> {

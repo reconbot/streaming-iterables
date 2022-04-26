@@ -39,6 +39,22 @@ function _throttle<T>(limit: number, interval: number, iterable: AnyIterable<T>)
   })()
 }
 
+/**
+ * Throttles `iterable` at a rate of `limit` per `interval` without discarding data. Useful for throttling rate limited APIs.
+
+`limit` can be greater than 0 but less than `Infinity`.
+`interval` can be greater than or equal to 0 but less than `Infinity`.
+
+```ts
+import { throttle } from 'streaming-iterables'
+import { getPokemon, trainMonster } from 'iterable-pokedex'
+
+// load monsters at a maximum rate of 1 per second
+for await (const monster of throttle(1, 1000, getPokemon())) {
+  await trainMonster(monster)
+}
+```
+ */
 export function throttle<T>(limit: number, interval: number): (iterable: AnyIterable<T>) => AsyncGenerator<T>
 export function throttle<T>(limit: number, interval: number, iterable: AnyIterable<T>): AsyncGenerator<T>
 export function throttle<T>(limit: number, interval: number, iterable?: AnyIterable<T>) {

@@ -110,6 +110,22 @@ function* syncBuffer<T>(size: number, iterable: Iterable<T>): IterableIterator<T
 
 export type CurriedBufferResult = <T, M extends AnyIterable<T>>(curriedIterable: M) => UnwrapAnyIterable<M>
 
+
+/**
+ * Buffer keeps a number of objects in reserve available for immediate reading. This is helpful with async iterators as it will pre-fetch results so you don't have to wait for them to load. For sync iterables it will pre-compute up to `size` values and keep them in reserve. The internal buffer will start to be filled once `.next()` is called for the first time and will continue to fill until the source `iterable` is exhausted or the buffer is full. Errors from the source `iterable` will be raised after all buffered values are yielded.
+
+`size` can be between 0 and `Infinity`.
+
+```ts
+import { buffer } from 'streaming-iterables'
+import { getPokemon, trainMonster } from 'iterable-pokedex'
+
+// load 10 monsters in the background while we process them one by one
+for await (const monster of buffer(10, getPokemon())) {
+  await trainMonster(monster) // got to do some pokéwork
+}
+```
+ */
 export function buffer(size: number): CurriedBufferResult
 export function buffer<T, M extends AnyIterable<T>>(size: number, iterable: M): UnwrapAnyIterable<M>
 export function buffer(size: number, iterable?: AnyIterable<any>): CurriedBufferResult | UnwrapAnyIterable<any> {

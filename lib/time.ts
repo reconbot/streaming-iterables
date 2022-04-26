@@ -62,6 +62,24 @@ function* _syncTime<T>(config: TimeConfig, iterable: Iterable<T>) {
 
 export type CurriedTimeResult = <T, M extends AnyIterable<T>>(curriedIterable: M) => UnwrapAnyIterable<M>
 
+/**
+ * Returns a new iterator that yields the data it consumes and calls the `progress` and `total` callbacks with the [`hrtime`](https://nodejs.org/api/process.html#process_process_hrtime_time) it took for `iterable` to provide a value when `.next()` was called on it. That is to say, the time returned is the time this iterator spent waiting for data, not the time it took to finish being read. The `hrtime` tuple looks like `[seconds, nanoseconds]`.
+
+```ts
+import { consume, transform, time } from 'streaming-iterables'
+import got from 'got'
+
+const urls = ['https://http.cat/200', 'https://http.cat/201', 'https://http.cat/202']
+const download = transform(1000, got)
+const timer = time({
+  total: total => console.log(`Spent ${total[0]} seconds and ${total[1]}ns downloading cats`),
+})
+// download all of these at the same time
+for await (page of timer(download(urls))) {
+  console.log(page)
+}
+```
+ */
 export function time(config?: TimeConfig): CurriedTimeResult
 export function time<T, M extends AnyIterable<T>>(config: TimeConfig, iterable: M): UnwrapAnyIterable<M>
 export function time(config: TimeConfig = {}, iterable?: AnyIterable<any>): CurriedTimeResult | UnwrapAnyIterable<any> {
