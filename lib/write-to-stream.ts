@@ -56,6 +56,26 @@ async function _writeToStream(stream: WritableStreamish, iterable: AnyIterable<a
   }
 }
 
+/**
+ * Writes the `iterable` to the stream respecting the stream back pressure. Resolves when the iterable is exhausted, rejects if the stream errors during calls to `write()` or if there are `error` events during the write.
+
+As it is when working with streams there are a few caveats;
+
+- It is possible for the stream to error after `writeToStream()` has finished writing due to internal buffering and other concerns, so always handle errors on the stream as well.
+- `writeToStream()` doesn't close the stream like `stream.pipe()` might. This is done so you can write to the stream multiple times. You can call `stream.write(null)` or any stream specific end function if you are done with the stream.
+
+```ts
+import { pipeline, map, writeToStream } from 'streaming-iterables'
+import { getPokemon } from 'iterable-pokedex'
+import { createWriteStream } from 'fs'
+
+const file = createWriteStream('pokemon.ndjson')
+const serialize = map(pokemon => `${JSON.stringify(pokemon)}\n`)
+await pipeline(getPokemon, serialize, writeToStream(file))
+file.end() // close the stream
+// now all the pokemon are written to the file!
+```
+ */
 export function writeToStream(stream: WritableStreamish): (iterable: AnyIterable<any>) => Promise<void>
 export function writeToStream(stream: WritableStreamish, iterable: AnyIterable<any>): Promise<void>
 export function writeToStream(stream: WritableStreamish, iterable?: AnyIterable<any>) {

@@ -107,6 +107,68 @@ function _flatTransform<T, R>(
   return asyncIterableIterator
 }
 
+/**
+ * Map `func` over the `iterable`, flatten the result and then ignore all null or undefined values. Returned async iterables are flattened concurrently too. It's the transform function we've always wanted.
+
+It's similar to;
+
+```ts
+const filterEmpty = filter(i => i !== undefined && i !== null)
+(concurrency, func, iterable) => filterEmpty(flatten(transform(concurrency, func, iterable)))
+```
+
+*note*: The return value for `func` is `FlatMapValue<B>`. Typescript doesn't have recursive types but you can nest iterables as deep as you like. However only directly returned async iterables are processed concurrently. (Eg, if you use an async generator function as `func` it's output will be processed concurrently, but if it's nested inside other iterables it will be processed sequentially.)
+
+Order is determined by when async operations resolve. And it will run up to `concurrency` async operations at once. This includes promises and async iterables returned from `func`. Errors from the source `iterable` are raised after all transformed values are yielded. Errors from `func` are raised after all previously transformed values are yielded.
+
+`concurrency` can be between 1 and `Infinity`.
+
+Promise Example;
+
+```ts
+import { flatTransform } from 'streaming-iterables'
+import { getPokemon, lookupStats } from 'iterable-pokedex'
+
+async function getDefeatedGyms(pokemon) {
+  if (pokemon.gymBattlesWon > 0) {
+    const stats = await lookupStats(pokemon)
+    return stats.gyms
+  }
+}
+
+// lookup 10 stats at a time
+for await (const gym of flatTransform(10, getDefeatedGyms, getPokemon())) {
+  console.log(gym.name)
+}
+// "Pewter Gym"
+// "Cerulean Gym"
+// "Vermilion Gym"
+```
+
+Async Generator Example
+
+```ts
+import { flatTransform } from 'streaming-iterables'
+import { getPokemon } from 'iterable-pokedex'
+import { findFriendsFB, findFriendsMySpace } from './util'
+
+
+async function* findFriends (pokemon) {
+  yield await findFriendsFB(pokemon.name)
+  yield await findFriendsMySpace(pokemon.name)
+}
+
+for await (const pokemon of flatTransform(10, findFriends, getPokemon())) {
+  console.log(pokemon.name)
+}
+// Pikachu
+// Meowth
+// Ash - FB
+// Jessie - FB
+// Misty - MySpace
+// James - MySpace
+```
+ */
 export function flatTransform<T, R>(
   concurrency: number
 ): {

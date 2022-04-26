@@ -567,7 +567,6 @@ const timer = time({
 for await (page of timer(download(urls))) {
   console.log(page)
 }
-
 ```
 
 ### transform

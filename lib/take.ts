@@ -24,6 +24,17 @@ function* _syncTake<T>(count: number, iterable: Iterable<T>) {
 
 export type CurriedTakeResult = <T, M extends AnyIterable<T>>(curriedIterable: M) => UnwrapAnyIterable<M>
 
+/**
+ * Returns a new iterator that reads a specific number of items from `iterable`. When used with generators it advances the generator, when used with arrays it gets a new iterator and starts from the beginning.
+
+```ts
+import { pipeline, take, collect } from 'streaming-iterables'
+import { getPokemon } from 'iterable-pokedex'
+
+const topFive = await collect(take(5, getPokemon()))
+// first five pokemon
+```
+ */
 export function take(count: number): CurriedTakeResult
 export function take<T, M extends AnyIterable<T>>(count: number, iterable: M): UnwrapAnyIterable<M>
 export function take<T>(count: number, iterable?: AnyIterable<T>): CurriedTakeResult | UnwrapAnyIterable<any> {

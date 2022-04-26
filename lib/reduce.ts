@@ -7,6 +7,11 @@ export async function _reduce<T, B>(func: (acc: B, value: T) => B, start: B, ite
   return value
 }
 
+/**
+ * An async function that takes a reducer function, an initial value and an iterable.
+
+Reduces an iterable to a value which is the accumulated result of running each value from the iterable thru `func`, where each successive invocation is supplied the return value of the previous. Errors are immediate raised.
+ */
 export function reduce<T, B>(
   func: (acc: B, value: T) => B
 ): {

@@ -34,7 +34,8 @@
         ],
         "trailing-comma": [
             false
-        ]
+        ],
+        "jsdoc-format": false
     },
     "rulesDirectory": [
         "tslint-plugin-prettier"

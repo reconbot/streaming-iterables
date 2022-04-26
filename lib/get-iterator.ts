@@ -1,5 +1,8 @@
 import { Iterableish } from './types'
 
+/**
+ * Get the iterator from any iterable or just return an iterator itself.
+ */
 export function getIterator<T>(iterable: Iterable<T> | Iterator<T>): Iterator<T>
 export function getIterator<T>(iterable: AsyncIterable<T> | AsyncIterator<T>): AsyncIterator<T>
 export function getIterator<T>(iterable: AsyncIterable<T> | Iterable<T>): AsyncIterator<T> | Iterator<T>
