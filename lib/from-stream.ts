@@ -40,6 +40,7 @@ for await (const pokeData of pokeLog) {
   console.log(pokeData) // Buffer(...)
 }
 ```
+ * @deprecated This method is deprecated since, node 10 is out of LTS. It may be removed in an upcoming major release.
  */
 export function fromStream<T>(stream: ReadableStreamish): AsyncIterable<T> {
   if (typeof stream[Symbol.asyncIterator] === 'function') {

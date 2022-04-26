@@ -342,6 +342,7 @@ function fromStream<T>(stream: Readable): AsyncIterable<T>
 Wraps the stream in an async iterator or returns the stream if it already is an async iterator.
 
 *note*: Since Node 10, streams already async iterators. This function may be used to ensure compatibility with older versions of Node.
+*note*: This method is deprecated since, node 10 is out of LTS. It may be removed in an upcoming major release.
 
 ```ts
 import { fromStream } from 'streaming-iterables'
