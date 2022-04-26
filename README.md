@@ -49,6 +49,7 @@ Since this works with async iterators it requires node 10 or higher.
 - [`collect()`](#collect)
 - [`concat()`](#concat)
 - [`consume()`](#consume)
+- [`drop()`][#drop]
 - [`flatMap()`](#flatmap)
 - [`flatten()`](#flatten)
 - [`flatTransform()`](#flattransform)
@@ -187,6 +188,23 @@ import { getPokemon, trainMonster } from 'iterable-pokedex'
 
 const train = map(trainMonster)
 await consume(train(getPokemon())) // load all the pokemon and train them!
+```
+
+### drop
+
+```ts
+function drop<T>(count: number, iterable: AsyncIterable<T>): AsyncIterableIterator<T>
+function drop<T>(count: number, iterable: Iterable<T>): IterableIterator<T>
+```
+
+Returns a new iterator that skips a specific number of items from `iterable`. When used with generators it advances the generator `count` items, when used with arrays it gets a new iterator and skips `count` items.
+
+```ts
+import { pipeline, drop, collect } from 'streaming-iterables'
+import { getPokemon } from 'iterable-pokedex'
+
+const allButFirstFive = await collect(drop(5, getPokemon()))
+// first five pokemon
 ```
 
 ### flatMap
@@ -484,6 +502,14 @@ function take<T>(count: number, iterable: Iterable<T>): IterableIterator<T>
 ```
 
 Returns a new iterator that reads a specific number of items from `iterable`. When used with generators it advances the generator, when used with arrays it gets a new iterator and starts from the beginning.
+
+```ts
+import { pipeline, take, collect } from 'streaming-iterables'
+import { getPokemon } from 'iterable-pokedex'
+
+const topFive = await collect(take(5, getPokemon()))
+// first five pokemon
+```
 
 ### tap
 
