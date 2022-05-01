@@ -3,6 +3,7 @@
   "compilerOptions": {
     "outDir": "dist-ts",
     "noEmit": false,
+    "module": "ESNext"
   },
   "exclude": [
     "node_modules",
