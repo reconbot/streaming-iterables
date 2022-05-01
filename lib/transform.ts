@@ -117,11 +117,11 @@ for await (page of download(urls)) {
 }
 ```
  */
-export function transform<T, R>(
+export function transform(
   concurrency: number
 ): {
-  (func: (data: T) => R | Promise<R>, iterable: AnyIterable<T>): AsyncIterableIterator<R>
-  (func: (data: T) => R | Promise<R>): (iterable: AnyIterable<T>) => AsyncIterableIterator<R>
+  <T, R>(func: (data: T) => R | Promise<R>, iterable: AnyIterable<T>): AsyncIterableIterator<R>
+  <T, R>(func: (data: T) => R | Promise<R>): (iterable: AnyIterable<T>) => AsyncIterableIterator<R>
 }
 export function transform<T, R>(
   concurrency: number,

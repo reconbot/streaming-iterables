@@ -101,11 +101,11 @@ describe('throttle', () => {
   it('throttles async iterators, 2 every 1s', async () => {
     const src = withTimestamp(throttle(2, 1000, asyncNumbers(5)))
     const promisedValues = new Promise(async resolve => {
-      const vals: any[] = []
+      const values: any[] = []
       for await (const value of src) {
-        vals.push(value)
+        values.push(value)
       }
-      resolve(vals)
+      resolve(values)
     })
     clock.runAllAsync()
     const values = await promisedValues
@@ -146,21 +146,21 @@ describe('throttle', () => {
   it('avoids over-throttling if the consumer is slower than the throttling config', async () => {
     const src = withTimestamp(throttle(1, 500, asyncNumbers(7)))
     const promisedValues = new Promise(async resolve => {
-      const vals: any[] = []
-      vals.push((await src.next()).value) // 1
+      const values: any[] = []
+      values.push((await src.next()).value) // 1
       await sleep(1000)
-      vals.push((await src.next()).value) // 2
+      values.push((await src.next()).value) // 2
       await sleep(250)
-      vals.push((await src.next()).value) // 3
+      values.push((await src.next()).value) // 3
       await sleep(3000)
-      vals.push((await src.next()).value) // 4
+      values.push((await src.next()).value) // 4
       await sleep(100)
-      vals.push((await src.next()).value) // 5
+      values.push((await src.next()).value) // 5
       await sleep(1000)
-      vals.push((await src.next()).value) // 6
+      values.push((await src.next()).value) // 6
       await sleep(60000)
-      vals.push((await src.next()).value) // 7
-      resolve(vals)
+      values.push((await src.next()).value) // 7
+      resolve(values)
     })
     clock.runAllAsync()
     const values = await promisedValues
@@ -180,11 +180,11 @@ describe('throttle', () => {
     const throttle3PerSecond = throttle(3, 1000)
     const src = withTimestamp(throttle3PerSecond(asyncNumbers(5)))
     const promisedValues = new Promise(async resolve => {
-      const vals: any[] = []
+      const values: any[] = []
       for await (const value of src) {
-        vals.push(value)
+        values.push(value)
       }
-      resolve(vals)
+      resolve(values)
     })
     clock.runAllAsync()
     const values = await promisedValues

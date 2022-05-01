@@ -169,11 +169,11 @@ for await (const pokemon of flatTransform(10, findFriends, getPokemon())) {
 // James - MySpace
 ```
  */
-export function flatTransform<T, R>(
+export function flatTransform(
   concurrency: number
 ): {
-  (func: (data: T) => FlatMapValue<R>, iterable: AnyIterable<T>): AsyncGenerator<R>
-  (func: (data: T) => FlatMapValue<R>): (iterable: AnyIterable<T>) => AsyncGenerator<R>
+  <T, R>(func: (data: T) => FlatMapValue<R>, iterable: AnyIterable<T>): AsyncGenerator<R>
+  <T, R>(func: (data: T) => FlatMapValue<R>): (iterable: AnyIterable<T>) => AsyncGenerator<R>
 }
 export function flatTransform<T, R>(
   concurrency: number,

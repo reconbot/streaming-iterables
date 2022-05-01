@@ -79,11 +79,11 @@ describe('flatTransform', () => {
     const twoAtAtime = flatTransform(2)
     const loadTwoAtATime = twoAtAtime(load)
     const loadIterator = loadTwoAtATime(ids)
-    const vals: any[] = []
+    const values: any[] = []
     for await (const val of loadIterator) {
-      vals.push(val)
+      values.push(val)
     }
-    assert.deepEqual(vals, ['1', '2', '3', '4'])
+    assert.deepEqual(values, ['1', '2', '3', '4'])
   })
   it('lets you curry the concurrency and the function', async () => {
     const ids = asyncFromArray([1, 2, 3, 4])

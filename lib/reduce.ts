@@ -15,8 +15,8 @@ Reduces an iterable to a value which is the accumulated result of running each v
 export function reduce<T, B>(
   func: (acc: B, value: T) => B
 ): {
-  (start: B): (iterable: AnyIterable<T>) => Promise<B>
-  (start: B, iterable: AnyIterable<T>): Promise<B>
+  (start?: B): (iterable: AnyIterable<T>) => Promise<B>
+  (start: B | undefined, iterable: AnyIterable<T>): Promise<B>
 }
 export function reduce<T, B>(func: (acc: B, value: T) => B, start: B): (iterable: AnyIterable<T>) => Promise<B>
 export function reduce<T, B>(func: (acc: B, value: T) => B, start: B, iterable: AnyIterable<T>): Promise<B>

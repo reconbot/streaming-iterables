@@ -83,11 +83,11 @@ describe('batchWithTimeout', () => {
     it('batches with an infinite timeout', async () => {
       const src = batchWithTimeout(3, Infinity, delayedAsyncNumbers())
       const promisedBatches = new Promise(async resolve => {
-        const vals: any[] = []
+        const values: any[] = []
         for await (const value of src) {
-          vals.push(value)
+          values.push(value)
         }
-        resolve(vals)
+        resolve(values)
       })
       clock.runAllAsync()
       const batches = await promisedBatches
@@ -125,11 +125,11 @@ describe('batchWithTimeout', () => {
     it('batches with a 20ms timeout', async () => {
       const src = batchWithTimeout(3, 20, delayedAsyncNumbers())
       const promisedBatches = new Promise(async resolve => {
-        const vals: any[] = []
+        const values: any[] = []
         for await (const value of src) {
-          vals.push(value)
+          values.push(value)
         }
-        resolve(vals)
+        resolve(values)
       })
       clock.runAllAsync()
       const batches = await promisedBatches
@@ -139,11 +139,11 @@ describe('batchWithTimeout', () => {
     it('batches with a 0ms timeout', async () => {
       const src = batchWithTimeout(3, 0, delayedAsyncNumbers())
       const promisedBatches = new Promise(async resolve => {
-        const vals: any[] = []
+        const values: any[] = []
         for await (const value of src) {
-          vals.push(value)
+          values.push(value)
         }
-        resolve(vals)
+        resolve(values)
       })
       clock.runAllAsync()
       const batches = await promisedBatches
@@ -153,11 +153,11 @@ describe('batchWithTimeout', () => {
     it('batches with an infinite size and infinite timeout', async () => {
       const src = batchWithTimeout(Infinity, Infinity, delayedAsyncNumbers())
       const promisedBatches = new Promise(async resolve => {
-        const vals: any[] = []
+        const values: any[] = []
         for await (const value of src) {
-          vals.push(value)
+          values.push(value)
         }
-        resolve(vals)
+        resolve(values)
       })
       clock.runAllAsync()
       const batches = await promisedBatches
@@ -167,11 +167,11 @@ describe('batchWithTimeout', () => {
     it('batches with an infinite size and 200ms timeout', async () => {
       const src = batchWithTimeout(Infinity, 200, delayedAsyncNumbers())
       const promisedBatches = new Promise(async resolve => {
-        const vals: any[] = []
+        const values: any[] = []
         for await (const value of src) {
-          vals.push(value)
+          values.push(value)
         }
-        resolve(vals)
+        resolve(values)
       })
       clock.runAllAsync()
       const batches = await promisedBatches
@@ -181,11 +181,11 @@ describe('batchWithTimeout', () => {
     it('treats size 0 as Infinity (same as `batch`)', async () => {
       const src = batchWithTimeout(0, Infinity, delayedAsyncNumbers())
       const promisedBatches = new Promise(async resolve => {
-        const vals: any[] = []
+        const values: any[] = []
         for await (const value of src) {
-          vals.push(value)
+          values.push(value)
         }
-        resolve(vals)
+        resolve(values)
       })
       clock.runAllAsync()
       const batches = await promisedBatches

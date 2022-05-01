@@ -70,22 +70,22 @@ describe('transform', () => {
     const twoAtAtime = transform(2)
     const loadTwoAtATime = twoAtAtime(load)
     const loadIterator = loadTwoAtATime(ids)
-    const vals: any[] = []
+    const values: any[] = []
     for await (const val of loadIterator) {
-      vals.push(val)
+      values.push(val)
     }
-    assert.deepEqual(vals, [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }])
+    assert.deepEqual(values, [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }])
   })
   it('lets you curry the function', async () => {
     const ids = asyncFromArray([1, 2, 3, 4])
     const load = (id: number) => ({ id })
     const loadTwoAtATime = transform(2, load)
     const loadIterator = loadTwoAtATime(ids)
-    const vals: any[] = []
+    const values: any[] = []
     for await (const val of loadIterator) {
-      vals.push(val)
+      values.push(val)
     }
-    assert.deepEqual(vals, [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }])
+    assert.deepEqual(values, [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }])
   })
   it('allows for resolving nothing', async () => {
     const ids = asyncFromArray([])
