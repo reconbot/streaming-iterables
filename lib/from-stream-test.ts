@@ -2,17 +2,6 @@ import { assert } from 'chai'
 import { fromStream } from '.'
 import { PassThrough } from 'stream'
 
-const once = func => {
-  let called = false
-  return (...args) => {
-    if (called) {
-      return
-    }
-    called = true
-    return func(...args)
-  }
-}
-
 describe('fromStream', () => {
   it('takes a stream and returns an async iterable', async () => {
     const stream = new PassThrough({ objectMode: true })

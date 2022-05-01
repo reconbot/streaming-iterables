@@ -1,3 +1,4 @@
+/* eslint-disable no-async-promise-executor */
 import { assert } from 'chai'
 import { batchWithTimeout } from '.'
 import { promiseImmediate } from './util-test'
@@ -96,11 +97,11 @@ describe('batchWithTimeout', () => {
     it('batches with a 2000ms timeout', async () => {
       const src = batchWithTimeout(3, 2000, delayedAsyncNumbers())
       const promisedBatches = new Promise(async resolve => {
-        const vals: any[] = []
+        const values: any[] = []
         for await (const value of src) {
-          vals.push(value)
+          values.push(value)
         }
-        resolve(vals)
+        resolve(values)
       })
       clock.runAllAsync()
       const batches = await promisedBatches
@@ -110,11 +111,11 @@ describe('batchWithTimeout', () => {
     it('batches with a 200ms timeout', async () => {
       const src = batchWithTimeout(3, 200, delayedAsyncNumbers())
       const promisedBatches = new Promise(async resolve => {
-        const vals: any[] = []
+        const values: any[] = []
         for await (const value of src) {
-          vals.push(value)
+          values.push(value)
         }
-        resolve(vals)
+        resolve(values)
       })
       clock.runAllAsync()
       const batches = await promisedBatches

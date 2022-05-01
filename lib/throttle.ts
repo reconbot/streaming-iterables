@@ -1,4 +1,3 @@
-/// <reference lib="esnext.asynciterable" />
 import { AnyIterable } from './types'
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
@@ -27,7 +26,7 @@ function _throttle<T>(limit: number, interval: number, iterable: AnyIterable<T>)
       }
       // Only wait if the interval hasn't already passed while we were
       // yielding the previous values.
-      const elapsedMs = Date.now() - time!
+      const elapsedMs = Date.now() - (time || 0)
       const waitFor = interval - elapsedMs
       if (waitFor > 0) {
         await sleep(waitFor)

@@ -1,3 +1,4 @@
+/* eslint-disable no-async-promise-executor */
 import { assert } from 'chai'
 import { throttle } from './throttle'
 import { promiseImmediate } from './util-test'
@@ -58,11 +59,11 @@ describe('throttle', () => {
   it('throttles sync iterators, 1 every 1s', async () => {
     const src = withTimestamp(throttle(1, 1000, numbers(5)))
     const promisedValues = new Promise(async resolve => {
-      const vals: any[] = []
+      const values: any[] = []
       for await (const value of src) {
-        vals.push(value)
+        values.push(value)
       }
-      resolve(vals)
+      resolve(values)
     })
     clock.runAllAsync()
     const values = await promisedValues
@@ -79,11 +80,11 @@ describe('throttle', () => {
   it('throttles async iterators, 1 every 1s', async () => {
     const src = withTimestamp(throttle(1, 1000, asyncNumbers(5)))
     const promisedValues = new Promise(async resolve => {
-      const vals: any[] = []
+      const values: any[] = []
       for await (const value of src) {
-        vals.push(value)
+        values.push(value)
       }
-      resolve(vals)
+      resolve(values)
     })
     clock.runAllAsync()
     const values = await promisedValues
@@ -121,11 +122,11 @@ describe('throttle', () => {
   it('throttles async iterators, 4 every 6s', async () => {
     const src = withTimestamp(throttle(4, 6000, asyncNumbers(9)))
     const promisedValues = new Promise(async resolve => {
-      const vals: any[] = []
+      const values: any[] = []
       for await (const value of src) {
-        vals.push(value)
+        values.push(value)
       }
-      resolve(vals)
+      resolve(values)
     })
     clock.runAllAsync()
     const values = await promisedValues

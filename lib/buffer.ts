@@ -13,7 +13,7 @@ function _buffer<T>(size: number, iterable: AsyncIterable<T>): AsyncIterableIter
   const readQueue: IDeferred<IteratorResult<T>>[] = []
 
   let reading = false
-  let ended: boolean = false
+  let ended = false
 
   function fulfillReadQueue() {
     while (readQueue.length > 0 && resultQueue.length > 0) {

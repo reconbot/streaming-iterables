@@ -62,7 +62,7 @@ describe('parallelFlatMap', () => {
   it('can have a concurrency more than the items in a stream', async () => {
     const stream = new PassThrough()
     stream.end()
-    for await (const value of parallelFlatMap(2, asyncStringArr, fromStream(stream))) {
+    for await (const _value of parallelFlatMap(2, asyncStringArr, fromStream(stream))) {
       throw new Error('empty string')
     }
   })
