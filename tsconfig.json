@@ -2,13 +2,17 @@
   "compilerOptions": {
     "noEmit": true,
     "allowJs": false,
-    "target": "ES2018",
-    "moduleResolution": "node",
-    "module": "commonjs",
-    "noImplicitAny": false,
-    "strictNullChecks": true,
     "declaration": true,
-    "importHelpers": true
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "lib": ["es2020"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noImplicitAny": false,
+    "strict": true,
+    "strictNullChecks": true,
+    "target": "es2020",
+    "useUnknownInCatchVariables": false,
   },
   "include": [
     "lib/*",
