@@ -1,6 +1,6 @@
 import { AnyIterable } from './types'
 export async function _consume<T>(iterable: AnyIterable<T>) {
-  for await (const val of iterable) {
+  for await (const _val of iterable) {
     // do nothing
   }
 }
@@ -22,7 +22,7 @@ export function consume<T>(iterable: AnyIterable<T>) {
   if (iterable[Symbol.asyncIterator]) {
     return _consume(iterable)
   }
-  for (const val of iterable as Iterable<T>) {
+  for (const _val of iterable as Iterable<T>) {
     // do nothing
   }
 }

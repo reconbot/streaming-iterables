@@ -90,14 +90,14 @@ describe('flatTransform', () => {
     const load = (id: number) => ({ id })
     const loadTwoAtATime = flatTransform(2, load)
     const loadIterator = loadTwoAtATime(ids)
-    const vals: any[] = []
+    const values: any[] = []
     for await (const val of loadIterator) {
-      vals.push(val)
+      values.push(val)
     }
-    assert.deepEqual(vals, [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }])
+    assert.deepEqual(values, [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }])
   })
   it('allows empty iterables', async () => {
-    for await (const val of flatTransform(500, () => {}, [])) {
+    for await (const _val of flatTransform(500, () => {}, [])) {
       throw new Error('No data')
     }
   })
@@ -143,14 +143,14 @@ describe('flatTransform', () => {
       yield 2
       yield 3
     }
-    const throwafter2 = async value => {
+    const throwAfter2 = async value => {
       await promiseImmediate()
       if (value === 2) {
         throw new Error('I dont like 2')
       }
       return [value]
     }
-    const itr = flatTransform(5, throwafter2, source())[Symbol.asyncIterator]()
+    const itr = flatTransform(5, throwAfter2, source())[Symbol.asyncIterator]()
     assert.equal((await itr.next()).value, 1)
     assert.equal((await itr.next()).value, 3)
     try {
@@ -167,7 +167,7 @@ describe('flatTransform', () => {
       yield 2
       yield 3
     }
-    const throwafter2 = async function* (value) {
+    const throwAfter2 = async function* (value) {
       await promiseImmediate()
       yield value
       if (value === 2) {
@@ -176,7 +176,7 @@ describe('flatTransform', () => {
       await promiseImmediate()
       yield value
     }
-    const itr = flatTransform(5, throwafter2, source())[Symbol.asyncIterator]()
+    const itr = flatTransform(5, throwAfter2, source())[Symbol.asyncIterator]()
     assert.equal((await itr.next()).value, 1)
     assert.equal((await itr.next()).value, 2)
     assert.equal((await itr.next()).value, 3)

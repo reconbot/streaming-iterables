@@ -73,7 +73,7 @@ describe('parallelMap', () => {
   it('can have a concurrency more than the items in a stream', async () => {
     const stream = new PassThrough()
     stream.end()
-    for await (const value of parallelMap(2, asyncString, fromStream(stream))) {
+    for await (const _value of parallelMap(2, asyncString, fromStream(stream))) {
       throw new Error('empty string')
     }
   })
@@ -116,14 +116,14 @@ describe('parallelMap', () => {
       yield 2
       yield 3
     }
-    const throwafter2 = async value => {
+    const throwAfter2 = async value => {
       await delayTicks(10)
       if (value >= 2) {
         throw new Error('I dont like 2')
       }
       return value
     }
-    const itr = parallelMap(5, throwafter2, source())[Symbol.asyncIterator]()
+    const itr = parallelMap(5, throwAfter2, source())[Symbol.asyncIterator]()
     assert.equal((await itr.next()).value, 1)
     try {
       await itr.next()

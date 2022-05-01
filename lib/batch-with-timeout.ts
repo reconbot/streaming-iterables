@@ -4,7 +4,7 @@ import { batch, UnwrapAnyIterableArray } from './batch'
 const TIMEOUT = Symbol('TIMEOUT')
 
 const createTimer = (duration: number): [Promise<typeof TIMEOUT>, () => void] => {
-  let timeoutId
+  let timeoutId: NodeJS.Timeout
   return [
     new Promise(resolve => {
       timeoutId = setTimeout(() => resolve(TIMEOUT), duration)
@@ -91,7 +91,7 @@ for await (const pokemons of batchWithTimeout(10, 100, getPokemon())) {
 }
 ```
  */
-export function batchWithTimeout<T, M extends AnyIterable<T>>(
+export function batchWithTimeout(
   size: number,
   timeout: number
 ): CurriedBatchWithTimeoutResult
