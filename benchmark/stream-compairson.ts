@@ -1,4 +1,3 @@
-// tslint:disable:no-console
 import { Suite } from 'benchmark'
 import { consume, map, pipeline, tap, fromStream } from '../dist'
 import { Readable, PassThrough, Transform } from 'stream'

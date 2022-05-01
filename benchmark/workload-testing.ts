@@ -1,4 +1,3 @@
-// tslint:disable:no-console
 import { Suite } from 'benchmark'
 import { Readable, Transform } from 'stream'
 import { obj as through2 } from 'through2-concurrent'

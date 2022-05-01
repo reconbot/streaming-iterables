@@ -14,5 +14,5 @@ rollup.config.js
 SECURITY.md
 tsconfig-build.json
 tsconfig.json
-tslint.json
+.eslintrc.json
 CODE_OF_CONDUCT.md

@@ -1,4 +1,3 @@
-// tslint:disable:no-console
 import { Suite } from 'benchmark'
 import {
   batch,
