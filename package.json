@@ -49,7 +49,7 @@
     "@typescript-eslint/parser": "5.23.0",
     "benchmark": "2.1.4",
     "bluestream": "10.3.3",
-    "c8": "7.11.2",
+    "c8": "7.11.3",
     "chai": "4.3.6",
     "eslint": "8.15.0",
     "eslint-config-airbnb-base": "15.0.0",
