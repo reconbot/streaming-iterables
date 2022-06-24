@@ -40,7 +40,7 @@
   "author": "reconbot",
   "license": "MIT",
   "devDependencies": {
-    "@microsoft/api-extractor": "7.25.3",
+    "@microsoft/api-extractor": "7.26.0",
     "@types/chai": "4.3.1",
     "@types/mocha": "9.1.1",
     "@types/node": "17.0.30",
