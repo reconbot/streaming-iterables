@@ -33,8 +33,8 @@ for await (const gym of flatMap(getDefeatedGyms, getPokemon())) {
 // "Vermilion Gym"
 ```
  */
-export function flatMap<T, B>(func: (data: T) => FlatMapValue<B>): (iterable: AnyIterable<T>) => AsyncGenerator<B>
-export function flatMap<T, B>(func: (data: T) => FlatMapValue<B>, iterable: AnyIterable<T>): AsyncGenerator<B>
+export function flatMap<T, B>(func: (data: T) => FlatMapValue<B>): (iterable: AnyIterable<T>) => AsyncGenerator<NonNullable<B>>
+export function flatMap<T, B>(func: (data: T) => FlatMapValue<B>, iterable: AnyIterable<T>): AsyncGenerator<NonNullable<B>>
 export function flatMap<T, B>(func: (data: T) => FlatMapValue<B>, iterable?: AnyIterable<T>) {
   if (iterable === undefined) {
     return curriedIterable => flatMap(func, curriedIterable)
