@@ -63,6 +63,8 @@ Since this works with async iterators it requires node 10 or higher.
 - [`pipeline()`](#pipeline)
 - [`reduce()`](#reduce)
 - [`take()`](#take)
+- [`takeLast()`](#takelast)
+- [`takeWhile()`](#takewhile)
 - [`tap()`](#tap)
 - [`throttle()`](#throttle)
 - [`time()`](#time)
@@ -510,6 +512,45 @@ import { getPokemon } from 'iterable-pokedex'
 
 const topFive = await collect(take(5, getPokemon()))
 // first five pokemon
+```
+
+### takeLast
+
+```ts
+function takeLast<T>(count: number, iterable: AsyncIterable<T>): AsyncIterableIterator<T>
+function takeLast<T>(count: number, iterable: Iterable<T>): IterableIterator<T>
+```
+
+Returns a new iterator that reads a specific number of items from the end of `iterable` once it has completed. When used with generators it advances the generator, when used with arrays it gets a new iterator and starts from the beginning.
+
+```ts
+import { pipeline, takeLast, collect } from 'streaming-iterables'
+import { getPokemon } from 'iterable-pokedex'
+
+const bottomFive = await collect(takeLast(5, getPokemon()))
+// last five pokemon
+```
+
+### takeWhile
+
+```ts
+function takeWhile<T, S extends T>(predicate: (data: T) => data is S, iterable: AnyIterable<T>): AsyncGenerator<S>;
+```
+
+Takes a `predicate` and a `iterable`, and returns a new async iterator of the same type containing the members of the given iterable until the `predicate` returns false.
+
+```ts
+import { takeWhile } from 'streaming-iterables'
+import { getPokemon } from 'iterable-pokedex'
+
+const firstSlowOnes = takeWhile(pokemon => pokemon.baseStats.speed < 100)
+
+for await (const pokemon of firstSlowOnes(getPokemon())) {
+  console.log(pokemon)
+}
+// Abomasnow
+// Abra
+// Absol
 ```
 
 ### tap
