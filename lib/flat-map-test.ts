@@ -23,7 +23,7 @@ describe('flatmap', () => {
     const numbers: number[] = []
     const values = asyncFromArray([1, undefined, null, 2, asyncFromArray([3, 4, undefined, 5, 6]), 7, [8], null])
     for await (const num of flatMap(i => i, values)) {
-      numbers.push(num as number)
+      numbers.push(num)
     }
     assert.deepEqual(numbers, [1, 2, 3, 4, 5, 6, 7, 8])
   })
@@ -31,7 +31,7 @@ describe('flatmap', () => {
     const numbers: number[] = []
     const mapNothing = flatMap(i => i)
     for await (const num of mapNothing([1, 2, [3, 4, 5, 6], 7, [8]])) {
-      numbers.push(num as any)
+      numbers.push(num as number)
     }
     assert.deepEqual(numbers, [1, 2, 3, 4, 5, 6, 7, 8])
   })
