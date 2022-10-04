@@ -18,7 +18,7 @@
     "check-coverage": "c8 check-coverage --lines 95 --functions 95 --branches 94",
     "lint": "tsc && eslint lib/*.ts",
     "format": "eslint lib/*.ts --fix",
-    "build": "tsc -p tsconfig-build.json && rollup -c && api-extractor run --local --verbose",
+    "build": "rm -rf dist dist-ts && tsc -p tsconfig-build.json && rollup -c && api-extractor run --local --verbose",
     "prepare": "npm run build"
   },
   "keywords": [
@@ -41,6 +41,7 @@
   "license": "MIT",
   "devDependencies": {
     "@microsoft/api-extractor": "7.33.1",
+    "@rollup/plugin-node-resolve": "^14.1.0",
     "@types/chai": "4.3.3",
     "@types/mocha": "10.0.0",
     "@types/node": "17.0.30",
@@ -54,6 +55,7 @@
     "eslint": "8.25.0",
     "eslint-config-airbnb-base": "15.0.0",
     "eslint-plugin-import": "2.26.0",
+    "inside-out-async": "^1.0.1",
     "mocha": "10.0.0",
     "prettier": "2.7.1",
     "rollup": "2.79.1",

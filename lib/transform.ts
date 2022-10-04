@@ -1,6 +1,6 @@
 import { AnyIterable } from './types'
 import { getIterator } from './get-iterator'
-import { defer, IDeferred } from './defer'
+import { defer, Deferred } from 'inside-out-async'
 
 function _transform<T, R>(
   concurrency: number,
@@ -10,7 +10,7 @@ function _transform<T, R>(
   const iterator = getIterator(iterable)
 
   const resultQueue: R[] = []
-  const readQueue: IDeferred<IteratorResult<R>>[] = []
+  const readQueue: Deferred<IteratorResult<R>>[] = []
 
   let ended = false
   let reading = false
@@ -19,12 +19,12 @@ function _transform<T, R>(
 
   function fulfillReadQueue() {
     while (readQueue.length > 0 && resultQueue.length > 0) {
-      const { resolve } = readQueue.shift() as IDeferred<IteratorResult<R>>
+      const { resolve } = readQueue.shift() as Deferred<IteratorResult<R>>
       const value = resultQueue.shift() as R
       resolve({ done: false, value } as any)
     }
     while (readQueue.length > 0 && inflightCount === 0 && ended) {
-      const { resolve, reject } = readQueue.shift() as IDeferred<IteratorResult<R>>
+      const { resolve, reject } = readQueue.shift() as Deferred<IteratorResult<R>>
       if (lastError) {
         reject(lastError)
         lastError = null
