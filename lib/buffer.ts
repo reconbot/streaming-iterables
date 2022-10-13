@@ -1,5 +1,5 @@
 import { getIterator } from './get-iterator'
-import { defer, IDeferred } from './defer'
+import { defer, Deferred } from 'inside-out-async'
 import { AnyIterable, UnwrapAnyIterable } from './types'
 
 interface IValueObj<T> {
@@ -10,14 +10,14 @@ interface IValueObj<T> {
 function _buffer<T>(size: number, iterable: AsyncIterable<T>): AsyncIterableIterator<T> {
   const iterator = getIterator(iterable)
   const resultQueue: IValueObj<T>[] = []
-  const readQueue: IDeferred<IteratorResult<T>>[] = []
+  const readQueue: Deferred<IteratorResult<T>>[] = []
 
   let reading = false
   let ended = false
 
   function fulfillReadQueue() {
     while (readQueue.length > 0 && resultQueue.length > 0) {
-      const readDeferred = readQueue.shift() as IDeferred<IteratorResult<T>>
+      const readDeferred = readQueue.shift() as Deferred<IteratorResult<T>>
       const { error, value } = resultQueue.shift() as IValueObj<T>
       if (error) {
         readDeferred.reject(error)
@@ -26,7 +26,7 @@ function _buffer<T>(size: number, iterable: AsyncIterable<T>): AsyncIterableIter
       }
     }
     while (readQueue.length > 0 && ended) {
-      const { resolve } = readQueue.shift() as IDeferred<IteratorResult<T>>
+      const { resolve } = readQueue.shift() as Deferred<IteratorResult<T>>
       resolve({ done: true, value: undefined } as any)
     }
   }

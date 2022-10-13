@@ -2,7 +2,7 @@ import { assert } from 'chai'
 import { writeToStream } from './'
 import { PassThrough, Transform, Writable } from 'stream'
 import { promiseImmediate } from './util-test'
-import { defer } from './defer'
+import { defer } from 'inside-out-async'
 
 describe('writeToStream', () => {
   it('writes values to a stream', async () => {
