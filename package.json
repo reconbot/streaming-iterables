@@ -61,7 +61,7 @@
     "through2-concurrent": "2.0.0",
     "ts-node": "10.9.1",
     "tslib": "2.5.0",
-    "typescript": "4.9.4"
+    "typescript": "4.9.5"
   },
   "engines": {
     "node": ">=14"
