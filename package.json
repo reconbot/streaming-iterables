@@ -60,7 +60,7 @@
     "sinon": "15.1.0",
     "through2-concurrent": "2.0.0",
     "ts-node": "10.9.1",
-    "tslib": "2.5.2",
+    "tslib": "2.5.3",
     "typescript": "5.0.4"
   },
   "engines": {
