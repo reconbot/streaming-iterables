@@ -43,7 +43,7 @@
     "@microsoft/api-extractor": "7.36.0",
     "@types/chai": "4.3.5",
     "@types/mocha": "10.0.1",
-    "@types/node": "18.16.18",
+    "@types/node": "18.16.19",
     "@types/sinon": "10.0.15",
     "@typescript-eslint/eslint-plugin": "5.60.1",
     "@typescript-eslint/parser": "5.60.1",
