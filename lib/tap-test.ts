@@ -1,7 +1,8 @@
+import { describe, it } from 'node:test'
 import { assert } from 'chai'
 import { tap } from './'
 import { map } from './map'
-import { promiseImmediate } from './util-test'
+import { promiseImmediate } from './test-utils'
 
 describe('tap', () => {
   it('iterates a sync function over an async value', async () => {

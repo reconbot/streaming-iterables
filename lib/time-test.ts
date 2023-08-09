@@ -1,3 +1,4 @@
+import { describe, it } from 'node:test'
 import { assert } from 'chai'
 import { time } from './'
 import { collect } from './collect'

@@ -1,7 +1,8 @@
 /* eslint-disable no-async-promise-executor */
+import { afterEach, beforeEach, describe, it } from 'node:test'
 import { assert } from 'chai'
 import { throttle } from './throttle'
-import { promiseImmediate } from './util-test'
+import { promiseImmediate } from './test-utils'
 import * as sinon from 'sinon'
 
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))

@@ -1,7 +1,8 @@
+import { describe, it } from 'node:test'
 import { assert } from 'chai'
 import { parallelFlatMap, fromStream } from './'
 import { PassThrough } from 'stream'
-import { asyncStringArr, delayTicks } from './util-test'
+import { asyncStringArr, delayTicks } from './test-utils'
 
 describe('parallelFlatMap', () => {
   it('iterates a sync function over an async value', async () => {

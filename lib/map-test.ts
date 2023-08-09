@@ -1,6 +1,7 @@
+import { describe, it } from 'node:test'
 import { assert } from 'chai'
 import { map } from './'
-import { makeDelay, asyncString, asyncFromArray } from './util-test'
+import { makeDelay, asyncString, asyncFromArray } from './test-utils'
 
 describe('map', () => {
   it('iterates a sync function over an async value', async () => {

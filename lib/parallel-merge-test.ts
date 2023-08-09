@@ -1,7 +1,8 @@
+import { describe, it } from 'node:test'
 import { assert } from 'chai'
 import { parallelMerge, fromStream } from './'
 import { PassThrough } from 'stream'
-import { promiseImmediate } from './util-test'
+import { promiseImmediate } from './test-utils'
 
 function* numbers() {
   yield 4

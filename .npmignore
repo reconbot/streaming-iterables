@@ -6,13 +6,11 @@ api-extractor.json
 benchmark
 budle-types.js
 coverage
-dist-ts
 lib
 package-lock.json
 package-tests
 rollup.config.js
 SECURITY.md
-tsconfig-build.json
 tsconfig.json
 .eslintrc.json
 CODE_OF_CONDUCT.md

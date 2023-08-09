@@ -1,6 +1,7 @@
+import { describe, it } from 'node:test'
 import { assert } from 'chai'
 import { merge } from './'
-import { promiseImmediate } from './util-test'
+import { promiseImmediate } from './test-utils'
 
 function* numbers() {
   yield 1

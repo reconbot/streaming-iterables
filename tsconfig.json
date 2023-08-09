@@ -2,11 +2,10 @@
   "compilerOptions": {
     "noEmit": true,
     "allowJs": false,
-    "declaration": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "lib": ["es2020"],
-    "module": "commonjs",
+    "module": "esnext",
     "moduleResolution": "node",
     "noImplicitAny": false,
     "strict": true,
@@ -18,6 +17,13 @@
     "lib/*",
   ],
   "exclude": [
-    "node_modules"
-  ]
+    "node_modules",
+    "lib/*-test.ts"
+  ],
+  // necessary for tests
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS"
+    }
+  }
 }

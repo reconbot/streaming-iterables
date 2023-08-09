@@ -14,11 +14,11 @@
   "runkitExampleFilename": "example.js",
   "scripts": {
     "test": "npm run unit-test && npm run lint",
-    "unit-test": "c8 -r html -r text mocha",
+    "unit-test": "c8 -r html -r text node -r ts-node/register --test lib/*-test.ts",
     "check-coverage": "c8 check-coverage --lines 95 --functions 95 --branches 94",
     "lint": "tsc && eslint lib/*.ts",
     "format": "eslint lib/*.ts --fix",
-    "build": "tsc -p tsconfig-build.json && rollup -c && api-extractor run --local --verbose",
+    "build": "rollup -c && node bundle-types.mjs",
     "prepare": "npm run build"
   },
   "keywords": [
@@ -40,37 +40,29 @@
   "author": "reconbot",
   "license": "MIT",
   "devDependencies": {
-    "@microsoft/api-extractor": "7.36.4",
+    "@rollup/plugin-typescript": "^11.1.2",
     "@types/chai": "4.3.5",
-    "@types/mocha": "10.0.1",
-    "@types/node": "18.17.4",
+    "@types/node": "20.4.9",
     "@types/sinon": "10.0.16",
-    "@typescript-eslint/eslint-plugin": "5.62.0",
-    "@typescript-eslint/parser": "5.62.0",
+    "@typescript-eslint/eslint-plugin": "6.3.0",
+    "@typescript-eslint/parser": "6.3.0",
     "benchmark": "2.1.4",
     "bluestream": "10.3.3",
     "c8": "8.0.1",
     "chai": "4.3.7",
+    "dts-buddy": "^0.1.9",
     "eslint": "8.46.0",
     "eslint-config-airbnb-base": "15.0.0",
     "eslint-plugin-import": "2.28.0",
-    "mocha": "10.2.0",
     "prettier": "3.0.1",
-    "rollup": "2.79.1",
+    "rollup": "3.28.0",
     "sinon": "15.2.0",
     "through2-concurrent": "2.0.0",
-    "ts-node": "10.9.1",
-    "tslib": "2.6.1",
-    "typescript": "5.0.4"
+    "ts-node": "^10.9.1",
+    "tslib": "^2.6.1",
+    "typescript": "5.1.6"
   },
   "engines": {
-    "node": ">=14"
-  },
-  "mocha": {
-    "bail": true,
-    "require": [
-      "ts-node/register"
-    ],
-    "spec": "lib/*-test.ts"
+    "node": ">=18"
   }
 }

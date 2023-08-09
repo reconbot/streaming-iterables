@@ -1,7 +1,8 @@
+import { describe, it } from 'node:test'
 import { assert } from 'chai'
 import { transform, fromStream } from '.'
 import { PassThrough } from 'stream'
-import { promiseImmediate, delayTicks, asyncFromArray, makeDelay } from './util-test'
+import { promiseImmediate, delayTicks, asyncFromArray, makeDelay } from './test-utils'
 
 describe('transform', () => {
   it('runs a concurrent number of functions at a time', async () => {

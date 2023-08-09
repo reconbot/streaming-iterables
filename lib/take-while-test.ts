@@ -1,6 +1,7 @@
+import { describe, it } from 'node:test'
 import { assert } from 'chai'
 import { takeWhile } from './'
-import { asyncFromArray } from './util-test'
+import { asyncFromArray } from './test-utils'
 
 describe('takeWhile', () => {
   const isTruthy = (i : any) => !!i

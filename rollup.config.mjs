@@ -1,5 +1,7 @@
+import typescript from '@rollup/plugin-typescript'
+
 export default {
-  input: './dist-ts/index.js',
+  input: './lib/index.ts',
   output: [
     {
       format: 'esm',
@@ -10,5 +12,6 @@ export default {
       name: 'streamingIterables',
       file: './dist/index.js'
     },
-  ]
+  ],
+  plugins: [typescript()]
 }
