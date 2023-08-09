@@ -1,7 +1,8 @@
+import { describe, it } from 'node:test'
 import { assert } from 'chai'
 import { flatten } from './'
 import { collect } from './collect'
-import { asyncFromArray } from './util-test'
+import { asyncFromArray } from './test-utils'
 
 describe('flatten', () => {
   it('flattens arrays', async () => {

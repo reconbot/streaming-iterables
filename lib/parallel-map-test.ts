@@ -1,7 +1,8 @@
+import { describe, it } from 'node:test'
 import { assert } from 'chai'
 import { parallelMap, fromStream } from './'
 import { PassThrough } from 'stream'
-import { asyncString, makeDelay, delayTicks } from './util-test'
+import { asyncString, makeDelay, delayTicks } from './test-utils'
 import { consume } from './consume'
 
 process.on('unhandledRejection', error => {

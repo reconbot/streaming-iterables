@@ -1,6 +1,7 @@
+import { describe, it } from 'node:test'
 import { assert } from 'chai'
 import { consume } from './'
-import { promiseImmediate } from './util-test'
+import { promiseImmediate } from './test-utils'
 
 describe('consume', () => {
   it('consumes the entire async iterator', async () => {

@@ -1,7 +1,8 @@
+import { describe, it } from 'node:test'
 import { assert } from 'chai'
 import { writeToStream } from './'
 import { PassThrough, Transform, Writable } from 'stream'
-import { promiseImmediate } from './util-test'
+import { promiseImmediate } from './test-utils'
 import { defer } from './defer'
 
 describe('writeToStream', () => {

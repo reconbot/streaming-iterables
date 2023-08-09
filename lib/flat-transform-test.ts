@@ -1,6 +1,7 @@
+import { describe, it } from 'node:test'
 import { assert } from 'chai'
 import { flatTransform } from '.'
-import { promiseImmediate, delayTicks, makeDelay, asyncFromArray } from './util-test'
+import { promiseImmediate, delayTicks, makeDelay, asyncFromArray } from './test-utils'
 
 describe('flatTransform', () => {
   it('runs a concurrent number of functions at a time', async () => {

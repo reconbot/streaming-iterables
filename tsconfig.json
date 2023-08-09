@@ -19,5 +19,11 @@
   "exclude": [
     "node_modules",
     "lib/*-test.ts"
-  ]
+  ],
+  // necessary for tests
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS"
+    }
+  }
 }

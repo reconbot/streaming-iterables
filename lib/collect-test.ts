@@ -1,6 +1,7 @@
+import { describe, it } from 'node:test'
 import { assert } from 'chai'
 import { collect } from './'
-import { asyncFromArray } from './util-test'
+import { asyncFromArray } from './test-utils'
 
 describe('collect', () => {
   it('collects async iterable data', async () => {

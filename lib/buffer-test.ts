@@ -1,6 +1,7 @@
+import { describe, it } from 'node:test'
 import { assert } from 'chai'
 import { buffer } from './'
-import { promiseImmediate, asyncFromArray } from './util-test'
+import { promiseImmediate, asyncFromArray } from './test-utils'
 
 describe('buffer', () => {
   it('buffers async data', async () => {
