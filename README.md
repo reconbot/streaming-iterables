@@ -688,3 +688,7 @@ A value, an array of that value, undefined, null or promises for any of them. Us
 ## Contributors wanted
 
 Writing docs and code is a lot of work! Thank you in advance for helping out.
+
+### Publishing
+
+Published with [`np`](https://www.npmjs.com/package/np)
