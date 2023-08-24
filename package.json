@@ -49,7 +49,7 @@
     "benchmark": "2.1.4",
     "bluestream": "10.3.3",
     "c8": "8.0.1",
-    "chai": "4.3.7",
+    "chai": "4.3.8",
     "dts-buddy": "^0.1.9",
     "eslint": "8.47.0",
     "eslint-config-airbnb-base": "15.0.0",
