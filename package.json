@@ -1,6 +1,6 @@
 {
   "name": "streaming-iterables",
-  "version": "8.0.0",
+  "version": "8.0.1",
   "description": "A collection of utilities for async iterables. Designed to replace your streams.",
   "main": "./dist/index.js",
   "types": "dist/index.d.ts",
