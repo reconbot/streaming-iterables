@@ -5,6 +5,7 @@
   "prHourlyLimit": 0,
   "prConcurrentLimit": 20,
   "timezone": "America/New_York",
+  "schedule": ["every 3 months"],
   "packageRules": [
     {
       "matchDepTypes": [
