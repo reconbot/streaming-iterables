@@ -17,14 +17,15 @@
   "repository": "git@github.com:reconbot/streaming-iterables.git",
   "homepage": "https://github.com/reconbot/streaming-iterables",
   "runkitExampleFilename": "example.js",
+  "packageManager": "pnpm@8.7.4",
   "scripts": {
-    "test": "npm run unit-test && npm run lint",
+    "test": "pnpm run unit-test && pnpm run lint",
     "unit-test": "c8 -r html -r text node -r ts-node/register --test lib/*-test.ts",
     "check-coverage": "c8 check-coverage --lines 95 --functions 95 --branches 94",
     "lint": "tsc && eslint lib/*.ts",
     "format": "eslint lib/*.ts --fix",
     "build": "rollup -c && node bundle-types.mjs",
-    "prepare": "npm run build"
+    "prepare": "pnpm run build"
   },
   "keywords": [
     "async",

@@ -14,10 +14,11 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-    - name: npm install, build, and test
+    - name: pnpm install, build, and test
       run: |
-        npm ci
-        npm test
+        corepack enable
+        pnpm install
+        pnpm test
     - name: Check Coverage Levels
       run: |
-        npm run check-coverage
+        pnpm run check-coverage
