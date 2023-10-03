@@ -8,6 +8,7 @@
   "schedule": ["every 3 months"],
   "packageRules": [
     {
+      "schedule": ["every 3 months"],
       "matchDepTypes": [
         "devDependencies"
       ],
