@@ -9,8 +9,8 @@ devDependencies:
     specifier: ^11.1.2
     version: 11.1.4(rollup@4.1.4)(tslib@2.6.2)(typescript@5.2.2)
   '@types/chai':
-    specifier: 4.3.8
-    version: 4.3.8
+    specifier: 4.3.9
+    version: 4.3.9
   '@types/node':
     specifier: 20.8.6
     version: 20.8.6
@@ -391,8 +391,8 @@ packages:
     resolution: {integrity: sha512-vxhUy4J8lyeyinH7Azl1pdd43GJhZH/tP2weN8TntQblOY+A0XbT8DJk1/oCPuOOyg/Ja757rG0CgHcWC8OfMA==}
     dev: true
 
-  /@types/chai@4.3.8:
-    resolution: {integrity: sha512-yW/qTM4mRBBcsA9Xw9FbcImYtFPY7sgr+G/O5RDYVmxiy9a+pE5FyoFUi8JYCZY5nicj8atrr1pcfPiYpeNGOA==}
+  /@types/chai@4.3.9:
+    resolution: {integrity: sha512-69TtiDzu0bcmKQv3yg1Zx409/Kd7r0b5F1PfpYJfSHzLGtB53547V4u+9iqKYsTu/O2ai6KTb0TInNpvuQ3qmg==}
     dev: true
 
   /@types/estree@1.0.2:
