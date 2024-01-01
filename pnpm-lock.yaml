@@ -15,8 +15,8 @@ devDependencies:
     specifier: 20.10.6
     version: 20.10.6
   '@types/sinon':
-    specifier: 10.0.20
-    version: 10.0.20
+    specifier: 17.0.2
+    version: 17.0.2
   '@typescript-eslint/eslint-plugin':
     specifier: 6.9.1
     version: 6.9.1(@typescript-eslint/parser@6.9.1)(eslint@8.52.0)(typescript@5.2.2)
@@ -54,8 +54,8 @@ devDependencies:
     specifier: 4.9.2
     version: 4.9.2
   sinon:
-    specifier: 17.0.0
-    version: 17.0.0
+    specifier: 17.0.1
+    version: 17.0.1
   through2-concurrent:
     specifier: 2.0.0
     version: 2.0.0
@@ -435,8 +435,8 @@ packages:
     resolution: {integrity: sha512-OxepLK9EuNEIPxWNME+C6WwbRAOOI2o2BaQEGzz5Lu2e4Z5eDnEo+/aVEDMIXywoJitJ7xWd641wrGLZdtwRyw==}
     dev: true
 
-  /@types/sinon@10.0.20:
-    resolution: {integrity: sha512-2APKKruFNCAZgx3daAyACGzWuJ028VVCUDk6o2rw/Z4PXT0ogwdV4KUegW0MwVs0Zu59auPXbbuBJHF12Sx1Eg==}
+  /@types/sinon@17.0.2:
+    resolution: {integrity: sha512-Zt6heIGsdqERkxctIpvN5Pv3edgBrhoeb3yHyxffd4InN0AX2SVNKSrhdDZKGQICVOxWP/q4DyhpfPNMSrpIiA==}
     dependencies:
       '@types/sinonjs__fake-timers': 8.1.3
     dev: true
@@ -2135,8 +2135,8 @@ packages:
     resolution: {integrity: sha512-wnD2ZE+l+SPC/uoS0vXeE9L1+0wuaMqKlfz9AMUo38JsyLSBWSFcHR1Rri62LZc12vLr1gb3jl7iwQhgwpAbGQ==}
     dev: true
 
-  /sinon@17.0.0:
-    resolution: {integrity: sha512-p4lJiYKBoOEVUxxVIC9H1MM2znG1/c8gud++I2BauJA5hsz7hHsst35eurNWXTusBsIq66FzOQbZ/uMdpvbPIQ==}
+  /sinon@17.0.1:
+    resolution: {integrity: sha512-wmwE19Lie0MLT+ZYNpDymasPHUKTaZHUH/pKEubRXIzySv9Atnlw+BUMGCzWgV7b7wO+Hw6f1TEOr0IUnmU8/g==}
     dependencies:
       '@sinonjs/commons': 3.0.0
       '@sinonjs/fake-timers': 11.2.2
