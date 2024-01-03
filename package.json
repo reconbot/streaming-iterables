@@ -54,7 +54,7 @@
     "@typescript-eslint/parser": "6.17.0",
     "benchmark": "2.1.4",
     "bluestream": "10.3.3",
-    "c8": "8.0.1",
+    "c8": "9.0.0",
     "chai": "5.0.0",
     "dts-buddy": "0.4.3",
     "eslint": "8.56.0",
