@@ -36,8 +36,8 @@ devDependencies:
     specifier: 5.0.0
     version: 5.0.0
   dts-buddy:
-    specifier: 0.4.3
-    version: 0.4.3(typescript@5.3.3)
+    specifier: 0.4.4
+    version: 0.4.4(typescript@5.3.3)
   eslint:
     specifier: 8.56.0
     version: 8.56.0
@@ -930,8 +930,8 @@ packages:
       esutils: 2.0.3
     dev: true
 
-  /dts-buddy@0.4.3(typescript@5.3.3):
-    resolution: {integrity: sha512-vytwDCQAj8rqYPbGsrjiOCRv3O2ipwyUwSc5/II1MpS/Eq6KNZNkGU1djOA31nL7jh7092W/nwbwZHCKedf8Vw==}
+  /dts-buddy@0.4.4(typescript@5.3.3):
+    resolution: {integrity: sha512-7pjuo2cmXNx9gYinJy1/KQr998KpAQfv52EKdvJvdQkk+ud++EGBCDgoxMiR3vuU/NvWDDvh1zc0lgnH+NsRtA==}
     hasBin: true
     peerDependencies:
       typescript: '>=5.0.4 <5.4'
