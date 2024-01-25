@@ -33,8 +33,8 @@ devDependencies:
     specifier: 9.1.0
     version: 9.1.0
   chai:
-    specifier: 5.0.0
-    version: 5.0.0
+    specifier: 5.0.3
+    version: 5.0.3
   dts-buddy:
     specifier: 0.4.4
     version: 0.4.4(typescript@5.3.3)
@@ -776,14 +776,14 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
-  /chai@5.0.0:
-    resolution: {integrity: sha512-HO5p0oEKd5M6HEcwOkNAThAE3j960vIZvVcc0t2tI06Dd0ATu69cEnMB2wOhC5/ZyQ6m67w3ePjU/HzXsSsdBA==}
+  /chai@5.0.3:
+    resolution: {integrity: sha512-wKGCtYv2kVY5WEjKqQ3fSIZWtTFveZCtzinhTZbx3/trVkxefiwovhpU9kRVCwxvKKCEjTWXPdM1/T7zPoDgow==}
     engines: {node: '>=12'}
     dependencies:
       assertion-error: 2.0.1
       check-error: 2.0.0
       deep-eql: 5.0.1
-      loupe: 3.0.2
+      loupe: 3.1.0
       pathval: 2.0.0
     dev: true
 
@@ -1748,8 +1748,8 @@ packages:
     resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
     dev: true
 
-  /loupe@3.0.2:
-    resolution: {integrity: sha512-Tzlkbynv7dtqxTROe54Il+J4e/zG2iehtJGZUYpTv8WzlkW9qyEcE83UhGJCeuF3SCfzHuM5VWhBi47phV3+AQ==}
+  /loupe@3.1.0:
+    resolution: {integrity: sha512-qKl+FrLXUhFuHUoDJG7f8P8gEMHq9NFS0c6ghXG1J0rldmZFQZoNVv/vyirE9qwCIhWZDsvEFd1sbFu3GvRQFg==}
     dependencies:
       get-func-name: 2.0.2
     dev: true
