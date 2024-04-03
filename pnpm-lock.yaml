@@ -33,8 +33,8 @@ devDependencies:
     specifier: 9.1.0
     version: 9.1.0
   chai:
-    specifier: 5.0.3
-    version: 5.0.3
+    specifier: 5.1.0
+    version: 5.1.0
   dts-buddy:
     specifier: 0.4.5
     version: 0.4.5(typescript@5.3.3)
@@ -777,8 +777,8 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
-  /chai@5.0.3:
-    resolution: {integrity: sha512-wKGCtYv2kVY5WEjKqQ3fSIZWtTFveZCtzinhTZbx3/trVkxefiwovhpU9kRVCwxvKKCEjTWXPdM1/T7zPoDgow==}
+  /chai@5.1.0:
+    resolution: {integrity: sha512-kDZ7MZyM6Q1DhR9jy7dalKohXQ2yrlXkk59CR52aRKxJrobmlBNqnFQxX9xOX8w+4mz8SYlKJa/7D7ddltFXCw==}
     engines: {node: '>=12'}
     dependencies:
       assertion-error: 2.0.1
