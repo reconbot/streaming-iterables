@@ -36,8 +36,8 @@ devDependencies:
     specifier: 5.1.0
     version: 5.1.0
   dts-buddy:
-    specifier: 0.4.5
-    version: 0.4.5(typescript@5.4.3)
+    specifier: 0.4.6
+    version: 0.4.6(typescript@5.4.3)
   eslint:
     specifier: 8.57.0
     version: 8.57.0
@@ -158,11 +158,6 @@ packages:
       '@jridgewell/trace-mapping': 0.3.19
     dev: true
 
-  /@jridgewell/resolve-uri@3.1.1:
-    resolution: {integrity: sha512-dSYZh7HhCDtCKm4QakX0xFpsRDqjjtZf/kjI/v3T3Nwt5r8/qz/M19F9ySyOqU94SXBmeG9ttTul+YnR4LOxFA==}
-    engines: {node: '>=6.0.0'}
-    dev: true
-
   /@jridgewell/resolve-uri@3.1.2:
     resolution: {integrity: sha512-bRISgCIjP20/tbWSPWMEi54QVPRZExkuD9lJL+UIxUKtwVJA8wW1Trb1jMs1RFXo1CBTNZ/5hpC9QvmKWdopKw==}
     engines: {node: '>=6.0.0'}
@@ -187,7 +182,7 @@ packages:
   /@jridgewell/trace-mapping@0.3.19:
     resolution: {integrity: sha512-kf37QtfW+Hwx/buWGMPcR60iF9ziHa6r/CZJIHbmcm4+0qrXiVdxegAH0F6yddEVQ7zdkjcGCgCzUu+BcbhQxw==}
     dependencies:
-      '@jridgewell/resolve-uri': 3.1.1
+      '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
 
@@ -931,8 +926,8 @@ packages:
       esutils: 2.0.3
     dev: true
 
-  /dts-buddy@0.4.5(typescript@5.4.3):
-    resolution: {integrity: sha512-UMx8cuzgk9jFv+kRR6cepAEs3rQhwXZ0lfXs4M1JuMiu2oyNdLbCUITN6dywbDm8lzU4pYuqlrSUH91crZGhdw==}
+  /dts-buddy@0.4.6(typescript@5.4.3):
+    resolution: {integrity: sha512-0gccY0vIuVCwbx4F9X5soE6ABKyjev2XVgwX2PYBx5hXfnrTeCBZwpf5F7MlVxzLo0pHfO9yNNo21cjZQZD/aw==}
     hasBin: true
     peerDependencies:
       typescript: '>=5.0.4 <5.5'
