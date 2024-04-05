@@ -12,8 +12,8 @@ devDependencies:
     specifier: 4.3.14
     version: 4.3.14
   '@types/node':
-    specifier: 20.12.4
-    version: 20.12.4
+    specifier: 20.12.5
+    version: 20.12.5
   '@types/sinon':
     specifier: 17.0.3
     version: 17.0.3
@@ -61,7 +61,7 @@ devDependencies:
     version: 2.0.0
   ts-node:
     specifier: ^10.9.1
-    version: 10.9.2(@types/node@20.12.4)(typescript@5.4.3)
+    version: 10.9.2(@types/node@20.12.5)(typescript@5.4.3)
   tslib:
     specifier: ^2.6.1
     version: 2.6.2
@@ -425,8 +425,8 @@ packages:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
     dev: true
 
-  /@types/node@20.12.4:
-    resolution: {integrity: sha512-E+Fa9z3wSQpzgYQdYmme5X3OTuejnnTx88A6p6vkkJosR3KBz+HpE3kqNm98VE6cfLFcISx7zW7MsJkH6KwbTw==}
+  /@types/node@20.12.5:
+    resolution: {integrity: sha512-BD+BjQ9LS/D8ST9p5uqBxghlN+S42iuNxjsUGjeZobe/ciXzk2qb1B6IXc6AnRLS+yFJRpN2IPEHMzwspfDJNw==}
     dependencies:
       undici-types: 5.26.5
     dev: true
@@ -2279,7 +2279,7 @@ packages:
       typescript: 5.4.3
     dev: true
 
-  /ts-node@10.9.2(@types/node@20.12.4)(typescript@5.4.3):
+  /ts-node@10.9.2(@types/node@20.12.5)(typescript@5.4.3):
     resolution: {integrity: sha512-f0FFpIdcHgn8zcPSbf1dRevwt047YMnaiJM3u2w2RewrB+fob/zePZcrOyQoLMMO7aBIddLcQIEK5dYjkLnGrQ==}
     hasBin: true
     peerDependencies:
@@ -2298,7 +2298,7 @@ packages:
       '@tsconfig/node12': 1.0.11
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.4
-      '@types/node': 20.12.4
+      '@types/node': 20.12.5
       acorn: 8.11.3
       acorn-walk: 8.3.2
       arg: 4.1.3
