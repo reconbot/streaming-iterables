@@ -60,7 +60,7 @@
     "eslint": "9.1.1",
     "eslint-config-airbnb-base": "15.0.0",
     "eslint-plugin-import": "2.29.1",
-    "prettier": "3.2.5",
+    "prettier": "3.3.2",
     "rollup": "4.17.2",
     "sinon": "17.0.1",
     "through2-concurrent": "2.0.0",
