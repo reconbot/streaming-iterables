@@ -33,8 +33,8 @@ devDependencies:
     specifier: 9.1.0
     version: 9.1.0
   chai:
-    specifier: 5.1.0
-    version: 5.1.0
+    specifier: 5.1.1
+    version: 5.1.1
   dts-buddy:
     specifier: 0.4.7
     version: 0.4.7(typescript@5.4.5)
@@ -797,12 +797,12 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
-  /chai@5.1.0:
-    resolution: {integrity: sha512-kDZ7MZyM6Q1DhR9jy7dalKohXQ2yrlXkk59CR52aRKxJrobmlBNqnFQxX9xOX8w+4mz8SYlKJa/7D7ddltFXCw==}
+  /chai@5.1.1:
+    resolution: {integrity: sha512-pT1ZgP8rPNqUgieVaEY+ryQr6Q4HXNg8Ei9UnLUrjN4IA7dvQC5JB+/kxVcPNDHyBcc/26CXPkbNzq3qwrOEKA==}
     engines: {node: '>=12'}
     dependencies:
       assertion-error: 2.0.1
-      check-error: 2.0.0
+      check-error: 2.1.1
       deep-eql: 5.0.1
       loupe: 3.1.0
       pathval: 2.0.0
@@ -816,8 +816,8 @@ packages:
       supports-color: 7.2.0
     dev: true
 
-  /check-error@2.0.0:
-    resolution: {integrity: sha512-tjLAOBHKVxtPoHe/SA7kNOMvhCRdCJ3vETdeY0RuAc9popf+hyaSV6ZEg9hr4cpWF7jmo/JSWEnLDrnijS9Tog==}
+  /check-error@2.1.1:
+    resolution: {integrity: sha512-OAlb+T7V4Op9OwdkjmguYRqncdlx5JiofwOAUkmTF+jNdHwzTaTs4sRAGpzLF3oOz5xAyDGrPgeIDFQmDOTiJw==}
     engines: {node: '>= 16'}
     dev: true
 
