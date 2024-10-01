@@ -59,7 +59,7 @@
     "dts-buddy": "0.5.1",
     "eslint": "9.8.0",
     "eslint-config-airbnb-base": "15.0.0",
-    "eslint-plugin-import": "2.29.1",
+    "eslint-plugin-import": "2.30.0",
     "prettier": "3.3.3",
     "rollup": "4.19.1",
     "sinon": "18.0.0",
