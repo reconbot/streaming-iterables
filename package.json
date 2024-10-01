@@ -56,7 +56,7 @@
     "bluestream": "10.3.3",
     "c8": "10.1.2",
     "chai": "5.1.1",
-    "dts-buddy": "0.5.1",
+    "dts-buddy": "0.5.3",
     "eslint": "9.8.0",
     "eslint-config-airbnb-base": "15.0.0",
     "eslint-plugin-import": "2.29.1",
