@@ -7,7 +7,7 @@ settings:
 devDependencies:
   '@rollup/plugin-typescript':
     specifier: ^11.1.2
-    version: 11.1.6(rollup@4.19.1)(tslib@2.6.3)(typescript@5.5.4)
+    version: 11.1.6(rollup@4.19.1)(tslib@2.7.0)(typescript@5.5.4)
   '@types/chai':
     specifier: 4.3.20
     version: 4.3.20
@@ -64,7 +64,7 @@ devDependencies:
     version: 10.9.2(@types/node@20.14.13)(typescript@5.5.4)
   tslib:
     specifier: ^2.6.1
-    version: 2.6.3
+    version: 2.7.0
   typescript:
     specifier: 5.5.4
     version: 5.5.4
@@ -239,7 +239,7 @@ packages:
     dev: true
     optional: true
 
-  /@rollup/plugin-typescript@11.1.6(rollup@4.19.1)(tslib@2.6.3)(typescript@5.5.4):
+  /@rollup/plugin-typescript@11.1.6(rollup@4.19.1)(tslib@2.7.0)(typescript@5.5.4):
     resolution: {integrity: sha512-R92yOmIACgYdJ7dJ97p4K69I8gg6IEHt8M7dUBxN3W6nrO8uUxX5ixl0yU/N3aZTi8WhPuICvOHXQvF6FaykAA==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
@@ -255,7 +255,7 @@ packages:
       '@rollup/pluginutils': 5.1.0(rollup@4.19.1)
       resolve: 1.22.8
       rollup: 4.19.1
-      tslib: 2.6.3
+      tslib: 2.7.0
       typescript: 5.5.4
     dev: true
 
@@ -2731,8 +2731,8 @@ packages:
       strip-bom: 3.0.0
     dev: true
 
-  /tslib@2.6.3:
-    resolution: {integrity: sha512-xNvxJEOUiWPGhUuUdQgAJPKOOJfGnIyKySOc09XkKsgdUV/3E2zvwZYdejjmRgPCgcym1juLH3226yA7sEFJKQ==}
+  /tslib@2.7.0:
+    resolution: {integrity: sha512-gLXCKdN1/j47AiHiOkJN69hJmcbGTHI0ImLmbYLHykhgeN0jVGola9yVjFgzCUklsZQMW55o+dW7IXv3RCXDzA==}
     dev: true
 
   /type-check@0.4.0:
