@@ -12,8 +12,8 @@ devDependencies:
     specifier: 5.0.1
     version: 5.0.1
   '@types/node':
-    specifier: 22.8.6
-    version: 22.8.6
+    specifier: 22.10.3
+    version: 22.10.3
   '@types/sinon':
     specifier: 17.0.3
     version: 17.0.3
@@ -61,7 +61,7 @@ devDependencies:
     version: 2.0.0
   ts-node:
     specifier: ^10.9.1
-    version: 10.9.2(@types/node@22.8.6)(typescript@5.6.3)
+    version: 10.9.2(@types/node@22.10.3)(typescript@5.6.3)
   tslib:
     specifier: ^2.6.1
     version: 2.8.1
@@ -526,10 +526,10 @@ packages:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
     dev: true
 
-  /@types/node@22.8.6:
-    resolution: {integrity: sha512-tosuJYKrIqjQIlVCM4PEGxOmyg3FCPa/fViuJChnGeEIhjA46oy8FMVoF9su1/v8PNs2a8Q0iFNyOx0uOF91nw==}
+  /@types/node@22.10.3:
+    resolution: {integrity: sha512-DifAyw4BkrufCILvD3ucnuN8eydUfc/C1GlyrnI+LK6543w5/L3VeVgf05o3B4fqSXP1dKYLOZsKfutpxPzZrw==}
     dependencies:
-      undici-types: 6.19.8
+      undici-types: 6.20.0
     dev: true
 
   /@types/sinon@17.0.3:
@@ -2486,7 +2486,7 @@ packages:
       typescript: 5.6.3
     dev: true
 
-  /ts-node@10.9.2(@types/node@22.8.6)(typescript@5.6.3):
+  /ts-node@10.9.2(@types/node@22.10.3)(typescript@5.6.3):
     resolution: {integrity: sha512-f0FFpIdcHgn8zcPSbf1dRevwt047YMnaiJM3u2w2RewrB+fob/zePZcrOyQoLMMO7aBIddLcQIEK5dYjkLnGrQ==}
     hasBin: true
     peerDependencies:
@@ -2505,7 +2505,7 @@ packages:
       '@tsconfig/node12': 1.0.11
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.4
-      '@types/node': 22.8.6
+      '@types/node': 22.10.3
       acorn: 8.11.3
       acorn-walk: 8.3.2
       arg: 4.1.3
@@ -2606,8 +2606,8 @@ packages:
       which-boxed-primitive: 1.0.2
     dev: true
 
-  /undici-types@6.19.8:
-    resolution: {integrity: sha512-ve2KP6f/JnbPBFyobGHuerC9g1FYGn/F8n1LWTwNxCEzd6IfqTwUQcNXgEtmmQ6DlRrC1hrSrBnCZPokRrDHjw==}
+  /undici-types@6.20.0:
+    resolution: {integrity: sha512-Ny6QZ2Nju20vw1SRHe3d9jVu6gJ+4e3+MMpqu7pqE5HT6WsTSlce++GQmK5UXS8mzV8DSYHrQH+Xrf2jVcuKNg==}
     dev: true
 
   /uri-js@4.4.1:
