@@ -48,7 +48,7 @@
   "devDependencies": {
     "@rollup/plugin-typescript": "^12.0.0",
     "@types/chai": "5.0.1",
-    "@types/node": "22.10.7",
+    "@types/node": "22.10.9",
     "@types/sinon": "17.0.3",
     "@typescript-eslint/eslint-plugin": "8.21.0",
     "@typescript-eslint/parser": "8.21.0",
