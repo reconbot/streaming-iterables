@@ -49,7 +49,7 @@
     "@rollup/plugin-typescript": "^12.0.0",
     "@types/chai": "5.0.1",
     "@types/node": "22.12.0",
-    "@types/sinon": "17.0.3",
+    "@types/sinon": "17.0.4",
     "@typescript-eslint/eslint-plugin": "8.22.0",
     "@typescript-eslint/parser": "8.22.0",
     "benchmark": "2.1.4",
