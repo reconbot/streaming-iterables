@@ -62,7 +62,7 @@
     "eslint-plugin-import": "2.31.0",
     "prettier": "3.5.3",
     "rollup": "4.38.0",
-    "sinon": "19.0.5",
+    "sinon": "20.0.0",
     "through2-concurrent": "2.0.0",
     "ts-node": "^10.9.1",
     "tslib": "^2.6.1",
