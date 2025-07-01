@@ -54,8 +54,8 @@ devDependencies:
     specifier: 4.40.1
     version: 4.40.1
   sinon:
-    specifier: 20.0.0
-    version: 20.0.0
+    specifier: 21.0.0
+    version: 21.0.0
   through2-concurrent:
     specifier: 2.0.0
     version: 2.0.0
@@ -2340,8 +2340,8 @@ packages:
     engines: {node: '>=14'}
     dev: true
 
-  /sinon@20.0.0:
-    resolution: {integrity: sha512-+FXOAbdnj94AQIxH0w1v8gzNxkawVvNqE3jUzRLptR71Oykeu2RrQXXl/VQjKay+Qnh73fDt/oDfMo6xMeDQbQ==}
+  /sinon@21.0.0:
+    resolution: {integrity: sha512-TOgRcwFPbfGtpqvZw+hyqJDvqfapr1qUlOizROIk4bBLjlsjlB00Pg6wMFXNtJRpu+eCZuVOaLatG7M8105kAw==}
     dependencies:
       '@sinonjs/commons': 3.0.1
       '@sinonjs/fake-timers': 13.0.5
