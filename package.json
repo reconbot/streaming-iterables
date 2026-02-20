@@ -17,7 +17,7 @@
   "repository": "git@github.com:reconbot/streaming-iterables.git",
   "homepage": "https://github.com/reconbot/streaming-iterables",
   "runkitExampleFilename": "example.js",
-  "packageManager": "pnpm@8.8.0",
+  "packageManager": "pnpm@10.30.1",
   "scripts": {
     "test": "pnpm run unit-test && pnpm run lint",
     "unit-test": "c8 -r html -r text node -r ts-node/register --test lib/*-test.ts",
