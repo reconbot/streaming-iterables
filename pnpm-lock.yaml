@@ -15,8 +15,8 @@ devDependencies:
     specifier: 24.12.0
     version: 24.12.0
   '@types/sinon':
-    specifier: 21.0.0
-    version: 21.0.0
+    specifier: 21.0.1
+    version: 21.0.1
   '@typescript-eslint/eslint-plugin':
     specifier: 8.58.0
     version: 8.58.0(@typescript-eslint/parser@8.58.0)(eslint@9.39.4)(typescript@6.0.2)
@@ -54,8 +54,8 @@ devDependencies:
     specifier: 4.60.1
     version: 4.60.1
   sinon:
-    specifier: 21.0.3
-    version: 21.0.3
+    specifier: 21.1.0
+    version: 21.1.0
   through2-concurrent:
     specifier: 2.0.0
     version: 2.0.0
@@ -485,14 +485,14 @@ packages:
       type-detect: 4.0.8
     dev: true
 
-  /@sinonjs/fake-timers@15.2.2:
-    resolution: {integrity: sha512-KK6HfcJHaxmQNzHSsCrRzp1igwAWUXEtD64EScEUsaHw3ViNHgpFR/ACgHpesDR/YDbu6IZMzNbQkTDMlnZHGw==}
+  /@sinonjs/fake-timers@15.3.0:
+    resolution: {integrity: sha512-m2xozxSfCIxjDdvbhIWazlP2i2aha/iUmbl94alpsIbd3iLTfeXgfBVbwyWogB6l++istyGZqamgA/EcqYf+Bg==}
     dependencies:
       '@sinonjs/commons': 3.0.1
     dev: true
 
-  /@sinonjs/samsam@9.0.3:
-    resolution: {integrity: sha512-ZgYY7Dc2RW+OUdnZ1DEHg00lhRt+9BjymPKHog4PRFzr1U3MbK57+djmscWyKxzO1qfunHqs4N45WWyKIFKpiQ==}
+  /@sinonjs/samsam@10.0.1:
+    resolution: {integrity: sha512-q2mHXfkviqX+roGbzFJF6r5GR4TJDGngJuPrtj0IZRZZGnFlYTjdeoiZ6vCISmOjTLsZm0+CqHPupXR/BRVZjA==}
     dependencies:
       '@sinonjs/commons': 3.0.1
       type-detect: 4.1.0
@@ -547,8 +547,8 @@ packages:
       undici-types: 7.16.0
     dev: true
 
-  /@types/sinon@21.0.0:
-    resolution: {integrity: sha512-+oHKZ0lTI+WVLxx1IbJDNmReQaIsQJjN2e7UUrJHEeByG7bFeKJYsv1E75JxTQ9QKJDp21bAa/0W2Xo4srsDnw==}
+  /@types/sinon@21.0.1:
+    resolution: {integrity: sha512-5yoJSqLbjH8T9V2bksgRayuhpZy+723/z6wBOR+Soe4ZlXC0eW8Na71TeaZPUWDQvM7LYKa9UGFc6LRqxiR5fQ==}
     dependencies:
       '@types/sinonjs__fake-timers': 8.1.3
     dev: true
@@ -2777,14 +2777,14 @@ packages:
     engines: {node: '>=14'}
     dev: true
 
-  /sinon@21.0.3:
-    resolution: {integrity: sha512-0x8TQFr8EjADhSME01u1ZK31yv2+bd6Z5NrBCHVM+n4qL1wFqbxftmeyi3bwlr49FbbzRfrqSFOpyHCOh/YmYA==}
+  /sinon@21.1.0:
+    resolution: {integrity: sha512-eyGgN8TGu8LZ3cNFatmeK+kM3T3ZjxZ+742ua4wMcm1yK6AQoQVibm2HnM+b1DT/a5ErAtmYL0R0c4ooDEcqNQ==}
     dependencies:
       '@sinonjs/commons': 3.0.1
-      '@sinonjs/fake-timers': 15.2.2
-      '@sinonjs/samsam': 9.0.3
+      '@sinonjs/fake-timers': 15.3.0
+      '@sinonjs/samsam': 10.0.1
       diff: 8.0.4
-      supports-color: 7.2.0
+      supports-color: 10.2.2
     dev: true
 
   /stop-iteration-iterator@1.1.0:
@@ -2867,6 +2867,11 @@ packages:
   /strip-json-comments@3.1.1:
     resolution: {integrity: sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==}
     engines: {node: '>=8'}
+    dev: true
+
+  /supports-color@10.2.2:
+    resolution: {integrity: sha512-SS+jx45GF1QjgEXQx4NJZV9ImqmO2NPz5FNsIHrsDjh2YsHnawpan7SNQ1o8NuhrbHZy9AZhIoCUiCeaW/C80g==}
+    engines: {node: '>=18'}
     dev: true
 
   /supports-color@7.2.0:
