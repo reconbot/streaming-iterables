@@ -48,8 +48,8 @@ devDependencies:
     specifier: 2.32.0
     version: 2.32.0(@typescript-eslint/parser@8.58.1)(eslint@10.2.0)
   prettier:
-    specifier: 3.8.1
-    version: 3.8.1
+    specifier: 3.8.2
+    version: 3.8.2
   rollup:
     specifier: 4.60.1
     version: 4.60.1
@@ -2406,8 +2406,8 @@ packages:
     engines: {node: '>= 0.8.0'}
     dev: true
 
-  /prettier@3.8.1:
-    resolution: {integrity: sha512-UOnG6LftzbdaHZcKoPFtOcCKztrQ57WkHDeRD9t/PTQtmT0NHSeWWepj6pS0z/N7+08BHFDQVUrfmfMRcZwbMg==}
+  /prettier@3.8.2:
+    resolution: {integrity: sha512-8c3mgTe0ASwWAJK+78dpviD+A8EqhndQPUBpNUIPt6+xWlIigCwfN01lWr9MAede4uqXGTEKeQWTvzb3vjia0Q==}
     engines: {node: '>=14'}
     hasBin: true
     dev: true
