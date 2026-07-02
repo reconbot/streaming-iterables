@@ -36,8 +36,8 @@ devDependencies:
     specifier: 6.2.2
     version: 6.2.2
   dts-buddy:
-    specifier: 0.7.0
-    version: 0.7.0(typescript@6.0.3)
+    specifier: 0.8.2
+    version: 0.8.2(typescript@6.0.3)
   eslint:
     specifier: 10.2.1
     version: 10.2.1
@@ -1101,11 +1101,11 @@ packages:
       esutils: 2.0.3
     dev: true
 
-  /dts-buddy@0.7.0(typescript@6.0.3):
-    resolution: {integrity: sha512-smcL+Hg0HTt83U2rhBiqUaPRdPBTONItZU1rF42zBffHobyQird6/R/QcGFguem4aCrRwBozoz4l4KtMYcXEKA==}
+  /dts-buddy@0.8.2(typescript@6.0.3):
+    resolution: {integrity: sha512-JwMQPNGhHwXBv9p0Uu5sKGO0EKb15CQbYZ7z4CvCFPX3MyosvhkGDyse6pAGpbtu4txPK3FoxoHy7MLBbEwQug==}
     hasBin: true
     peerDependencies:
-      typescript: '>=5.0.4 <6'
+      typescript: ^5.0.4 || ^6.0.0
     dependencies:
       '@jridgewell/source-map': 0.3.5
       '@jridgewell/sourcemap-codec': 1.4.15
