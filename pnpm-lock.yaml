@@ -15,8 +15,8 @@ devDependencies:
     specifier: 24.19.2
     version: 24.19.2
   '@types/sinon':
-    specifier: 22.0.1
-    version: 22.0.1
+    specifier: 22.0.2
+    version: 22.0.2
   '@typescript-eslint/eslint-plugin':
     specifier: 8.72.0
     version: 8.72.0(@typescript-eslint/parser@8.72.0)(eslint@10.13.0)(typescript@7.0.2)
@@ -569,8 +569,8 @@ packages:
       undici-types: 7.24.6
     dev: true
 
-  /@types/sinon@22.0.1:
-    resolution: {integrity: sha512-MThluJXPmpBY+Z5S3565F2z+hjkCXnBrr36j2mitVQ7JUtxA+A+YQhs+0Q6J8jxb0SVJvydO+6NWfj9EBzpiBQ==}
+  /@types/sinon@22.0.2:
+    resolution: {integrity: sha512-2qLRFlluKkn6mci189eKhlOsHcdFpsn/9+29S4VmwKCpfb+vseKrZSSOSy5259yzIpP/y4gLfqQfIIR/lZn4Ng==}
     dependencies:
       '@sinonjs/fake-timers': 15.4.0
     dev: true
